@@ -1,12 +1,12 @@
-import sys
-
 import pandas as pd
 
-sys.path.append('/src/generators/')
 from generators.generator_factory import GeneratorFactory
+from generators.generator_types import GeneratorType
 
-
-def export_to_csv(variable_excel_path: str) -> str:
+def generate_csv(variable_excel_path: str) -> str:
+    '''
+    
+    '''
     # Input from Excel
     input_variables = pd.read_excel(variable_excel_path)
 
@@ -21,10 +21,10 @@ def export_to_csv(variable_excel_path: str) -> str:
     for _, row in input_variables.iterrows():
         variables_dict[row['Concept Id']] = (row['Default values'], row['Type'], row['Value Set'])
 
-    # Fill in default values
+    # Fill in default values 
     for concept_id, (default_values, type, value_set) in variables_dict.items():
-        generator = GeneratorFactory
-        column_list = [default_values]  # Generator
+        generator = GeneratorFactory.create_generator(GeneratorType[type], value_set=value_set)
+        column_list = [default_values] # Generator 
         output_data[concept_id] = pd.Series(data=column_list)
 
     # Output

@@ -10,10 +10,9 @@ from .date_generator import DateGenerator
 
 class GeneratorFactory:
     @staticmethod
-    def create_generator(generator_type: GeneratorType, **kwargs) -> Any:
+    def create_generator(generator_type: GeneratorType, value_set: str) -> Any:
+
         if generator_type == GeneratorType.INT:
-            min_value = kwargs.get('min_value', 0)
-            max_value = kwargs.get('max_value', 100)
             return IntGenerator(min_value, max_value).generate()
 
         elif generator_type == GeneratorType.FLOAT:
