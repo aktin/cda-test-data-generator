@@ -1,12 +1,12 @@
-import generators
 from datetime import datetime
 from typing import List, Optional, Any
-from generator_types import GeneratorType
-from int_generator import IntGenerator
-from float_generator import FloatGenerator
-from string_generator import StringGenerator
-from uuid_generator import UUIDGenerator
-from date_generator import DateGenerator
+from .generator_types import GeneratorType
+from .int_generator import IntGenerator
+from .float_generator import FloatGenerator
+from .string_generator import StringGenerator
+from .uuid_generator import UUIDGenerator
+from .date_generator import DateGenerator
+
 
 class GeneratorFactory:
     @staticmethod

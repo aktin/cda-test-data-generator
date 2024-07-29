@@ -1,6 +1,6 @@
 import random
 from typing import List, Optional
-from generator import AbstractGenerator
+from .generator import AbstractGenerator
 
 class StringGenerator(AbstractGenerator):
     def __init__(self, value_set: Optional[List[str]] = None, format: Optional[str] = None, link: Optional[str] = None):

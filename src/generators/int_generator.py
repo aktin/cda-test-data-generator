@@ -1,5 +1,6 @@
 import random
-from generator import AbstractGenerator
+from .generator import AbstractGenerator
+
 
 class IntGenerator(AbstractGenerator):
     def __init__(self, min_value: int, max_value: int):

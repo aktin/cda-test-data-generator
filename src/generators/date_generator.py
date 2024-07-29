@@ -1,6 +1,7 @@
 import random
 from datetime import datetime, timedelta
-from generator import AbstractGenerator
+from .generator import AbstractGenerator
+
 
 class DateGenerator(AbstractGenerator):
     def __init__(self, start_date: datetime, end_date: datetime, format: str):
