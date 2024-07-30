@@ -3,9 +3,9 @@ from .generator import AbstractGenerator
 
 
 class IntGenerator(AbstractGenerator):
-    def __init__(self, min_value: int, max_value: int):
-        self.min_value = min_value
-        self.max_value = max_value
+    def __init__(self, **kwargs):
+        self.min_value = kwargs['min_value']
+        self.max_value = kwargs['max_value']
 
     def generate(self):
         while True:

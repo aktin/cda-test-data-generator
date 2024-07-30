@@ -23,8 +23,8 @@ def generate_csv(variable_excel_path: str) -> str:
 
     # Fill in default values 
     for concept_id, (default_values, type, value_set) in variables_dict.items():
-        generator = GeneratorFactory.create_generator(GeneratorType[type], value_set=value_set)
-        column_list = [default_values] # Generator 
+        generator = GeneratorFactory.create_generator(GeneratorType(type), value_set=value_set)
+        column_list = [next(generator)] # Generator 
         output_data[concept_id] = pd.Series(data=column_list)
 
     # Output
