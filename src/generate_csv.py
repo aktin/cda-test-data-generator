@@ -21,12 +21,13 @@ def generate_csv(variable_excel_path: str) -> str:
     for _, row in input_variables.iterrows():
         variables_dict[row['Concept Id']] = (row['Default values'], row['Type'], row['Value Set'])
 
-    types = []
+    # Test
+    types = ['int', 'UUID', 'float', 'String']
 
     # Fill in default values 
     for concept_id, (default_values, type, value_set) in variables_dict.items():
-        generator = GeneratorFactory.create_generator(GeneratorType(type), value_set=value_set)
         if type in types:
+            generator = GeneratorFactory.create_generator(GeneratorType(type), value_set=value_set)
             # column_list = [next(generator) for _ in range(10)] # Generator 
             column_list = [next(generator)]
         else:

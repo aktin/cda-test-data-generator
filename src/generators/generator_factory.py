@@ -29,9 +29,9 @@ class GeneratorFactory:
 
         elif generator_type == GeneratorType.STRING:
             value_set = params.get('value_set')
-            format = params.get('format')
+            regex = params.get('regex')
             link = params.get('link')
-            return StringGenerator(value_set, format, link).generate()
+            return StringGenerator(value_set, regex, link).generate()
 
         elif generator_type == GeneratorType.UUID:
             return UUIDGenerator().generate()
