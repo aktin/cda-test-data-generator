@@ -15,7 +15,7 @@ class ValueSetParser:
             elif key == "value_set":
                 value = value[1:-1] # Remove the brackets
                 value_set = value.split(",")
-                value_set = set([elem.strip() for elem in value_set])
+                param_dict["value_set"] = set([elem.strip() for elem in value_set])
             elif key == "format":
                 param_dict["format"] = value
             elif key == "link":
