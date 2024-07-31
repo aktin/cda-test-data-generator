@@ -7,4 +7,5 @@ class GeneratorType(Enum):
     STRING = 'String'
     UUID = 'UUID'
     DATE = 'date'
+    EMPTY = 'period'
 

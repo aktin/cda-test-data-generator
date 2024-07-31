@@ -22,7 +22,7 @@ def csv_to_cda(csv_file, xslt_file) -> None:
                 record.text = value
 
             # Create new file with raw xml data 'aktin_raw_{number}
-            output_file = os.path.join('output/raw', f'aktin_raw_{i}.xml')
+            output_file = os.path.join('../output/raw', f'aktin_raw_{i}.xml')
             with open(output_file, 'wb') as aktin_raw_xml:
                 aktin_raw_xml.write(etree.tostring(root, pretty_print=True)) # TODO Encoding UTF-8
 
@@ -43,7 +43,7 @@ def csv_to_cda(csv_file, xslt_file) -> None:
             tree.getroot().addprevious(pi2)
 
             # Write XML output to file
-            output_file = os.path.join('output/cda', f'cda_{i}.xml')
+            output_file = os.path.join('../output/cda', f'cda_{i}.xml')
 
             with open(output_file, 'wb') as xml_file:
                 xml_file.write(
