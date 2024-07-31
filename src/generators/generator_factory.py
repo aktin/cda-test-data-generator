@@ -9,7 +9,7 @@ from .float_generator import FloatGenerator
 from .string_generator import StringGenerator
 from .uuid_generator import UUIDGenerator
 from .date_generator import DateGenerator
-from parser import ValueSetParser
+from parser import Parser
 
 class GeneratorFactory:
 
@@ -18,7 +18,7 @@ class GeneratorFactory:
 
         params = {}
         if type(value_set) == str:
-            params = ValueSetParser.parse(value_set)
+            params = Parser.parse(value_set)
 
         if generator_type == GeneratorType.INT:
             return IntGenerator(**params).generate()
