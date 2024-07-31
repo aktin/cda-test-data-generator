@@ -82,6 +82,7 @@ def generate_csv(variable_excel_path: str) -> str:
     for (concept_id, order) in generation_order:
         if order != 0:
             #generate
+            print(concept_id, order)
             pass
 
 
