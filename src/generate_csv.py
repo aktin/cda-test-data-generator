@@ -25,7 +25,7 @@ def generate_csv(variable_excel_path: str, number_datasets=1) -> str:
             row['Default values'], row['Generation type'], row['Parameters'])
 
     # Test
-    types = ["int"]
+    types = ["date", "int", "float", "UUID", "String"]
 
     # Fill in default values
     for concept_id, (default_values, type, value_set) in variables_dict.items():

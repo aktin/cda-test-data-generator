@@ -23,11 +23,14 @@ def calculate_dependencies(filename: str) -> None:
                                     + dt.timedelta(minutes=int(row["_endarztkontakt_entlassung"]))).strftime("%Y%m%d%H%M%S")
 
         # Triage_start
-        row["triage_ts_start"] = (dt.datetime.strptime(row["entlassung_ts"], "%Y%m%d%H%M%S")
-                                    + dt.timedelta(minutes=int(row["_entlassung_triagestart"]))).strftime("%Y%m%d%H%M")
+        x = dt.timedelta(minutes=int(row["_entlassung_triagestart"]))
+        y = dt.datetime.strptime(row["entlassung_ts"], "%Y%m%d%H%M%S")
+        row["triage_ts_start"] = (y + x).strftime("%Y%m%d%H%M")
 
         # Triage_end
-        row["triage_end_ts"] = (dt.datetime.strptime(row["triage_ts_start"], "%Y%m%d%H%M")
-                                  + dt.timedelta(minutes=int(row["_triagestart_triageend"]))).strftime("%Y%m%d%H%M")
+        x = dt.timedelta(minutes=int(row["_triagestart_triageend"]))
+        y = dt.datetime.strptime(row["triage_ts_start"], "%Y%m%d%H%M")
+        row["triage_ts_end"] = (y + x).strftime("%Y%m%d%H%M")
+
 
     df.to_csv(filename, index=False)
