@@ -3,7 +3,7 @@ import datetime as dt
 
 
 def calculate_dependencies(filename: str) -> None:
-    df = pd.read_csv(filename, dtype=str)
+    df = pd.read_csv(filename, dtype=str, na_values=[], keep_default_na=False)
 
     for _, row in df.iterrows():
         # Therapiebeginn

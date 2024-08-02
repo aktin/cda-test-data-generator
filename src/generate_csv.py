@@ -31,6 +31,9 @@ def generate_csv(variable_excel_path: str, number_datasets=1) -> str:
     for concept_id, (default_values, type, value_set) in variables_dict.items():
         if type in types:
 
+            if concept_id == "zuweisung":
+                x = 1
+
             generator = GeneratorFactory.create_generator(GeneratorType(type), value_set=value_set, constraints=None)
             column_list = [next(generator) for _ in range(number_datasets)]
 

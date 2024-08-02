@@ -1,5 +1,6 @@
 import random
 import exrex
+import pandas as pd
 from typing import List, Optional
 from .generator import AbstractGenerator
 
@@ -7,7 +8,9 @@ class StringGenerator(AbstractGenerator):
     def __init__(self, value_set: Optional[set[str]] = None, regex: Optional[str] = None, link: Optional[str] = None):
         self.value_set = value_set
         self.regex = regex
-        self.link = link
+        if link:
+            df = pd.read_csv(f"../res/value_sets/{link}", delimiter=";",  dtype=str)
+            self.value_set = set(df.iloc[:, 0])
 
     def generate(self):
         if self.value_set:

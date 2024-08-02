@@ -8,6 +8,7 @@ if __name__ == '__main__':
     # TODO Proper import
     data_csv = generate_csv.generate_csv('../res/CDAVariables.xlsx', 10)
 
+    print()
     calculate_dependencies(data_csv)
 
     xslt_file = '../res/EmergencyNote.xslt'
