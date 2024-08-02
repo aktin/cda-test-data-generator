@@ -4,10 +4,10 @@ from .generator import AbstractGenerator
 
 
 class DateGenerator(AbstractGenerator):
-    def __init__(self, start_date: datetime, end_date: datetime, format: str):
+    def __init__(self, start_date: datetime, end_date: datetime, date_format="yyyymmdd"):
         self.start_date = start_date
         self.end_date = end_date
-        self.format = format
+        self.format = date_format
 
     def generate(self):
         while True:

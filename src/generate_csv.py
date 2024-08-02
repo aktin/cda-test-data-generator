@@ -5,36 +5,7 @@ from generators.generator_types import GeneratorType
 from parser import Parser
 
 
-def calculate_order(first_order, second_order):
-    variables = {concept: 0 for concept in first_order}
-    iterator = 1
-    length_vars = len(variables)
-    while length_vars != len(variables) or iterator == 1:
-        length_vars = len(variables)
-        for concept_id, (default_values, type, value_set, constraints) in second_order.items():
-            dependencies = Parser.parse_constraints(constraints)
-            if "range" in dependencies.keys():
-                dependencies.pop("range")
-            if "unit" in dependencies.keys():
-                dependencies.pop("unit")
-
-            dependency_set = set(dependencies.values())
-            variables_set = set(variables.keys())
-
-            if dependency_set.issubset(variables_set) and not variables_set.__contains__(concept_id):
-                variables[concept_id] = iterator
-                iterator += 1
-                # second_order.pop(concept_id)
-        if iterator == len(second_order) + 1:
-            break
-        if length_vars == len(variables):
-            raise ValueError("Looping Constraints" + str(length_vars) + " " + str(iterator))
-
-    return variables
-
-
-
-def generate_csv(variable_excel_path: str) -> str:
+def generate_csv(variable_excel_path: str, number_datasets=1) -> str:
     '''
     
     '''
@@ -51,43 +22,22 @@ def generate_csv(variable_excel_path: str) -> str:
     variables_dict = {}
     for _, row in input_variables.iterrows():
         variables_dict[row['Concept Id']] = (
-            row['Default values'], row['Generation type'], row['Parameters'], row['Constraints'])
+            row['Default values'], row['Generation type'], row['Parameters'])
 
     # Test
-    types = ['date', 'period']
-    first_order = {}
-    second_order = {}
+    types = ["int"]
 
     # Fill in default values
-    for concept_id, (default_values, type, value_set, constraints) in variables_dict.items():
+    for concept_id, (default_values, type, value_set) in variables_dict.items():
         if type in types:
-            if not isinstance(constraints, str):
-                generator = GeneratorFactory.create_generator(GeneratorType(type), value_set=value_set)
-                # column_list = [next(generator) for _ in range(10)] # Generator
-                column_list = [next(generator)]
-                first_order[concept_id] = (default_values, type, value_set, constraints)
 
-            else:
-                column_list = [""]
-                second_order[concept_id] = (default_values, type, value_set, constraints)
+            generator = GeneratorFactory.create_generator(GeneratorType(type), value_set=value_set, constraints=None)
+            column_list = [next(generator) for _ in range(number_datasets)]
+
         else:
-            column_list = [default_values]
-            first_order[concept_id] = (default_values, type, value_set, constraints)
+            column_list = [default_values for _ in range(number_datasets)]
 
         output_data[concept_id] = pd.Series(data=column_list)
-
-    generation_order = list(calculate_order(first_order,second_order).items())
-    generation_order = sorted(generation_order, key=lambda x: x[1])
-
-    for (concept_id, order) in generation_order:
-        if order != 0:
-            #generate
-            print(concept_id, order)
-            pass
-
-
-
-
 
     #Output
     output_filename = '../res/data.csv'
