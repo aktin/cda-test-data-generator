@@ -252,7 +252,7 @@
                                   displayName="Transport mode"/>
                             <title>Transportmittel</title>
                             <text>
-                                <xsl:value-of select="transportmittel_name"/>
+
                             </text>
                             <entry typeCode="COMP">
                                 <observation classCode="OBS" moodCode="EVN">
@@ -272,9 +272,7 @@
                                         <xsl:attribute name="code">
                                             <xsl:value-of select="transportmittel"/>
                                         </xsl:attribute>
-                                        <xsl:attribute name="displayName">
-                                            <xsl:value-of select="transportmittel_name"/>
-                                        </xsl:attribute>
+
                                     </value>
                                 </observation>
                             </entry>
@@ -295,13 +293,9 @@
                                     <code code="11293-8" codeSystem="2.16.840.1.113883.6.1" displayName="Zuweisung"/>
                                     <participant typeCode="AUT">
                                         <participantRole classCode="AGNT">
-                                            <code codeSystem="1.2.276.0.76.5.440"
-                                                  displayName="KV-Notdienst außerhalb des Krankenhauses">
+                                            <code codeSystem="1.2.276.0.76.5.440">
                                                 <xsl:attribute name="code">
                                                     <xsl:value-of select="zuweisung"/>
-                                                </xsl:attribute>
-                                                <xsl:attribute name="displayName">
-                                                    <xsl:value-of select="zuweisung_name"/>
                                                 </xsl:attribute>
                                             </code>
                                         </participantRole>
@@ -333,7 +327,7 @@
                             <title>Beschwerden bei Vorstellung</title>
                             <text>
                                 <content ID="compl-1">
-                                    <xsl:value-of select="beschwerden_txt"/>
+                                    <xsl:value-of select="beschwerde_liste"/>
                                 </content>
                             </text>
                             <entry typeCode="COMP">
@@ -371,11 +365,8 @@
                                                 <xsl:attribute name="code">
                                                     <xsl:value-of select="cedis"/>
                                                 </xsl:attribute>
-                                                <xsl:attribute name="displayName">
-                                                    <xsl:value-of select="beschwerde_name"/>
-                                                </xsl:attribute>
                                                 <originalText>
-                                                    <xsl:value-of select="beschwerde_original"/>
+                                                    <xsl:value-of select="beschwerden_txt"/>
                                                 </originalText>
                                             </value>
                                         </observation>
@@ -418,16 +409,12 @@
                                             </xsl:attribute>
                                         </high>
                                     </effectiveTime>
-                                    <value code="1" codeSystem="1.2.276.0.76.5.438" xsi:type="CE"
-                                           displayName="sofort - rot - 0 Minuten">
+                                    <value code="1" codeSystem="1.2.276.0.76.5.438" xsi:type="CE">
                                         <xsl:attribute name="code">
                                             <xsl:value-of select="triage"/>
                                         </xsl:attribute>
                                         <xsl:attribute name="codeSystem">
                                             <xsl:value-of select="triage_system"/>
-                                        </xsl:attribute>
-                                        <xsl:attribute name="displayName">
-                                            <xsl:value-of select="ersteinschaetzung_name"/>
                                         </xsl:attribute>
                                     </value>
                                     <!--<value xsi:type="CE" code="3" codeSystem="1.2.276.0.76.5.438" displayName="Triage"/>-->
@@ -470,13 +457,9 @@
                                     </text>
                                     <statusCode code="completed"/>
                                     <effectiveTime value="202006201545"/>
-                                    <value code="1" codeSystem="1.2.276.0.76.3.1.195.5.46" xsi:type="CV"
-                                           displayName="Patient ist schwanger">
+                                    <value code="1" codeSystem="1.2.276.0.76.3.1.195.5.46" xsi:type="CV">
                                         <xsl:attribute name="code">
                                             <xsl:value-of select="schwangerschaft"/>
-                                        </xsl:attribute>
-                                        <xsl:attribute name="displayName">
-                                            <xsl:value-of select="schwanger_name"/>
                                         </xsl:attribute>
                                     </value>
                                     <!-- <value xsi:type="CV" code="#Pregnancy#" codeSystem="1.2.276.0.76.3.1.195.5.46" displayName="Patient nicht schwanger"/>-->
@@ -606,9 +589,6 @@
                                         <xsl:attribute name="code">
                                             <xsl:value-of select="diagnostik_ergebnis_code"/>
                                         </xsl:attribute>
-                                        <xsl:attribute name="displayName">
-                                            <xsl:value-of select="diagnostik_ergebnis_name"/>
-                                        </xsl:attribute>
                                     </value>
                                     <participant typeCode="LOC">
                                         <participantRole classCode="SDLOC">
@@ -629,7 +609,6 @@
                                   displayName="Vital signs"/>
                             <title>Vitalparameter</title>
                             <text>
-                                <xsl:value-of select="vitalparameter_text"/>
                             </text>
                             <entry typeCode="COMP" contextConductionInd="true">
                                 <observation classCode="OBS" moodCode="EVN">
@@ -1106,9 +1085,6 @@
                                                    displayName="Verstauchung und Zerrung sonstiger und nicht näher bezeichneter Teile des Fußes">
                                                 <xsl:attribute name="code">
                                                     <xsl:value-of select="diagnose_code"/>
-                                                </xsl:attribute>
-                                                <xsl:attribute name="displayName">
-                                                    <xsl:value-of select="diagnose_name"/>
                                                 </xsl:attribute>
                                                 <originalText>
                                                     <xsl:value-of select="diagnose_name"/>
