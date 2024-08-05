@@ -26,7 +26,7 @@ def csv_to_cda(csv_file, xslt_file) -> None:
             os.mkdir('../output/raw') if not os.path.isdir('../output/raw') else None
             output_file = os.path.join('../output/raw', f'aktin_raw_{i}.xml')
             with open(output_file, 'wb') as aktin_raw_xml:
-                aktin_raw_xml.write(etree.tostring(root, pretty_print=True)) # TODO Encoding UTF-8
+                aktin_raw_xml.write(etree.tostring(root, pretty_print=True, encoding='UTF-8'))
 
             # Perform XSLT transformation
             transformed_xml_data = transform(root)
