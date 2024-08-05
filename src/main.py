@@ -4,10 +4,11 @@ from calculate_dependencies import calculate_dependencies
 from src.sent_to_server_and_print_error import send_xml_file
 
 if __name__ == '__main__':
-    
+    # First step: Generate
     data_csv = generate_csv('../resources/CDAVariables.xlsx', 10)
-
+    # Second step: Set dependable variables
     calculate_dependencies(data_csv)
+    # Third step: Transform to CDA
     xslt_file = '../resources/EmergencyNote.xslt'
     csv_to_cda(data_csv, xslt_file)
 
