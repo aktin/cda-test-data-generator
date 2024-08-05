@@ -1,8 +1,6 @@
 import requests
 
 
-
-
 def send_xml_file(url: str, xml_file_path: str, response_file_path: str) -> None:
     try:
         # Read the XML file
@@ -27,6 +25,5 @@ def send_xml_file(url: str, xml_file_path: str, response_file_path: str) -> None
 
 
 if __name__ == '__main__':
-
     send_xml_file("http://localhost:5080/aktin/cda/fhir/Binary/$validate", "../output/cda/cda_7.xml",
                   "../output/fehlercodes/response.xml")
