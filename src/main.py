@@ -5,12 +5,12 @@ from src.sent_to_server_and_print_error import send_xml_file
 
 if __name__ == '__main__':
     
-    data_csv = generate_csv('../res/CDAVariables.xlsx', 10)
+    data_csv = generate_csv('../resources/CDAVariables.xlsx', 10)
 
     print()
     calculate_dependencies(data_csv)
 
-    xslt_file = '../res/EmergencyNote.xslt'
+    xslt_file = '../resources/EmergencyNote.xslt'
     csv_to_cda(data_csv, xslt_file)
     for i in range(1,11):
         send_xml_file("http://localhost:5080/aktin/cda/fhir/Binary/$validate", f"../output/cda/cda_{i}.xml",

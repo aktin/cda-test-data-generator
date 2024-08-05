@@ -9,7 +9,7 @@ class StringGenerator(AbstractGenerator):
         self.value_set = value_set
         self.regex = regex
         if link:
-            df = pd.read_csv(f"../res/value_sets/{link}", delimiter=";",  dtype=str)
+            df = pd.read_csv(f"../resources/value_sets/{link}", delimiter=";",  dtype=str)
             self.value_set = set(df.iloc[:, 0])
 
     def generate(self):

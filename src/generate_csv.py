@@ -43,7 +43,7 @@ def generate_csv(variable_excel_path: str, number_datasets=1) -> str:
         output_data[concept_id] = pd.Series(data=column_list)
 
     #Output
-    output_filename = '../res/data.csv'
+    output_filename = '../resources/data.csv'
 
     output_data.to_csv(output_filename, index=False)
     return output_filename
