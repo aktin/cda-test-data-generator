@@ -22,6 +22,8 @@ def csv_to_cda(csv_file, xslt_file) -> None:
                 record.text = value
 
             # Create new file with raw xml data 'aktin_raw_{number}
+            os.mkdir('../output/') if not os.path.isdir('../output/') else None
+            os.mkdir('../output/raw') if not os.path.isdir('../output/raw') else None
             output_file = os.path.join('../output/raw', f'aktin_raw_{i}.xml')
             with open(output_file, 'wb') as aktin_raw_xml:
                 aktin_raw_xml.write(etree.tostring(root, pretty_print=True)) # TODO Encoding UTF-8
@@ -43,6 +45,8 @@ def csv_to_cda(csv_file, xslt_file) -> None:
             tree.getroot().addprevious(pi2)
 
             # Write XML output to file
+            os.mkdir('../output/') if not os.path.isdir('../output/') else None
+            os.mkdir('../output/cda') if not os.path.isdir('../output/cda') else None
             output_file = os.path.join('../output/cda', f'cda_{i}.xml')
 
             with open(output_file, 'wb') as xml_file:
