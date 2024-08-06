@@ -4,13 +4,16 @@ from calculate_dependencies import calculate_dependencies
 from src.sent_to_server_and_print_error import send_xml_file
 
 if __name__ == '__main__':
-    # First step: Generate
-    data_csv = generate_csv('../resources/CDAVariables.xlsx', 10)
-    # Second step: Set dependable variables
-    calculate_dependencies(data_csv)
-    # Third step: Transform to CDA
+    csv_path = '../resources/data.csv'
+    excel_path = '../resources/CDAVariables.xlsx'
     xslt_file = '../resources/EmergencyNote.xslt'
-    csv_to_cda(data_csv, xslt_file)
+
+    # First step: Generate
+    generate_csv(excel_path, csv_path, 10)
+    # Second step: Set dependable variables
+    calculate_dependencies(csv_path)
+    # Third step: Transform to CDA
+    csv_to_cda(csv_path, xslt_file)
 
     for i in range(1,11):
         send_xml_file("http://localhost:5080/aktin/cda/fhir/Binary/$validate", f"../output/cda/cda_{i}.xml",
