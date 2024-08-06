@@ -2,7 +2,6 @@ import pandas as pd
 
 from generators.generator_factory import GeneratorFactory
 from generators.generator_types import GeneratorType
-from parser import Parser
 
 
 def convert_row_to_column_names(excel_input: pd.DataFrame) -> pd.DataFrame:
