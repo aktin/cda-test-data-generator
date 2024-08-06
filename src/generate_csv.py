@@ -1,7 +1,7 @@
 import pandas as pd
 
-from generators.generator_factory import GeneratorFactory
-from generators.generator_types import GeneratorType
+from generators.generator import GeneratorFactory
+from generators.generator import GeneratorType
 
 
 def convert_row_to_column_names(excel_input: pd.DataFrame) -> pd.DataFrame:
@@ -43,7 +43,7 @@ def generate_csv(excel_path: str, csv_path, num_datasets=1) -> None:
     for concept_id, (default_values, type, params) in variables_dict.items():
         if type in types:
             # Generate data
-            generator = GeneratorFactory.create_generator(GeneratorType(type), value_set=params, constraints=None)
+            generator = GeneratorFactory.create_generator(GeneratorType(type), value_set=params).generate()
             column_list = [next(generator) for _ in range(num_datasets)]
 
         else:
