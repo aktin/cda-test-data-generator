@@ -1,31 +1,82 @@
-# CDA Processing and Validation
+# CSV to CDA Processor
 
-This project processes CSV files into CDA (Clinical Document Architecture) XML files, transforms them using XSLT, and validates the resulting XML files by sending them to a server.
+This project processes CSV files to generate CDA (Clinical Document Architecture) files. It reads configuration from a `config.toml` file, sets environment variables, and processes the data through several steps.
 
-## Project Structure
+## Prerequisites
 
-- `src/`
-  - `main.py`: Main script to run the entire process.
-  - `generate_csv.py`: Generates CSV files from an Excel file.
-  - `csv_to_cda.py`: Converts CSV files to CDA XML files using XSLT.
-  - `calculate_dependencies.py`: Calculates dependencies for the CSV data.
-  - `sent_to_server_and_print_error.py`: Sends XML files to a server for validation and prints any errors.
-- `res/`
-  - `CDAVariables.xlsx`: Source Excel file for generating CSV.
-  - `EmergencyNote.xslt`: XSLT file for transforming CSV data to CDA XML.
-  - `stylesheets/`: Directory containing XSL stylesheets.
-  - `schematron-basis/`: Directory containing Schematron files.
-- `output/`
-  - `raw/`: Directory for storing raw XML files.
-  - `cda/`: Directory for storing CDA XML files.
-  - `fehlercodes/`: Directory for storing server response files.
+- Python 3.12
+- `pip` (Python package installer)
 
-## Requirements
+## Installation
 
-- Python 3.x
-- `requests` library
-- `lxml` library
+1. Clone the repository:
+    ```sh
+    git clone <repository-url>
+    cd <repository-directory>
+    ```
 
-Install the required libraries using:
+2. Install the required Python packages:
+    ```sh
+    pip install -r requirements.txt
+    ```
+
+3. Ensure you have the following structure in your `config.toml` file:
+    ```toml
+    [cda_paths]
+    csv_path = "../resources/data.csv"
+    excel_path = "../resources/CDAVariables.xlsx"
+    xslt_file = "../resources/EmergencyNote.xslt"
+    ```
+
+## Usage
+
+1. Navigate to the `src` directory:
+    ```sh
+    cd src
+    ```
+
+2. Run the main script with the required command line argument for the number of rows:
+    ```sh
+    python main.py --rows <number_of_rows>
+    ```
+
+    Replace `<number_of_rows>` with the number of rows you want to generate in the CSV file.
+
+## Configuration
+
+The `config.toml` file should be located in the root directory of the project. It contains paths to the necessary files:
+- `csv_path`: Path to the CSV file.
+- `excel_path`: Path to the Excel file.
+- `xslt_file`: Path to the XSLT file.
+
+Example `config.toml`:
+```toml
+[cda_paths]
+csv_path = "../resources/data.csv"
+excel_path = "../resources/CDAVariables.xlsx"
+xslt_file = "../resources/EmergencyNote.xslt"
+```
+
+## Main Script
+
+The main script (`main.py`) performs the following steps:
+
+1. Loads configuration from `config.toml`.
+2. Sets environment variables based on the configuration.
+3. Parses command line arguments to get the number of rows.
+4. Generates a CSV file with the specified number of rows.
+5. Calculates dependencies and updates the CSV file.
+6. Transforms the CSV file to CDA format.
+7. Optionally sends the generated CDA files to a server for validation (commented out by default).
+8. Removes the generated CSV file.
+
+## Example
+
+To generate a CSV file with 10 rows and process it, run:
 ```sh
-pip install requests lxml
+python main.py --rows 10
+```
+
+## License
+
+This project is licensed under the AGPL-3.0 license.
