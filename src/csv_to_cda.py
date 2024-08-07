@@ -47,7 +47,7 @@ def csv_to_cda(csv_file, xslt_file) -> None:
             # Write XML output to file
             os.mkdir('../output/') if not os.path.isdir('../output/') else None
             os.mkdir('../output/cda') if not os.path.isdir('../output/cda') else None
-            output_file = os.path.join('../output/cda', f'cda_{i}.xml')
+            output_file = os.path.join('../output/cda', f'cda_{i}.cda')
 
             with open(output_file, 'wb') as xml_file:
                 xml_file.write(
