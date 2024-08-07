@@ -15,6 +15,6 @@ if __name__ == '__main__':
     # Third step: Transform to CDA
     csv_to_cda(csv_path, xslt_file)
 
-    for i in range(1,11):
+    for i in range(1, 11):
         send_xml_file("http://localhost:5080/aktin/cda/fhir/Binary/$validate", f"../output/cda/cda_{i}.xml",
-                  f"../output/fehlercodes/response{i}.xml")
+                      f"../output/fehlercodes/response{i}.xml")

@@ -1,7 +1,7 @@
 import pandas as pd
 
-from generators.generator import GeneratorFactory
-from generators.generator import GeneratorType
+from generator import GeneratorFactory
+from generator import GeneratorType
 
 
 def convert_row_to_column_names(excel_input: pd.DataFrame) -> pd.DataFrame:
