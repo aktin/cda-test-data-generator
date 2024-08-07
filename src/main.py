@@ -22,7 +22,7 @@ if __name__ == '__main__':
     xslt_file = os.environ['XSLT_FILE']
 
     # Parse command line arguments
-    parser = argparse.ArgumentParser(description='Process CSV to CDA.')
+    parser = argparse.ArgumentParser(description='Process Excel to CDA.')
     parser.add_argument('--rows', type=int, required=True, help='Number of rows to generate in the CSV file')
     args = parser.parse_args()
 
@@ -39,4 +39,3 @@ if __name__ == '__main__':
 
     # Remove data.csv
     os.remove(csv_path)
-

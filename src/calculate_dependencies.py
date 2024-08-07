@@ -32,5 +32,4 @@ def calculate_dependencies(filename: str) -> None:
         y = dt.datetime.strptime(row["triage_ts_start"], "%Y%m%d%H%M")
         row["triage_ts_end"] = (y + x).strftime("%Y%m%d%H%M")
 
-
     df.to_csv(filename, index=False)
