@@ -1,5 +1,6 @@
 import os
 import toml
+import argparse
 
 from generate_csv import generate_csv
 from csv_to_cda import csv_to_cda
@@ -19,6 +20,11 @@ if __name__ == '__main__':
     csv_path = os.environ['CSV_PATH']
     excel_path = os.environ['EXCEL_PATH']
     xslt_file = os.environ['XSLT_FILE']
+
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(description='Process CSV to CDA.')
+    parser.add_argument('--rows', type=int, required=True, help='Number of rows to generate in the CSV file')
+    args = parser.parse_args()
 
     # First step: Generate
     generate_csv(excel_path, csv_path, 10)
