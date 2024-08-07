@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 
@@ -49,7 +50,10 @@ class FormatHandler:
 
 class LinkHandler:
     def handle(self, param_dict, value):
-        param_dict["link"] = value
+        if os.path.exists(f'../resources/value_sets/{value}'):
+            param_dict["link"] = value
+        else:
+            raise ValueError(f"File {value} does not exist in resources/value_sets")
 
 
 class RegexHandler:
