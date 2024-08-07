@@ -68,13 +68,18 @@ class IntGenerator(AbstractGenerator):
 
 
 class StringGenerator(AbstractGenerator):
-    def __init__(self, value_set: Optional[set[str]] = None, regex: Optional[str] = None, link: Optional[str] = None):
-        self.value_set = value_set
-        self.regex = regex
-        if link:
-            df = pd.read_csv(f"../resources/value_sets/{link}", delimiter=";", dtype=str)
-            self.value_set = set(df.iloc[:, 0])
-
+    def __init__(self, **kwargs):
+        self.value_set = kwargs['value_set'] if 'value_set' in kwargs else None
+        self.regex = kwargs['regex'] if 'regex' in kwargs else None
+        if 'link' in kwargs:
+            df = pd.read_csv(f"../resources/value_sets/{kwargs['link']}", delimiter=";", dtype=str, header=0)
+            if 'column' in kwargs:
+                if kwargs['column'] in df.columns:
+                    self.value_set = set(df[kwargs['column']])
+                else:
+                    raise ValueError("Column not found in file")
+            else:
+                raise ValueError("Column not specified in parameters")
     def generate(self):
         if self.value_set:
             while True:
@@ -112,7 +117,8 @@ class GeneratorFactory:
         value_set = params.get('value_set')
         regex = params.get('regex')
         link = params.get('link')
-        return StringGenerator(value_set, regex, link)
+        column = params.get('column')
+        return StringGenerator(**params)
 
     @staticmethod
     def _create_uuid_generator(params: Dict[str, Any]) -> UUIDGenerator:

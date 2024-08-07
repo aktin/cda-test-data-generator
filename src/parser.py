@@ -24,7 +24,8 @@ class ParserFactory:
             "link": LinkHandler,
             "regex": RegexHandler,
             "start_date": StartDateHandler,
-            "end_date": EndDateHandler
+            "end_date": EndDateHandler,
+            "column": ColumnHandler
         }
         return handlers.get(key, DefaultHandler)()
 
@@ -69,6 +70,10 @@ class StartDateHandler:
 class EndDateHandler:
     def handle(self, param_dict, value):
         param_dict["end_date"] = datetime.strptime(value, "%Y%m%d")
+
+class ColumnHandler:
+    def handle(self, param_dict, value):
+        param_dict["column"] = value
 
 
 class DefaultHandler:
