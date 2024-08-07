@@ -8,19 +8,22 @@ def calculate_dependencies(filename: str) -> None:
     for _, row in df.iterrows():
         # Therapiebeginn
         row["therapiebeginn_ts"] = (dt.datetime.strptime(row["aufnahme_ts"], "%Y%m%d%H%M%S")
-                                    + dt.timedelta(minutes=int(row["_aufnahme_therapiebeginn"]))).strftime("%Y%m%d%H%M%S")
+                                    + dt.timedelta(minutes=int(row["_aufnahme_therapiebeginn"]))).strftime(
+            "%Y%m%d%H%M%S")
 
         # Arztkontakt
         row["arztkontakt_ts"] = (dt.datetime.strptime(row["therapiebeginn_ts"], "%Y%m%d%H%M%S")
-                                    + dt.timedelta(minutes=int(row["_therapiebeginn_arztkontakt"]))).strftime("%Y%m%d%H%M%S")
+                                 + dt.timedelta(minutes=int(row["_therapiebeginn_arztkontakt"]))).strftime(
+            "%Y%m%d%H%M%S")
 
         # End Arztkontakt
         row["end_arztkontakt_ts"] = (dt.datetime.strptime(row["arztkontakt_ts"], "%Y%m%d%H%M%S")
-                                    + dt.timedelta(minutes=int(row["_arztkontakt_endarztkontakt"]))).strftime("%Y%m%d%H%M%S")
+                                     + dt.timedelta(minutes=int(row["_arztkontakt_endarztkontakt"]))).strftime(
+            "%Y%m%d%H%M%S")
 
         # Entlassung
         row["entlassung_ts"] = (dt.datetime.strptime(row["end_arztkontakt_ts"], "%Y%m%d%H%M%S")
-                                    + dt.timedelta(minutes=int(row["_endarztkontakt_entlassung"]))).strftime("%Y%m%d%H%M%S")
+                                + dt.timedelta(minutes=int(row["_endarztkontakt_entlassung"]))).strftime("%Y%m%d%H%M%S")
 
         # Triage_start
         x = dt.timedelta(minutes=int(row["_entlassung_triagestart"]))
@@ -32,6 +35,11 @@ def calculate_dependencies(filename: str) -> None:
         y = dt.datetime.strptime(row["triage_ts_start"], "%Y%m%d%H%M")
         row["triage_ts_end"] = (y + x).strftime("%Y%m%d%H%M")
 
-
+    # Read the diagnostic value set
+    df_diagnostik = pd.read_csv("../resources/value_sets/diagnostik.csv", delimiter=";", dtype=str)
+    # Create a dictionary with the mapping code to id
+    diagnostik_dict = dict(zip(df_diagnostik['diagnostik_code'], df_diagnostik['diagnostik_id']))
+    # Add for each diagnostic code the corresponding diagnostic id
+    df['_diagnostik_id'] = df['diagnostik_code'].map(diagnostik_dict)
 
     df.to_csv(filename, index=False)

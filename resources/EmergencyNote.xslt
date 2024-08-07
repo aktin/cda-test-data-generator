@@ -562,7 +562,11 @@
                             </text>
                             <entry typeCode="COMP" contextConductionInd="true">
                                 <observation classCode="OBS" moodCode="EVN">
-                                    <templateId root="1.2.276.0.76.10.4053"/>
+                                    <templateId root="1.2.276.0.76.10.4053">
+                                        <xsl:attribute name="root">
+                                            <xsl:value-of select="_diagnostik_id"/>
+                                        </xsl:attribute>
+                                    </templateId>
                                     <id root="1.2.276.0.76.4.17.9814184919"
                                         extension="944cd73e-4361-4fca-929b-9a404b063651"/>
                                     <code code="37637-6" codeSystem="2.16.840.1.113883.6.1"
@@ -590,12 +594,17 @@
                                             <xsl:value-of select="diagnostik_ergebnis_code"/>
                                         </xsl:attribute>
                                     </value>
-                                    <participant typeCode="LOC">
-                                        <participantRole classCode="SDLOC">
-                                            <code code="ER" codeSystem="2.16.840.1.113883.5.111"
-                                                  displayName="Notaufnahme"/>
-                                        </participantRole>
-                                    </participant>
+                                    <xsl:choose>
+                                        <xsl:when test="number(substring-after(_diagnostik_id, '1.2.276.0.76.10.')) > 4050 and
+                                                        number(substring-after(_diagnostik_id, '1.2.276.0.76.10.')) &lt; 4057">
+                                            <participant typeCode="LOC">
+                                                <participantRole classCode="SDLOC">
+                                                    <code code="ER" codeSystem="2.16.840.1.113883.5.111"
+                                                          displayName="Notaufnahme"/>
+                                                </participantRole>
+                                            </participant>
+                                        </xsl:when>
+                                    </xsl:choose>
                                 </observation>
                             </entry>
                         </section>
