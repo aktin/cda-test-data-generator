@@ -595,7 +595,7 @@
                                         </xsl:attribute>
                                     </value>
                                     <xsl:choose>
-                                        <xsl:when test="number(substring-after(_diagnostik_id, '1.2.276.0.76.10.')) > 4050 and
+                                        <xsl:when test="number(substring-after(_diagnostik_id, '1.2.276.0.76.10.')) > 4049 and
                                                         number(substring-after(_diagnostik_id, '1.2.276.0.76.10.')) &lt; 4057">
                                             <participant typeCode="LOC">
                                                 <participantRole classCode="SDLOC">

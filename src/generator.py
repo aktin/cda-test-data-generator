@@ -1,13 +1,12 @@
 import random
-from abc import ABC, abstractmethod
 import exrex
 import uuid
 import pandas as pd
 
+from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
 from enum import Enum
 from typing import Optional, Any, Dict, Callable
-
 from src.parser import Parser
 
 
@@ -80,6 +79,7 @@ class StringGenerator(AbstractGenerator):
                     raise ValueError("Column not found in file")
             else:
                 raise ValueError("Column not specified in parameters")
+
     def generate(self):
         if self.value_set:
             while True:
