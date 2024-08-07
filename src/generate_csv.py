@@ -42,8 +42,6 @@ def generate_csv(excel_path: str, csv_path, num_datasets=1) -> None:
     # Loop through all variables and generate data
     for concept_id, (default_values, var_type, params) in variables_dict.items():
         if var_type in types:
-            if concept_id == 'given_patient':
-                x = 1
             # Generate data
             generator = GeneratorFactory.create_generator(GeneratorType(var_type), value_set=params).generate()
             column_list = [next(generator) for _ in range(num_datasets)]

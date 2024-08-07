@@ -6,7 +6,7 @@ import pandas as pd
 
 from datetime import datetime, timedelta
 from enum import Enum
-from typing import Optional, Any, Dict
+from typing import Optional, Any, Dict, Callable
 
 from src.parser import Parser
 
@@ -115,7 +115,7 @@ class GeneratorFactory:
         return StringGenerator(value_set, regex, link)
 
     @staticmethod
-    def _create_uuid_generator() -> UUIDGenerator:
+    def _create_uuid_generator(params: Dict[str, Any]) -> UUIDGenerator:
         return UUIDGenerator()
 
     @staticmethod
@@ -125,21 +125,22 @@ class GeneratorFactory:
         date_format = params.get('format', 'yyyymmddhhmmss')
         return DateGenerator(start_date, end_date, date_format)
 
-    @staticmethod
-    def create_generator(generator_type: GeneratorType, value_set: str) -> AbstractGenerator:
+    _generator_map: Dict[GeneratorType, Callable] = {
+        GeneratorType.INT: _create_int_generator,
+        GeneratorType.FLOAT: _create_float_generator,
+        GeneratorType.STRING: _create_string_generator,
+        GeneratorType.UUID: _create_uuid_generator,
+        GeneratorType.DATE: _create_date_generator
+    }
+
+    @classmethod
+    def create_generator(cls, generator_type: GeneratorType, value_set: str) -> AbstractGenerator:
         params = {}
-        if type(value_set) == str:
+        if isinstance(value_set, str):
             params = Parser.parse(value_set)
 
-        if generator_type == GeneratorType.INT:
-            return GeneratorFactory._create_int_generator(params)
-        elif generator_type == GeneratorType.FLOAT:
-            return GeneratorFactory._create_float_generator(params)
-        elif generator_type == GeneratorType.STRING:
-            return GeneratorFactory._create_string_generator(params)
-        elif generator_type == GeneratorType.UUID:
-            return GeneratorFactory._create_uuid_generator()
-        elif generator_type == GeneratorType.DATE:
-            return GeneratorFactory._create_date_generator(params)
-        else:
+        generator_type = cls._generator_map.get(generator_type)
+        if not generator_type:
             raise ValueError(f"Unknown generator type: {generator_type}")
+
+        return generator_type(params)
