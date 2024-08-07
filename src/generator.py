@@ -128,7 +128,7 @@ class GeneratorFactory:
     @staticmethod
     def create_generator(generator_type: GeneratorType, value_set: str) -> AbstractGenerator:
         params = {}
-        if value_set is str:
+        if type(value_set) == str:
             params = Parser.parse(value_set)
 
         if generator_type == GeneratorType.INT:

@@ -49,7 +49,6 @@ class FormatHandler:
 
 class LinkHandler:
     def handle(self, param_dict, value):
-        # TODO: Validate the link
         param_dict["link"] = value
 
 
