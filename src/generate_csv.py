@@ -36,18 +36,18 @@ def generate_csv(excel_path: str, csv_path, num_datasets=1) -> None:
     # Dictionary has form { conceptId -> (Default values, Type, Parameters) }
     variables_dict = extract_vars_with_params(excel_input)
 
-    # Valid generation types
+    # Valid generation types. Test purposes only
     types = ["date", "int", "float", "UUID", "String"]
 
-    # loop through all variables and generate data
-    for concept_id, (default_values, type, params) in variables_dict.items():
-        if type in types:
+    # Loop through all variables and generate data
+    for concept_id, (default_values, var_type, params) in variables_dict.items():
+        if var_type in types:
             # Generate data
-            generator = GeneratorFactory.create_generator(GeneratorType(type), value_set=params).generate()
+            generator = GeneratorFactory.create_generator(GeneratorType(var_type), value_set=params).generate()
             column_list = [next(generator) for _ in range(num_datasets)]
 
         else:
-            # fill in default values
+            # Fill in default values
             column_list = [default_values for _ in range(num_datasets)]
 
         output_data[concept_id] = pd.Series(data=column_list)

@@ -128,7 +128,7 @@ class GeneratorFactory:
     @staticmethod
     def create_generator(generator_type: GeneratorType, value_set: str) -> AbstractGenerator:
         params = {}
-        if type(value_set) == str:
+        if value_set is str:
             params = Parser.parse(value_set)
 
         if generator_type == GeneratorType.INT:
@@ -143,4 +143,3 @@ class GeneratorFactory:
             return GeneratorFactory._create_date_generator(params)
         else:
             raise ValueError(f"Unknown generator type: {generator_type}")
-

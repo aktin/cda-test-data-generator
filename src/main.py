@@ -26,7 +26,7 @@ if __name__ == '__main__':
     parser.add_argument('--rows', type=int, required=True, help='Number of rows to generate in the CSV file')
     args = parser.parse_args()
 
-    # First step: Generate
+    # First step: Generate csv with rows as patients
     generate_csv(excel_path, csv_path, 10)
     # Second step: Set dependable variables
     calculate_dependencies(csv_path)
