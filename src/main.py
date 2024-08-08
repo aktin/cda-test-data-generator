@@ -26,16 +26,18 @@ if __name__ == '__main__':
     parser.add_argument('--rows', type=int, required=True, help='Number of rows to generate in the CSV file')
     args = parser.parse_args()
 
+    rows = args.rows
+
     # First step: Generate csv with rows as patients
-    generate_csv(excel_path, csv_path, 10)
+    generate_csv(excel_path, csv_path, rows)
     # Second step: Set dependable variables
     calculate_dependencies(csv_path)
     # Third step: Transform to CDA
     csv_to_cda(csv_path, xslt_file)
 
-    for i in range(1, 11):
-        send_xml_file("http://localhost:5080/aktin/cda/fhir/Binary/$validate", f"../output/cda/cda_{i}.cda",
-                      f"../output/fehlercodes/response{i}.xml")
+    for i in range(rows):
+        send_xml_file("http://localhost:5080/aktin/cda/fhir/Binary/$validate", f"../output/cda/cda_{i+1}.cda",
+                      f"../output/fehlercodes/response{i+1}.xml")
 
     # Remove data.csv
     os.remove(csv_path)
