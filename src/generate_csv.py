@@ -4,7 +4,16 @@ from generator import GeneratorFactory
 from generator import GeneratorType
 
 
-def convert_row_to_column_names(excel_input: pd.DataFrame) -> pd.DataFrame:
+def convert_concept_id_to_header(excel_input: pd.DataFrame) -> pd.DataFrame:
+    """
+    Convert the column "Concept Id" from Excel input to header row of output DataFrame.
+
+    Args:
+        excel_input (pd.DataFrame): The input DataFrame read from the Excel file.
+
+    Returns:
+        pd.DataFrame: A DataFrame with the first row converted to column names.
+    """
     output_data = excel_input['Concept Id'].to_frame().transpose()
     output_data.columns = output_data.iloc[0]
     output_data = output_data[1:]
@@ -12,7 +21,17 @@ def convert_row_to_column_names(excel_input: pd.DataFrame) -> pd.DataFrame:
     return output_data
 
 
-def extract_vars_with_params(excel_input):
+def parse_variable_parameters(excel_input: pd.DataFrame) -> dict:
+    """
+    Extract variables with their default values, generation type, and parameters from an Excel input.
+
+    Args:
+        excel_input (pd.DataFrame): The input DataFrame read from the Excel file.
+
+    Returns:
+        dict: A dictionary where the keys are concept IDs and the values are tuples containing
+              default values, generation type, and parameters.
+    """
     variables_dict = {}
     for _, row in excel_input.iterrows():
         variables_dict[row['Concept Id']] = (
@@ -22,19 +41,24 @@ def extract_vars_with_params(excel_input):
 
 def generate_csv(excel_path: str, csv_path, num_datasets=1) -> None:
     """
-    Generates a CSV file from an Excel file
-    :param csv_path:
-    :param excel_path:
-    :param num_datasets:
+    Generate a CSV file from an Excel input file.
+
+    Args:
+        excel_path (str): Path to the input Excel file.
+        csv_path (str): Path to the output CSV file.
+        num_datasets (int, optional): Number of datasets to generate. Defaults to 1.
+
+    Returns:
+        None
     """
     # Input from Excel
     excel_input = pd.read_excel(excel_path)
 
     # Convert first row to column names
-    output_data = convert_row_to_column_names(excel_input)
+    output_data = convert_concept_id_to_header(excel_input)
 
     # Dictionary has form { conceptId -> (Default values, Type, Parameters) }
-    variables_dict = extract_vars_with_params(excel_input)
+    variables_dict = parse_variable_parameters(excel_input)
 
     # Valid generation types. Test purposes only
     types = ["date", "int", "float", "UUID", "String"]
