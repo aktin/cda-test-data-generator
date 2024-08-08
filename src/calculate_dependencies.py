@@ -2,38 +2,62 @@ import pandas as pd
 import datetime as dt
 
 
+def calculate_timestamps(row: pd.Series) -> None:
+    """
+    Calculate and update various timestamp dependencies in a row of a DataFrame.
+
+    Args:
+        row (pd.Series): A row from a DataFrame containing timestamp and minute offset information.
+
+    Returns:
+        None
+    """
+    def add_minutes_to_timestamp(timestamp, minutes, format_in="%Y%m%d%H%M%S", format_out="%Y%m%d%H%M%S"):
+        """
+        Add a specified number of minutes to a timestamp and return the new timestamp in the desired format.
+
+        Args:
+            timestamp (str): The original timestamp as a string.
+            minutes (int): The number of minutes to add to the timestamp.
+            format_in (str, optional): The format of the input timestamp. Defaults to "%Y%m%d%H%M%S".
+            format_out (str, optional): The format of the output timestamp. Defaults to "%Y%m%d%H%M%S".
+
+        Returns:
+            str: The new timestamp after adding the specified minutes, formatted according to format_out.
+        """
+        return (dt.datetime.strptime(timestamp, format_in) + dt.timedelta(minutes=int(minutes))).strftime(format_out)
+
+    # Define the sequence of operations: (timestamp, start_timestamp, minutes_to_add, format_input, format_output)
+    operations = [
+        ("therapiebeginn_ts", "aufnahme_ts", "_aufnahme_therapiebeginn"),
+        ("arztkontakt_ts", "therapiebeginn_ts", "_therapiebeginn_arztkontakt"),
+        ("end_arztkontakt_ts", "arztkontakt_ts", "_arztkontakt_endarztkontakt"),
+        ("entlassung_ts", "end_arztkontakt_ts", "_endarztkontakt_entlassung"),
+        ("triage_ts_start", "entlassung_ts", "_entlassung_triagestart", "%Y%m%d%H%M%S", "%Y%m%d%H%M"),
+        ("triage_ts_end", "triage_ts_start", "_triagestart_triageend", "%Y%m%d%H%M", "%Y%m%d%H%M")
+    ]
+
+    # Process each operation
+    for output_key, input_key, minutes_key, *formats in operations:
+        format_in, format_out = formats if formats else ("%Y%m%d%H%M%S", "%Y%m%d%H%M%S")
+        row[output_key] = add_minutes_to_timestamp(row[input_key], row[minutes_key], format_in, format_out)
+
+
 def calculate_dependencies(filename: str) -> None:
+    """
+    Calculate and update dependent variables in a CSV file.
+
+    Args:
+        filename (str): The path to the input CSV file.
+
+    Returns:
+        None
+    """
     df = pd.read_csv(filename, dtype=str, na_values=[], keep_default_na=False)
 
     for _, row in df.iterrows():
         # Therapiebeginn
-        row["therapiebeginn_ts"] = (dt.datetime.strptime(row["aufnahme_ts"], "%Y%m%d%H%M%S")
-                                    + dt.timedelta(minutes=int(row["_aufnahme_therapiebeginn"]))).strftime(
-            "%Y%m%d%H%M%S")
-
-        # Arztkontakt
-        row["arztkontakt_ts"] = (dt.datetime.strptime(row["therapiebeginn_ts"], "%Y%m%d%H%M%S")
-                                 + dt.timedelta(minutes=int(row["_therapiebeginn_arztkontakt"]))).strftime(
-            "%Y%m%d%H%M%S")
-
-        # End Arztkontakt
-        row["end_arztkontakt_ts"] = (dt.datetime.strptime(row["arztkontakt_ts"], "%Y%m%d%H%M%S")
-                                     + dt.timedelta(minutes=int(row["_arztkontakt_endarztkontakt"]))).strftime(
-            "%Y%m%d%H%M%S")
-
-        # Entlassung
-        row["entlassung_ts"] = (dt.datetime.strptime(row["end_arztkontakt_ts"], "%Y%m%d%H%M%S")
-                                + dt.timedelta(minutes=int(row["_endarztkontakt_entlassung"]))).strftime("%Y%m%d%H%M%S")
-
-        # Triage_start
-        x = dt.timedelta(minutes=int(row["_entlassung_triagestart"]))
-        y = dt.datetime.strptime(row["entlassung_ts"], "%Y%m%d%H%M%S")
-        row["triage_ts_start"] = (y + x).strftime("%Y%m%d%H%M")
-
-        # Triage_end
-        x = dt.timedelta(minutes=int(row["_triagestart_triageend"]))
-        y = dt.datetime.strptime(row["triage_ts_start"], "%Y%m%d%H%M")
-        row["triage_ts_end"] = (y + x).strftime("%Y%m%d%H%M")
+        calculate_timestamps(row)
 
     # Read the diagnostic value set
     df_diagnostik = pd.read_csv("../resources/value_sets/diagnostik.csv", delimiter=";", dtype=str)
