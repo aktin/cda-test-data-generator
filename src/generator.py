@@ -11,6 +11,9 @@ from src.parser import Parser
 
 
 class GeneratorType(Enum):
+    """
+    Enum representing different types of generators.
+    """
     INT = 'int'
     FLOAT = 'float'
     STRING = 'String'
@@ -19,18 +22,41 @@ class GeneratorType(Enum):
 
 
 class AbstractGenerator(ABC):
+    """
+    Abstract base class for all generators.
+    """
     @abstractmethod
     def generate(self):
+        """
+        Abstract method to generate values.
+        """
         pass
 
 
 class DateGenerator(AbstractGenerator):
-    def __init__(self, start_date: datetime, end_date: datetime, date_format="yyyymmdd"):
-        self.start_date = start_date
-        self.end_date = end_date
-        self.format = date_format
+    """
+    Generator for random dates within a specified range.
+    """
+    def __init__(self, **kwargs):
+        """
+        Initialize the DateGenerator with optional parameters.
+
+        Args:
+            start_date (datetime, optional): The start date for the range. Defaults to January 1, 2000.
+            end_date (datetime, optional): The end date for the range. Defaults to today.
+            format (str, optional): The format of the generated date strings. Defaults to "yyyymmddhhmmss".
+        """
+        self.start_date = kwargs.get('start_date', datetime(2000, 1, 1))
+        self.end_date = kwargs.get('end_date', datetime.today())
+        self.format = kwargs.get('format', "yyyymmddhhmmss")
 
     def generate(self):
+        """
+        Generate random dates within the specified range and format.
+
+        Yields:
+            str: A randomly generated date string.
+        """
         while True:
             random_date = self.start_date + timedelta(
                 seconds=random.randint(0, int((self.end_date - self.start_date).total_seconds()))
@@ -46,30 +72,75 @@ class DateGenerator(AbstractGenerator):
 
 
 class FloatGenerator(AbstractGenerator):
-    def __init__(self, min_value: float, max_value: float, precision: int = 2):
-        self.min_value = min_value
-        self.max_value = max_value
-        self.precision = precision
+    """
+    Generator for random float values within a specified range.
+    """
+    def __init__(self, **kwargs):
+        """
+        Initialize the FloatGenerator with optional parameters.
+
+        Args:
+            min_value (float, optional): The minimum value for the range. Defaults to 0.0.
+            max_value (float, optional): The maximum value for the range. Defaults to 0.0.
+            precision (int, optional): The number of decimal places for the generated values. Defaults to 2.
+        """
+        self.min_value = kwargs.get('min_value', 0.0)
+        self.max_value = kwargs.get('max_value', 0.0)
+        self.precision = kwargs.get('precision', 2)
 
     def generate(self):
+        """
+        Generate random float values within the specified range and precision.
+
+        Yields:
+            float: A randomly generated float value.
+        """
         while True:
             yield round(random.uniform(self.min_value, self.max_value), self.precision)
 
 
 class IntGenerator(AbstractGenerator):
-    def __init__(self, min_value, max_value):
-        self.min_value = min_value
-        self.max_value = max_value
+    """
+    Generator for random integer values within a specified range.
+    """
+    def __init__(self, **kwargs):
+        """
+        Initialize the IntGenerator with optional parameters.
+
+        Args:
+            min_value (int, optional): The minimum value for the range. Defaults to 0.
+            max_value (int, optional): The maximum value for the range. Defaults to 100.
+        """
+        self.min_value = kwargs.get('min_value', 0)
+        self.max_value = kwargs.get('max_value', 100)
 
     def generate(self):
+        """
+        Generate random integer values within the specified range.
+
+        Yields:
+            int: A randomly generated integer value.
+        """
         while True:
             yield random.randint(self.min_value, self.max_value)
 
 
 class StringGenerator(AbstractGenerator):
+    """
+    Generator for random string values based on a value set or regex pattern.
+    """
     def __init__(self, **kwargs):
-        self.value_set = kwargs['value_set'] if 'value_set' in kwargs else None
-        self.regex = kwargs['regex'] if 'regex' in kwargs else None
+        """
+        Initialize the StringGenerator with optional parameters.
+
+        Args:
+            value_set (set, optional): A set of predefined string values to choose from.
+            regex (str, optional): A regex pattern to generate random strings.
+            link (str, optional): A path to a CSV file containing a column of string values.
+            column (str, optional): The column name in the CSV file to use for the value set.
+        """
+        self.value_set = kwargs.get('value_set', None)
+        self.regex = kwargs.get('regex', None)
         if 'link' in kwargs:
             df = pd.read_csv(f"../resources/value_sets/{kwargs['link']}", delimiter=";", dtype=str, header=0)
             if 'column' in kwargs:
@@ -81,6 +152,12 @@ class StringGenerator(AbstractGenerator):
                 raise ValueError("Column not specified in parameters")
 
     def generate(self):
+        """
+        Generate random string values based on the value set or regex pattern.
+
+        Yields:
+            str: A randomly generated string value.
+        """
         if self.value_set:
             while True:
                 yield random.choice(tuple(self.value_set))
@@ -93,60 +170,59 @@ class StringGenerator(AbstractGenerator):
 
 
 class UUIDGenerator(AbstractGenerator):
+    """
+    Generator for random UUID values.
+    """
+    def __init__(self, **kwargs):
+        """
+        Initialize the UUIDGenerator.
+        """
+        pass
+
     def generate(self):
+        """
+        Generate random UUID values.
+
+        Yields:
+            UUID: A randomly generated UUID.
+        """
         while True:
             yield uuid.uuid4()
 
 
 class GeneratorFactory:
-    @staticmethod
-    def _create_int_generator(params: Dict[str, Any]) -> IntGenerator:
-        min_value = params.get('min_value', 0)
-        max_value = params.get('max_value', 100)
-        return IntGenerator(min_value, max_value)
-
-    @staticmethod
-    def _create_float_generator(params: Dict[str, Any]) -> FloatGenerator:
-        min_value = params.get('min_value', 0.0)
-        max_value = params.get('max_value', 1.0)
-        precision = params.get('precision', 2)
-        return FloatGenerator(min_value, max_value, precision)
-
-    @staticmethod
-    def _create_string_generator(params: Dict[str, Any]) -> StringGenerator:
-        value_set = params.get('value_set')
-        regex = params.get('regex')
-        link = params.get('link')
-        column = params.get('column')
-        return StringGenerator(**params)
-
-    @staticmethod
-    def _create_uuid_generator(params: Dict[str, Any]) -> UUIDGenerator:
-        return UUIDGenerator()
-
-    @staticmethod
-    def _create_date_generator(params: Dict[str, Any]) -> DateGenerator:
-        start_date = params.get('start_date', datetime(2000, 1, 1))
-        end_date = params.get('end_date', datetime(2030, 12, 31))
-        date_format = params.get('format', 'yyyymmddhhmmss')
-        return DateGenerator(start_date, end_date, date_format)
-
-    _generator_map: Dict[GeneratorType, Callable] = {
-        GeneratorType.INT: _create_int_generator,
-        GeneratorType.FLOAT: _create_float_generator,
-        GeneratorType.STRING: _create_string_generator,
-        GeneratorType.UUID: _create_uuid_generator,
-        GeneratorType.DATE: _create_date_generator
+    """
+    Factory class to create generator instances based on the generator type.
+    """
+    _generator_map: Dict[GeneratorType, AbstractGenerator] = {
+        GeneratorType.INT: IntGenerator,
+        GeneratorType.FLOAT: FloatGenerator,
+        GeneratorType.STRING: StringGenerator,
+        GeneratorType.UUID: UUIDGenerator,
+        GeneratorType.DATE: DateGenerator
     }
 
     @classmethod
-    def create_generator(cls, generator_type: GeneratorType, value_set: str) -> AbstractGenerator:
+    def create_generator(cls, generator_type: GeneratorType, value_set: str) -> Any:
+        """
+        Create a generator instance based on the generator type and value set.
+
+        Args:
+            generator_type (GeneratorType): The type of generator to create.
+            value_set (str): The value set or parameters for the generator.
+
+        Returns:
+            AbstractGenerator: An instance of the specified generator type.
+        """
         params = {}
         if isinstance(value_set, str):
             params = Parser.parse(value_set)
 
-        generator_type = cls._generator_map.get(generator_type)
-        if not generator_type:
+        # generator_type = cls._generator_map.get(generator_type)
+        try:
+            generator_class = cls._generator_map[generator_type]
+        except:
             raise ValueError(f"Unknown generator type: {generator_type}")
 
-        return generator_type(params)
+        return generator_class(**params)
+
