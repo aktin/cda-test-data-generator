@@ -2,3 +2,4 @@
 csv_path = "../resources/data.csv"
 excel_path = "../resources/CDAVariables.xlsx"
 xslt_file = "../resources/EmergencyNote.xslt"
+output_dir = "../output/"

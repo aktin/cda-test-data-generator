@@ -2,6 +2,17 @@ from lxml import etree
 
 
 def xslt_transform(xml_path: str, xsl_path: str, output_path: str) -> None:
+    """
+    Transform an XML file using an XSLT stylesheet and save the result to a file.
+
+    Args:
+        xml_path (str): The path to the input XML file.
+        xsl_path (str): The path to the XSLT stylesheet file.
+        output_path (str): The path to save the transformed XML file.
+
+    Returns:
+        None
+    """
     # Parse the XML and XSL files
     xml_tree = etree.parse(xml_path)
     xsl_tree = etree.parse(xsl_path)

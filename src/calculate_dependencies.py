@@ -3,6 +3,7 @@ import datetime as dt
 
 from generator import GeneratorFactory, GeneratorType
 
+
 def calculate_timestamps(row: pd.Series) -> None:
     """
     Calculate and update various timestamp dependencies in a row of a DataFrame.
@@ -13,6 +14,7 @@ def calculate_timestamps(row: pd.Series) -> None:
     Returns:
         None
     """
+
     def add_minutes_to_timestamp(timestamp, minutes, format_in="%Y%m%d%H%M%S", format_out="%Y%m%d%H%M%S"):
         """
         Add a specified number of minutes to a timestamp and return the new timestamp in the desired format.
@@ -61,7 +63,6 @@ def calculate_dependencies(filename: str) -> None:
     df = pd.read_csv(filename, dtype=str, na_values=[], keep_default_na=False)
 
     for _, row in df.iterrows():
-        # Therapiebeginn
         calculate_timestamps(row)
 
     # Read the diagnostic value set
@@ -86,13 +87,13 @@ def calculate_dependencies(filename: str) -> None:
     # Remove pregnant men
     df.loc[df['gender'] == 'M', 'schwangerschaft'] = 0
 
-    # # Add Associated Person if Person has family insurance
+    # Add Associated Person if Person has family insurance
     given_name_generator = GeneratorFactory.create_generator(GeneratorType.STRING,
                                                              'link=first_names.csv;column=first_name').generate()
     df['_associatedPerson_given'] = df.apply(lambda x: next(given_name_generator), axis=1)
 
     family_name_generator = GeneratorFactory.create_generator(GeneratorType.STRING,
-                                                             'link=family_names.csv;column=family_name').generate()
+                                                              'link=family_names.csv;column=family_name').generate()
     df['_associatedPerson_family'] = df.apply(lambda x: next(family_name_generator), axis=1)
 
     df.to_csv(filename, index=False)

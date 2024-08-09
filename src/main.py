@@ -15,6 +15,7 @@ if __name__ == '__main__':
     os.environ['CSV_PATH'] = config['cda_paths']['csv_path']
     os.environ['EXCEL_PATH'] = config['cda_paths']['excel_path']
     os.environ['XSLT_FILE'] = config['cda_paths']['xslt_file']
+    os.environ['OUTPUT_DIR'] = config['cda_paths']['output_dir']
 
     # Get environment variables
     csv_path = os.environ['CSV_PATH']
