@@ -75,4 +75,7 @@ def calculate_dependencies(filename: str) -> None:
     city_dict = dict(zip(df_city['city'], df_city['postleitzahl']))
     df['postleitzahl'] = df['city'].map(city_dict)
 
+    # GCS Sum
+    df['gcs_summe'] = df['gcs_motorisch'].astype(int) + df['gcs_verbal'].astype(int) + df['gcs_augen'].astype(int)
+
     df.to_csv(filename, index=False)
