@@ -1,78 +1,78 @@
-city;klinik_name
-Berlin;Charité – Universitätsmedizin Berlin
-Hamburg;Universitätsklinikum Hamburg-Eppendorf (UKE)
-München;Klinikum der Universität München
-Köln;Universitätsklinikum Köln
-Frankfurt am Main;Universitätsklinikum Frankfurt
-Stuttgart;Klinikum Stuttgart
-Düsseldorf;Universitätsklinikum Düsseldorf
-Dortmund;Klinikum Dortmund
-Essen;Universitätsklinikum Essen
-Leipzig;Universitätsklinikum Leipzig
-Bremen;Klinikum Bremen-Mitte
-Dresden;Universitätsklinikum Carl Gustav Carus
-Hannover;Medizinische Hochschule Hannover
-Nürnberg;Klinikum Nürnberg Nord
-Duisburg;Helios Klinikum Duisburg
-Bochum;Universitätsklinikum Knappschaftskrankenhaus Bochum
-Wuppertal;Helios Universitätsklinikum Wuppertal
-Bielefeld;Klinikum Bielefeld
-Bonn;Universitätsklinikum Bonn
-Mannheim;Universitätsklinikum Mannheim
-Karlsruhe;Städtisches Klinikum Karlsruhe
-Wiesbaden;Helios Dr. Horst Schmidt Kliniken Wiesbaden
-Münster;Universitätsklinikum Münster
-Augsburg;Universitätsklinikum Augsburg
-Gelsenkirchen;Marienhospital Gelsenkirchen
-Mönchengladbach;Städtisches Klinikum Mönchengladbach
-Aachen;Universitätsklinikum Aachen
-Braunschweig;Städtisches Klinikum Braunschweig
-Chemnitz;Klinikum Chemnitz
-Kiel;Universitätsklinikum Schleswig-Holstein
-Halle (Saale);Universitätsklinikum Halle (Saale)
-Magdeburg;Universitätsklinikum Magdeburg
-Freiburg im Breisgau;Universitätsklinikum Freiburg
-Krefeld;Helios Klinikum Krefeld
-Lübeck;Universitätsklinikum Schleswig-Holstein
-Oberhausen;St. Marien-Hospital Oberhausen
-Erfurt;Helios Klinikum Erfurt
-Mainz;Universitätsmedizin Mainz
-Rostock;Universitätsmedizin Rostock
-Kassel;Klinikum Kassel
-Hagen;Allgemeines Krankenhaus Hagen
-Hamm;St. Marien-Hospital Hamm
-Saarbrücken;Universitätsklinikum des Saarlandes
-Mülheim an der Ruhr;St. Marien-Hospital Mülheim an der Ruhr
-Potsdam;Ernst von Bergmann Klinikum Potsdam
-Ludwigshafen am Rhein;St. Marien- und St. Annastiftskrankenhaus Ludwigshafen
-Oldenburg;Klinikum Oldenburg
-Leverkusen;Klinikum Leverkusen
-Osnabrück;Klinikum Osnabrück
-Solingen;Städtisches Klinikum Solingen
-Heidelberg;Universitätsklinikum Heidelberg
-Herne;Evangelisches Krankenhaus Herne
-Neuss;Lukaskrankenhaus Neuss
-Darmstadt;Klinikum Darmstadt
-Paderborn;St. Vincenz-Krankenhaus Paderborn
-Regensburg;Universitätsklinikum Regensburg
-Ingolstadt;Klinikum Ingolstadt
-Würzburg;Universitätsklinikum Würzburg
-Wolfsburg;Klinikum Wolfsburg
-Ulm;Universitätsklinikum Ulm
-Heilbronn;SLK-Kliniken Heilbronn
-Offenbach am Main;Klinikum Offenbach
-Göttingen;Universitätsmedizin Göttingen
-Bottrop;Knappschaftskrankenhaus Bottrop
-Trier;Klinikum Mutterhaus der Borromäerinnen Trier
-Recklinghausen;Marienhospital Recklinghausen
-Reutlingen;Klinikum am Steinenberg Reutlingen
-Bremerhaven;Klinikum Bremerhaven-Reinkenheide
-Koblenz;Evangelisches Stift St. Martin Koblenz
-Bergisch Gladbach;Marien-Krankenhaus Bergisch Gladbach
-Jena;Universitätsklinikum Jena
-Remscheid;Sana Kliniken Remscheid
-Erlangen;Universitätsklinikum Erlangen
-Moers;Bethesda Krankenhaus Moers
-Siegen;Marienkrankenhaus Siegen
-Hildesheim;Klinikum Hildesheim
-Salzgitter;Klinikum Salzgitter
+city;klinik_name;postleitzahl
+Berlin;Charité – Universitätsmedizin Berlin;10117
+Hamburg;Universitätsklinikum Hamburg-Eppendorf (UKE);20246
+München;Klinikum der Universität München;80336
+Köln;Universitätsklinikum Köln;50937
+Frankfurt am Main;Universitätsklinikum Frankfurt;60590
+Stuttgart;Klinikum Stuttgart;70174
+Düsseldorf;Universitätsklinikum Düsseldorf;40225
+Dortmund;Klinikum Dortmund;44137
+Essen;Universitätsklinikum Essen;45122
+Leipzig;Universitätsklinikum Leipzig;04103
+Bremen;Klinikum Bremen-Mitte;25205
+Dresden;Universitätsklinikum Carl Gustav Carus;01307
+Hannover;Medizinische Hochschule Hannover;30625
+Nürnberg;Klinikum Nürnberg Nord;90419
+Duisburg;Helios Klinikum Duisburg;47166
+Bochum;Universitätsklinikum Knappschaftskrankenhaus Bochum;444892
+Wuppertal;Helios Universitätsklinikum Wuppertal;42283
+Bielefeld;Klinikum Bielefeld;33604
+Bonn;Universitätsklinikum Bonn;53127
+Mannheim;Universitätsklinikum Mannheim;68167
+Karlsruhe;Städtisches Klinikum Karlsruhe;76133
+Wiesbaden;Helios Dr. Horst Schmidt Kliniken Wiesbaden;65199
+Münster;Universitätsklinikum Münster;48149
+Augsburg;Universitätsklinikum Augsburg;86156
+Gelsenkirchen;Marienhospital Gelsenkirchen;45881
+Mönchengladbach;Städtisches Klinikum Mönchengladbach;41061
+Aachen;Universitätsklinikum Aachen;52074
+Braunschweig;Städtisches Klinikum Braunschweig;38126
+Chemnitz;Klinikum Chemnitz;09116
+Kiel;Universitätsklinikum Schleswig-Holstein;24105
+Halle (Saale);Universitätsklinikum Halle (Saale);06120
+Magdeburg;Universitätsklinikum Magdeburg;39120
+Freiburg im Breisgau;Universitätsklinikum Freiburg;79106
+Krefeld;Helios Klinikum Krefeld;47798
+Lübeck;Universitätsklinikum Schleswig-Holstein;23538
+Oberhausen;St. Marien-Hospital Oberhausen;46045
+Erfurt;Helios Klinikum Erfurt;99089
+Mainz;Universitätsmedizin Mainz;55131
+Rostock;Universitätsmedizin Rostock;18057
+Kassel;Klinikum Kassel;34125
+Hagen;Allgemeines Krankenhaus Hagen;58095
+Hamm;St. Marien-Hospital Hamm;59065
+Saarbrücken;Universitätsklinikum des Saarlandes;66421
+Mülheim an der Ruhr;St. Marien-Hospital Mülheim an der Ruhr;45468
+Potsdam;Ernst von Bergmann Klinikum Potsdam;14467
+Ludwigshafen am Rhein;St. Marien- und St. Annastiftskrankenhaus Ludwigshafen;67063
+Oldenburg;Klinikum Oldenburg;26133
+Leverkusen;Klinikum Leverkusen;51375
+Osnabrück;Klinikum Osnabrück;49076
+Solingen;Städtisches Klinikum Solingen;42653
+Heidelberg;Universitätsklinikum Heidelberg;69120
+Herne;Evangelisches Krankenhaus Herne;44649
+Neuss;Lukaskrankenhaus Neuss;41464
+Darmstadt;Klinikum Darmstadt;64283
+Paderborn;St. Vincenz-Krankenhaus Paderborn;33098
+Regensburg;Universitätsklinikum Regensburg;93053
+Ingolstadt;Klinikum Ingolstadt;85049
+Würzburg;Universitätsklinikum Würzburg;97080
+Wolfsburg;Klinikum Wolfsburg;38440
+Ulm;Universitätsklinikum Ulm;89081
+Heilbronn;SLK-Kliniken Heilbronn;74078
+Offenbach am Main;Klinikum Offenbach;63069
+Göttingen;Universitätsmedizin Göttingen;37075
+Bottrop;Knappschaftskrankenhaus Bottrop;46236
+Trier;Klinikum Mutterhaus der Borromäerinnen Trier;54290
+Recklinghausen;Marienhospital Recklinghausen;45657
+Reutlingen;Klinikum am Steinenberg Reutlingen;72764
+Bremerhaven;Klinikum Bremerhaven-Reinkenheide;27574
+Koblenz;Evangelisches Stift St. Martin Koblenz;56068
+Bergisch Gladbach;Marien-Krankenhaus Bergisch Gladbach;51465
+Jena;Universitätsklinikum Jena;07747
+Remscheid;Sana Kliniken Remscheid;42853
+Erlangen;Universitätsklinikum Erlangen;91054
+Moers;Bethesda Krankenhaus Moers;47441
+Siegen;Marienkrankenhaus Siegen;57072
+Hildesheim;Klinikum Hildesheim;31134
+Salzgitter;Klinikum Salzgitter;38226
