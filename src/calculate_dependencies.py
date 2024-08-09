@@ -78,4 +78,7 @@ def calculate_dependencies(filename: str) -> None:
     # GCS Sum
     df['gcs_summe'] = df['gcs_motorisch'].astype(int) + df['gcs_verbal'].astype(int) + df['gcs_augen'].astype(int)
 
+    # Remove pregnant men
+    df.loc[df['gender'] == 'M', 'schwangerschaft'] = 0
+
     df.to_csv(filename, index=False)
