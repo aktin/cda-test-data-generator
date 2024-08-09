@@ -65,5 +65,11 @@ def calculate_dependencies(filename: str) -> None:
     diagnostik_dict = dict(zip(df_diagnostik['diagnostik_code'], df_diagnostik['diagnostik_id']))
     # Add for each diagnostic code the corresponding diagnostic id
     df['_diagnostik_id'] = df['diagnostik_code'].map(diagnostik_dict)
+    # Read the city value_set
+    df_city = pd.read_csv("../resources/value_sets/cities.csv", delimiter=";", dtype=str)
+    # Create a dictionary with the mapping code to clinic
+    city_dict = dict(zip(df_city['city'], df_city['klinik_name']))
+    # Add for each city the corresponding clinic
+    df['organisation_name'] = df['city'].map(city_dict)
 
     df.to_csv(filename, index=False)

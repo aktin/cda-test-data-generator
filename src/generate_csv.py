@@ -78,4 +78,3 @@ def generate_csv(excel_path: str, csv_path, num_datasets=1) -> None:
 
     # Output to CSV
     output_data.to_csv(csv_path, index=False)
-
