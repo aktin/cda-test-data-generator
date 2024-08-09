@@ -40,4 +40,4 @@ if __name__ == '__main__':
                       f"../output/fehlercodes/response{i+1}.xml")
 
     # Remove data.csv
-    os.remove(csv_path)
+    #os.remove(csv_path)

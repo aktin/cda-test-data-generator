@@ -1,6 +1,7 @@
 import pandas as pd
 import datetime as dt
 
+from generator import GeneratorFactory, GeneratorType
 
 def calculate_timestamps(row: pd.Series) -> None:
     """
@@ -43,6 +44,10 @@ def calculate_timestamps(row: pd.Series) -> None:
         row[output_key] = add_minutes_to_timestamp(row[input_key], row[minutes_key], format_in, format_out)
 
 
+def apply_generator_to_column(df, column_name, generator):
+    df[column_name] = df.apply(lambda x: next(generator), axis=1)
+
+
 def calculate_dependencies(filename: str) -> None:
     """
     Calculate and update dependent variables in a CSV file.
@@ -80,5 +85,14 @@ def calculate_dependencies(filename: str) -> None:
 
     # Remove pregnant men
     df.loc[df['gender'] == 'M', 'schwangerschaft'] = 0
+
+    # # Add Associated Person if Person has family insurance
+    given_name_generator = GeneratorFactory.create_generator(GeneratorType.STRING,
+                                                             'link=first_names.csv;column=first_name').generate()
+    df['_associatedPerson_given'] = df.apply(lambda x: next(given_name_generator), axis=1)
+
+    family_name_generator = GeneratorFactory.create_generator(GeneratorType.STRING,
+                                                             'link=family_names.csv;column=family_name').generate()
+    df['_associatedPerson_family'] = df.apply(lambda x: next(family_name_generator), axis=1)
 
     df.to_csv(filename, index=False)

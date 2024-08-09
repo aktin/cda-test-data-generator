@@ -151,6 +151,18 @@
                             <xsl:value-of select="insurance_case"/>
                         </xsl:attribute>
                     </code>
+                    <xsl:if test="insurance_case = 'FAMDEP'">
+                        <associatedPerson>
+                            <name>
+                                <given>
+                                    <xsl:value-of select="_associatedPerson_given"/>
+                                </given>
+                                <family>
+                                    <xsl:value-of select="_associatedPerson_family"/>
+                                </family>
+                            </name>
+                        </associatedPerson>
+                    </xsl:if>
                     <scopingOrganization>
                         <!-- IK-NR -->
                         <id extension="987654321" root="1.2.276.0.76.4.5">
