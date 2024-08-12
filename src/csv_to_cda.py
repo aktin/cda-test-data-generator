@@ -29,7 +29,7 @@ def csv_to_dict(csv_file: str) -> tuple[int, dict]:
     Yields:
         tuple: A tuple containing the row index and a dictionary where the keys are the header fields and the values are the corresponding row values.
     """
-    with open(csv_file, 'r', newline='') as f:
+    with open(csv_file, 'r', newline='', encoding="UTF-8") as f:
         csv_reader = csv.reader(f)
         header_row = next(csv_reader)
         for i, row in enumerate(csv_reader, start=1):
