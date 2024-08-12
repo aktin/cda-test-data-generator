@@ -1,5 +1,7 @@
 import requests
 
+from src import main
+
 
 def send_xml_file(url: str, xml_file_path: str, response_file_path: str) -> None:
     try:
@@ -24,6 +26,13 @@ def send_xml_file(url: str, xml_file_path: str, response_file_path: str) -> None
         print(f'An error occurred: {e}')
 
 
+def main_and_sent_test():
+    main.main()
+    rows = main.args.rows
+    for i in range(rows):
+        send_xml_file("http://localhost:5080/aktin/cda/fhir/Binary/$validate", f"../output/cda/cda_{i+1}.xml",
+                      f"../output/fehlercodes/response_{i+1}.xml")
+
+
 if __name__ == '__main__':
-    send_xml_file("http://localhost:5080/aktin/cda/fhir/Binary/$validate", "../output/cda/cda_7.xml",
-                  "../output/fehlercodes/response.xml")
+    main_and_sent_test()
