@@ -528,9 +528,6 @@
                                         extension="dd8a6ff8-ed4b-4f7e-82c3-e98e58b45de6"/>
                                     <code code="CONC" codeSystem="2.16.840.1.113883.5.6" displayName="Concern"/>
                                     <statusCode code="completed"/>
-                                    <effectiveTime>
-                                        <low value="20150304"/>
-                                    </effectiveTime>
                                     <entryRelationship typeCode="SUBJ">
                                         <observation classCode="OBS" moodCode="EVN">
                                             <templateId root="1.2.276.0.76.10.4073"/>
@@ -600,8 +597,7 @@
                                             <xsl:value-of select="diagnostik_ts"/>
                                         </xsl:attribute>
                                     </effectiveTime>
-                                    <value xsi:type="CE" code="OPB" codeSystem="1.2.276.0.76.3.1.195.5.51"
-                                           displayName="ohne path. Befund">
+                                    <value xsi:type="CE" code="OPB" codeSystem="1.2.276.0.76.3.1.195.5.51">
                                         <xsl:attribute name="code">
                                             <xsl:value-of select="diagnostik_ergebnis_code"/>
                                         </xsl:attribute>
