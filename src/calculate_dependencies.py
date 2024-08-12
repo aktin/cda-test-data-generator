@@ -66,6 +66,7 @@ def calculate_dependencies(filename: str) -> None:
         calculate_timestamps(row)
 
     # Read the diagnostic value set
+    # TODO Split in small functions
     df_diagnostik = pd.read_csv("../resources/value_sets/diagnostik.csv", delimiter=";", dtype=str)
     # Create a dictionary with the mapping code to id
     diagnostik_dict = dict(zip(df_diagnostik['diagnostik_code'], df_diagnostik['diagnostik_id']))
@@ -84,14 +85,16 @@ def calculate_dependencies(filename: str) -> None:
     # GCS Sum
     df['gcs_summe'] = df['gcs_motorisch'].astype(int) + df['gcs_verbal'].astype(int) + df['gcs_augen'].astype(int)
 
-    # Remove pregnant men
+    # Abort pregnant men
     df.loc[df['gender'] == 'M', 'schwangerschaft'] = 0
 
     # Add Associated Person if Person has family insurance
+    # TODO Define a variable in Excel as "private"
     given_name_generator = GeneratorFactory.create_generator(GeneratorType.STRING,
                                                              'link=first_names.csv;column=first_name').generate()
     df['_associatedPerson_given'] = df.apply(lambda x: next(given_name_generator), axis=1)
 
+    # TODO Family Name to recordTarget
     family_name_generator = GeneratorFactory.create_generator(GeneratorType.STRING,
                                                               'link=family_names.csv;column=family_name').generate()
     df['_associatedPerson_family'] = df.apply(lambda x: next(family_name_generator), axis=1)

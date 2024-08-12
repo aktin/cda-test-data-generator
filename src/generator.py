@@ -25,6 +25,7 @@ class AbstractGenerator(ABC):
     """
     Abstract base class for all generators.
     """
+
     @abstractmethod
     def generate(self):
         """
@@ -37,6 +38,7 @@ class DateGenerator(AbstractGenerator):
     """
     Generator for random dates within a specified range.
     """
+
     def __init__(self, **kwargs):
         """
         Initialize the DateGenerator with optional parameters.
@@ -75,6 +77,7 @@ class FloatGenerator(AbstractGenerator):
     """
     Generator for random float values within a specified range.
     """
+
     def __init__(self, **kwargs):
         """
         Initialize the FloatGenerator with optional parameters.
@@ -103,6 +106,7 @@ class IntGenerator(AbstractGenerator):
     """
     Generator for random integer values within a specified range.
     """
+
     def __init__(self, **kwargs):
         """
         Initialize the IntGenerator with optional parameters.
@@ -129,6 +133,7 @@ class StringGenerator(AbstractGenerator):
     """
     Generator for random string values based on a value set or regex pattern.
     """
+
     def __init__(self, **kwargs):
         """
         Initialize the StringGenerator with optional parameters.
@@ -173,6 +178,7 @@ class UUIDGenerator(AbstractGenerator):
     """
     Generator for random UUID values.
     """
+
     def __init__(self, **kwargs):
         """
         Initialize the UUIDGenerator.
@@ -202,8 +208,9 @@ class GeneratorFactory:
         GeneratorType.DATE: DateGenerator
     }
 
+    #TODO Rename value_set
     @classmethod
-    def create_generator(cls, generator_type: GeneratorType, value_set: str) -> Any:
+    def create_generator(cls, generator_type: GeneratorType, value_set: str) -> AbstractGenerator:
         """
         Create a generator instance based on the generator type and value set.
 
@@ -218,11 +225,9 @@ class GeneratorFactory:
         if isinstance(value_set, str):
             params = Parser.parse(value_set)
 
-        # generator_type = cls._generator_map.get(generator_type)
         try:
             generator_class = cls._generator_map[generator_type]
         except:
             raise ValueError(f"Unknown generator type: {generator_type}")
 
         return generator_class(**params)
-
