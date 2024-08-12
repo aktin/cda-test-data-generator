@@ -100,10 +100,10 @@ def calculate_dependencies(filename: str) -> None:
         read_csv_and_map(df, *task)
 
     # GCS Sum
-    df['gcs_summe'] = df['gcs_motorisch'].astype(int) + df['gcs_verbal'].astype(int) + df['gcs_augen'].astype(int)
+    calculate_gcs_sum(df)
 
     # Abort pregnant men
-    df.loc[df['gender'] == 'M', 'schwangerschaft'] = 0
+    make_pregnant_man_not_pregnant(df)
 
     # Add Associated Person if Person has family insurance
     # TODO Define a variable in Excel as "private"
@@ -117,3 +117,11 @@ def calculate_dependencies(filename: str) -> None:
     df['_associatedPerson_family'] = df.apply(lambda x: next(family_name_generator), axis=1)
 
     df.to_csv(filename, index=False)
+
+
+def make_pregnant_man_not_pregnant(df):
+    df.loc[df['gender'] == 'M', 'schwangerschaft'] = 0
+
+
+def calculate_gcs_sum(df):
+    df['gcs_summe'] = df['gcs_motorisch'].astype(int) + df['gcs_verbal'].astype(int) + df['gcs_augen'].astype(int)
