@@ -67,6 +67,45 @@ def read_csv_and_map(df, csv, key_column, value_column, concept_id):
     df[concept_id] = df[key_column].map(tuples)
 
 
+def make_associated_person_family_member(df):
+    """
+    Maps the 'family_patient' column to the '_associatedPerson_family' column in the DataFrame.
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing the data.
+
+    Returns:
+        None
+    """
+    df['_associatedPerson_family'] = df['family_patient']
+
+
+def make_pregnant_man_not_pregnant(df):
+    """
+    Sets the 'schwangerschaft' column to 0 for all rows where the 'gender' column is 'M'.
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing the data.
+
+    Returns:
+        None
+    """
+    df.loc[df['gender'] == 'M', 'schwangerschaft'] = 0
+
+
+def calculate_gcs_sum(df):
+    """
+    Calculates the sum of 'gcs_motorisch', 'gcs_verbal', and 'gcs_augen' columns and stores it in the 'gcs_summe' column.
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing the data.
+
+    Returns:
+        None
+    """
+    df['gcs_summe'] = df['gcs_motorisch'].astype(int) + df['gcs_verbal'].astype(int) + df['gcs_augen'].astype(int)
+
+
 def calculate_dependencies(filename: str) -> None:
     """
     Calculate and update dependent variables in a CSV file.
@@ -105,23 +144,6 @@ def calculate_dependencies(filename: str) -> None:
     # Abort pregnant men
     make_pregnant_man_not_pregnant(df)
 
-    # Add Associated Person if Person has family insurance
-    # TODO Define a variable in Excel as "private"
-    given_name_generator = GeneratorFactory.create_generator(GeneratorType.STRING,
-                                                             'link=first_names.csv;column=first_name').generate()
-    df['_associatedPerson_given'] = df.apply(lambda x: next(given_name_generator), axis=1)
-
-    # TODO Family Name to recordTarget
-    family_name_generator = GeneratorFactory.create_generator(GeneratorType.STRING,
-                                                              'link=family_names.csv;column=family_name').generate()
-    df['_associatedPerson_family'] = df.apply(lambda x: next(family_name_generator), axis=1)
+    make_associated_person_family_member(df)
 
     df.to_csv(filename, index=False)
-
-
-def make_pregnant_man_not_pregnant(df):
-    df.loc[df['gender'] == 'M', 'schwangerschaft'] = 0
-
-
-def calculate_gcs_sum(df):
-    df['gcs_summe'] = df['gcs_motorisch'].astype(int) + df['gcs_verbal'].astype(int) + df['gcs_augen'].astype(int)
