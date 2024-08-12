@@ -30,7 +30,7 @@ def main_and_sent_test():
     main.main()
     rows = main.args.rows
     for i in range(rows):
-        send_xml_file("http://localhost:5080/aktin/cda/fhir/Binary/$validate", f"../output/cda/cda_{i+1}.xml",
+        send_xml_file("http://localhost:5080/aktin/cda/fhir/Binary/$validate", f"../output/cda/cda_{i+1}.cda",
                       f"../output/fehlercodes/response_{i+1}.xml")
 
 
