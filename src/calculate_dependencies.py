@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 import datetime as dt
 
@@ -46,8 +48,23 @@ def calculate_timestamps(row: pd.Series) -> None:
         row[output_key] = add_minutes_to_timestamp(row[input_key], row[minutes_key], format_in, format_out)
 
 
-def apply_generator_to_column(df, column_name, generator):
-    df[column_name] = df.apply(lambda x: next(generator), axis=1)
+def read_csv_and_map(df, csv, key_column, value_column, concept_id):
+    """
+    Reads a CSV file and maps its values to a DataFrame based on specified columns.
+
+    Args:
+        df (pd.DataFrame): The DataFrame to which the mapping will be applied.
+        csv (str): The path to the CSV file to be read.
+        key_column (str): The column in the DataFrame and CSV file to be used as the key for mapping.
+        value_column (str): The column in the CSV file whose values will be mapped to the DataFrame.
+        concept_id (str): The column name in the DataFrame where the mapped values will be stored.
+
+    Returns:
+        None
+    """
+    df_csv = pd.read_csv(csv, dtype=str, delimiter=';')
+    tuples = dict(zip(df_csv[key_column], df_csv[value_column]))
+    df[concept_id] = df[key_column].map(tuples)
 
 
 def calculate_dependencies(filename: str) -> None:
@@ -60,27 +77,27 @@ def calculate_dependencies(filename: str) -> None:
     Returns:
         None
     """
+    # Read the CSV file with generated data
     df = pd.read_csv(filename, dtype=str, na_values=[], keep_default_na=False)
 
+    # Calculate timestamps
     for _, row in df.iterrows():
         calculate_timestamps(row)
 
-    # Read the diagnostic value set
-    # TODO Split in small functions
-    df_diagnostik = pd.read_csv("../resources/value_sets/diagnostik.csv", delimiter=";", dtype=str)
-    # Create a dictionary with the mapping code to id
-    diagnostik_dict = dict(zip(df_diagnostik['diagnostik_code'], df_diagnostik['diagnostik_id']))
-    # Add for each diagnostic code the corresponding diagnostic id
-    df['_diagnostik_id'] = df['diagnostik_code'].map(diagnostik_dict)
+    # Get environment variables for each csv path
+    diagnostik_csv = os.environ['DIAGNOSTIK_CSV']
+    cities_csv = os.environ['CITIES_CSV']
 
-    # Read the city value_set
-    df_city = pd.read_csv("../resources/value_sets/cities.csv", delimiter=";", dtype=str)
-    # Create a dictionary with the mapping code to clinic
-    city_dict = dict(zip(df_city['city'], df_city['klinik_name']))
-    # Add for each city the corresponding clinic
-    df['organisation_name'] = df['city'].map(city_dict)
-    city_dict = dict(zip(df_city['city'], df_city['postleitzahl']))
-    df['postleitzahl'] = df['city'].map(city_dict)
+    # Define tasks for reading CSV files and mapping values
+    tasks = [
+        (diagnostik_csv, "diagnostik_code", "diagnostik_id", "_diagnostik_id"),
+        (cities_csv, "city", "klinik_name", "organisation_name"),
+        (cities_csv, "city", "postleitzahl", "postleitzahl")
+    ]
+
+    # Read CSV files and map values to DataFrame
+    for task in tasks:
+        read_csv_and_map(df, *task)
 
     # GCS Sum
     df['gcs_summe'] = df['gcs_motorisch'].astype(int) + df['gcs_verbal'].astype(int) + df['gcs_augen'].astype(int)
