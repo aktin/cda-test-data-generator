@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 
 from generator import GeneratorFactory
@@ -35,7 +36,7 @@ def parse_variable_parameters(excel_input: pd.DataFrame) -> dict:
     variables_dict = {}
     for _, row in excel_input.iterrows():
         variables_dict[row['Concept Id']] = (
-            row['Default values'], row['Generation type'], row['Parameters'])
+            row['Default values'], row['Generation type'], row['Parameters'], row['NullFlavor'])
     return variables_dict
 
 
@@ -64,11 +65,14 @@ def generate_csv(excel_path: str, csv_path, num_datasets=1) -> None:
     types = ["date", "int", "float", "UUID", "String"]
 
     # Loop through all variables and generate data
-    for concept_id, (default_values, var_type, params) in variables_dict.items():
+    for concept_id, (default_values, var_type, params, null_flavors) in variables_dict.items():
         if var_type in types:
             # Generate data column
             generator = GeneratorFactory.create_generator(GeneratorType(var_type), value_set=params).generate()
-            column_list = [next(generator) for _ in range(num_datasets)]
+            if null_flavors is np.nan:
+                column_list = [next(generator) for _ in range(num_datasets)]
+            else:
+                column_list = [next(generator) if np.random.rand() > 0.5 else "" for _ in range(num_datasets)]
         else:
             # Fill in default values
             column_list = [default_values for _ in range(num_datasets)]

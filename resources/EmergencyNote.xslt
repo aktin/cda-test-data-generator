@@ -244,10 +244,22 @@
                         </high>
                     </effectiveTime>
                     <!-- Entlassung des Patienten mit Entlassungsgrund -->
-                    <dischargeDispositionCode code="4" codeSystem="1.2.276.0.76.3.1.195.5.56">
-                        <xsl:attribute name="code">
-                            <xsl:value-of select="entlassung"/>
-                        </xsl:attribute>
+                    <dischargeDispositionCode>
+                        <xsl:choose>
+                            <xsl:when test="entlassung = ''">
+                                <xsl:attribute name="nullFlavor">
+                                    <xsl:text>OTH</xsl:text>
+                                </xsl:attribute>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:attribute name="code">
+                                    <xsl:value-of select="entlassung"/>
+                                </xsl:attribute>
+                                <xsl:attribute name="codeSystem">
+                                    <xsl:text>1.2.276.0.76.3.1.195.5.56</xsl:text>
+                                </xsl:attribute>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </dischargeDispositionCode>
                 </encompassingEncounter>
             </componentOf>
@@ -282,14 +294,18 @@
                                         </high>
                                     </effectiveTime>
                                     <value xsi:type="CV" codeSystem="1.2.276.0.76.3.1.195.5.41">
-                                        <xsl:if test="transportmittel = 'OTH' or transportmittel = 'NA">
-                                            <xsl:attribute name="code">
-                                                <xsl:value-of select="transportmittel"/>
-                                            </xsl:attribute>
-                                        <xsl:attribute name="code">
-                                            <xsl:value-of select="transportmittel"/>
-                                        </xsl:attribute>
-
+                                        <xsl:choose>
+                                            <xsl:when test="transportmittel = ''">
+                                                <xsl:attribute name="nullFlavor">
+                                                    <xsl:text>NA</xsl:text>
+                                                </xsl:attribute>
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                <xsl:attribute name="code">
+                                                    <xsl:value-of select="transportmittel"/>
+                                                </xsl:attribute>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
                                     </value>
                                 </observation>
                             </entry>
@@ -356,9 +372,18 @@
                                     <statusCode code="active"/>
                                     <effectiveTime>
                                         <low>
-                                            <xsl:attribute name="value">
-                                                <xsl:value-of select="beschwerde_begin"/>
-                                            </xsl:attribute>
+                                            <xsl:choose>
+                                                <xsl:when test="beschwerde_begin = ''">
+                                                    <xsl:attribute name="nullFlavor">
+                                                        <xsl:text>UNK</xsl:text>
+                                                    </xsl:attribute>
+                                                </xsl:when>
+                                                <xsl:otherwise>
+                                                    <xsl:attribute name="value">
+                                                        <xsl:value-of select="beschwerde_begin"/>
+                                                    </xsl:attribute>
+                                                </xsl:otherwise>
+                                            </xsl:choose>
                                         </low>
                                     </effectiveTime>
                                     <entryRelationship typeCode="SUBJ">
@@ -372,19 +397,52 @@
                                             </text>
                                             <statusCode code="completed"/>
                                             <effectiveTime>
-                                                <width value="1" unit="h">
-                                                    <xsl:attribute name="value">
-                                                        <xsl:value-of select="symptomdauer"/>
-                                                    </xsl:attribute>
+                                                <width>
+                                                    <xsl:choose>
+                                                        <xsl:when test="symptomdauer = ''">
+                                                            <xsl:attribute name="nullFlavor">
+                                                                <xsl:text>UNK</xsl:text>
+                                                            </xsl:attribute>
+                                                        </xsl:when>
+                                                        <xsl:otherwise>
+                                                            <xsl:attribute name="value">
+                                                                <xsl:value-of select="symptomdauer"/>
+                                                            </xsl:attribute>
+                                                            <xsl:attribute name="unit">
+                                                                <xsl:text>h</xsl:text>
+                                                            </xsl:attribute>
+                                                        </xsl:otherwise>
+                                                    </xsl:choose>
                                                 </width>
                                             </effectiveTime>
-                                            <value xsi:type="CE" codeSystem="1.2.276.0.76.5.439">
-                                                <xsl:attribute name="code">
-                                                    <xsl:value-of select="cedis"/>
-                                                </xsl:attribute>
-                                                <originalText>
-                                                    <xsl:value-of select="beschwerden_txt"/>
-                                                </originalText>
+                                            <value xsi:type="CE">
+                                                <xsl:choose>
+                                                    <xsl:when test="cedis = ''">
+                                                        <xsl:attribute name="nullFlavor">
+                                                            <xsl:text>UNK</xsl:text>
+                                                        </xsl:attribute>
+                                                    </xsl:when>
+                                                    <xsl:otherwise>
+                                                        <xsl:attribute name="code">
+                                                            <xsl:value-of select="cedis"/>
+                                                        </xsl:attribute>
+                                                        <xsl:attribute name="codeSystem">
+                                                            <xsl:text>1.2.276.0.76.5.439</xsl:text>
+                                                        </xsl:attribute>
+                                                        <originalText>
+                                                            <xsl:choose>
+                                                                <xsl:when test="beschwerden_txt = ''">
+                                                                    <xsl:attribute name="nullFlavor">
+                                                                        <xsl:text>UNK</xsl:text>
+                                                                    </xsl:attribute>
+                                                                </xsl:when>
+                                                                <xsl:otherwise>
+                                                                    <xsl:value-of select="beschwerden_txt"/>
+                                                                </xsl:otherwise>
+                                                            </xsl:choose>
+                                                        </originalText>
+                                                    </xsl:otherwise>
+                                                </xsl:choose>
                                             </value>
                                         </observation>
                                     </entryRelationship>
@@ -473,10 +531,23 @@
                                     </text>
                                     <statusCode code="completed"/>
                                     <effectiveTime value="202006201545"/>
-                                    <value code="1" codeSystem="1.2.276.0.76.3.1.195.5.46" xsi:type="CV">
-                                        <xsl:attribute name="code">
-                                            <xsl:value-of select="schwangerschaft"/>
-                                        </xsl:attribute>
+                                    <value xsi:type="CV">
+                                        <xsl:choose>
+                                            <xsl:when test="schwangerschaft = ''">
+                                                <xsl:attribute name="nullFlavor">
+                                                    <xsl:text>UNK</xsl:text>
+                                                </xsl:attribute>
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                <xsl:attribute name="code">
+                                                    <xsl:value-of select="schwangerschaft"/>
+                                                </xsl:attribute>
+                                                <xsl:attribute name="codeSystem">
+                                                    <xsl:text>1.2.276.0.76.3.1.195.5.46</xsl:text>
+                                                </xsl:attribute>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
+
                                     </value>
                                     <!-- <value xsi:type="CV" code="#Pregnancy#" codeSystem="1.2.276.0.76.3.1.195.5.46" displayName="Patient nicht schwanger"/>-->
                                 </observation>
@@ -484,9 +555,21 @@
 
                             <entry typeCode="COMP" contextConductionInd="true">
                                 <substanceAdministration moodCode="EVN" classCode="SBADM" negationInd="true">
-                                    <xsl:attribute name="negationInd">
-                                        <xsl:value-of select="tetanusschutz"/>
-                                    </xsl:attribute>
+                                    <xsl:choose>
+                                        <xsl:when test="tetanusschutz = ''">
+                                            <xsl:attribute name="negationInd">
+                                                <xsl:text>false</xsl:text>
+                                            </xsl:attribute>
+                                            <xsl:attribute name="nullFlavor">
+                                                <xsl:text>NI</xsl:text>
+                                            </xsl:attribute>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <xsl:attribute name="negationInd">
+                                                <xsl:value-of select="tetanusschutz"/>
+                                            </xsl:attribute>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
                                     <templateId root="1.2.276.0.76.10.4044"/>
                                     <code code="IMMUNIZ" codeSystem="2.16.840.1.113883.5.4"/>
                                     <text>
@@ -546,10 +629,19 @@
                                             <effectiveTime>
                                                 <low value="20150304"/>
                                             </effectiveTime>
-                                            <value code="3MRGN" codeSystem="1.2.276.0.76.5.441" xsi:type="CD">
-                                                <xsl:attribute name="code">
-                                                    <xsl:value-of select="keime"/>
-                                                </xsl:attribute>
+                                            <value codeSystem="1.2.276.0.76.5.441" xsi:type="CD">
+                                                <xsl:choose>
+                                                    <xsl:when test="keime = ''">
+                                                        <xsl:attribute name="nullFlavor">
+                                                            <xsl:text>OTH</xsl:text>
+                                                        </xsl:attribute>
+                                                    </xsl:when>
+                                                    <xsl:otherwise>
+                                                        <xsl:attribute name="code">
+                                                            <xsl:value-of select="keime"/>
+                                                        </xsl:attribute>
+                                                    </xsl:otherwise>
+                                                </xsl:choose>
                                             </value>
                                         </observation>
                                     </entryRelationship>
@@ -1217,11 +1309,22 @@
                                     <effectiveTime value="20200620"/>
 
                                     <!-- <value xsi:type="CV" code="#PupilWL#" codeSystem="1.2.276.0.76.3.1.195.5.49" displayName="mittel"/>-->
-                                    <value code="C" codeSystem="1.2.276.0.76.3.1.195.5.49" xsi:type="CV"
-                                           displayName="eng">
-                                        <xsl:attribute name="code">
-                                            <xsl:value-of select="pupillenweite_links"/>
-                                        </xsl:attribute>
+                                    <value xsi:type="CV">
+                                        <xsl:choose>
+                                            <xsl:when test="pupillenweite_links = ''">
+                                                <xsl:attribute name="nullFlavor">
+                                                    <xsl:text>UNK</xsl:text>
+                                                </xsl:attribute>
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                <xsl:attribute name="code">
+                                                    <xsl:value-of select="pupillenweite_links"/>
+                                                </xsl:attribute>
+                                                <xsl:attribute name="codeSystem">
+                                                    <xsl:text>1.2.276.0.76.3.1.195.5.49</xsl:text>
+                                                </xsl:attribute>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
                                     </value>
                                     <targetSiteCode code="L" codeSystem="1.2.276.0.76.3.1.195.5.48"
                                                     displayName="Auge links"/>
@@ -1238,11 +1341,22 @@
                                     </text>
                                     <statusCode code="completed"/>
                                     <effectiveTime value="20200620"/>
-                                    <value code="D" codeSystem="1.2.276.0.76.3.1.195.5.49" xsi:type="CV"
-                                           displayName="weit">
-                                        <xsl:attribute name="code">
-                                            <xsl:value-of select="pupillenweite_rechts"/>
-                                        </xsl:attribute>
+                                    <value xsi:type="CV">
+                                        <xsl:choose>
+                                            <xsl:when test="pupillenweite_rechts = ''">
+                                                <xsl:attribute name="nullFlavor">
+                                                    <xsl:text>UNK</xsl:text>
+                                                </xsl:attribute>
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                <xsl:attribute name="code">
+                                                    <xsl:value-of select="pupillenweite_rechts"/>
+                                                </xsl:attribute>
+                                                <xsl:attribute name="codeSystem">
+                                                    <xsl:text>1.2.276.0.76.3.1.195.5.49</xsl:text>
+                                                </xsl:attribute>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
                                     </value>
                                     <!--<value xsi:type="CV" code="#PupilWR#" codeSystem="1.2.276.0.76.3.1.195.5.49" displayName="mittel"/>-->
                                     <targetSiteCode code="R" codeSystem="1.2.276.0.76.3.1.195.5.48"
@@ -1260,15 +1374,27 @@
                                     </text>
                                     <statusCode code="completed"/>
                                     <effectiveTime value="20200620"/>
-                                    <value code="D" codeSystem="1.2.276.0.76.3.1.195.5.50" xsi:type="CV">
-                                        <xsl:attribute name="code">
-                                            <xsl:value-of select="pupillenreaktion_rechts"/>
-                                        </xsl:attribute>
+                                    <value xsi:type="CV">
+                                        <xsl:choose>
+                                            <xsl:when test="pupillenreaktion_rechts = ''">
+                                                <xsl:attribute name="nullFlavor">
+                                                    <xsl:text>UNK</xsl:text>
+                                                </xsl:attribute>
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                <xsl:attribute name="codeSystem">
+                                                    <xsl:text>1.2.276.0.76.3.1.195.5.50</xsl:text>
+                                                </xsl:attribute>
+                                                <xsl:attribute name="code">
+                                                    <xsl:value-of select="pupillenreaktion_rechts"/>
+                                                </xsl:attribute>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
                                     </value>
                                     <!--<value xsi:type="CV" code="#PupilRL#" codeSystem="1.2.276.0.76.3.1.195.5.50" displayName="prompt"/>
                                     -->
-                                    <targetSiteCode code="L" codeSystem="1.2.276.0.76.3.1.195.5.48"
-                                                    displayName="Auge links"/>
+                                    <targetSiteCode code="R" codeSystem="1.2.276.0.76.3.1.195.5.48"
+                                                    displayName="Auge rechts"/>
                                 </observation>
                             </entry>
                             <entry typeCode="COMP" contextConductionInd="true">
@@ -1283,15 +1409,26 @@
                                     <statusCode code="completed"/>
                                     <effectiveTime value="20200620"/>
 
-                                    <value code="B" codeSystem="1.2.276.0.76.3.1.195.5.50" xsi:type="CV"
-                                           displayName="prompt">
-                                        <xsl:attribute name="code">
-                                            <xsl:value-of select="pupillenreaktion_links"/>
-                                        </xsl:attribute>
+                                    <value xsi:type="CV">
+                                        <xsl:choose>
+                                            <xsl:when test="pupillenreaktion_links = ''">
+                                                <xsl:attribute name="nullFlavor">
+                                                    <xsl:text>UNK</xsl:text>
+                                                </xsl:attribute>
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                <xsl:attribute name="codeSystem">
+                                                    <xsl:text>1.2.276.0.76.3.1.195.5.50</xsl:text>
+                                                </xsl:attribute>
+                                                <xsl:attribute name="code">
+                                                    <xsl:value-of select="pupillenreaktion_links"/>
+                                                </xsl:attribute>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
                                     </value>
                                     <!--<value xsi:type="CV" code="#PupilRR#" codeSystem="1.2.276.0.76.3.1.195.5.50" displayName="prompt"/>-->
-                                    <targetSiteCode code="R" codeSystem="1.2.276.0.76.3.1.195.5.48"
-                                                    displayName="Auge rechts"/>
+                                    <targetSiteCode code="L" codeSystem="1.2.276.0.76.3.1.195.5.48"
+                                                    displayName="Auge links"/>
                                 </observation>
                             </entry>
                             <entry typeCode="COMP" contextConductionInd="true">
@@ -1533,13 +1670,38 @@
                                             <effectiveTime>
                                                 <low value="20150117"/>
                                             </effectiveTime>
-                                            <value xsi:type="CD" code="S93.6" codeSystem="1.2.276.0.76.5.424"
-                                                   codeSystemName="icd10gm2015">
-                                                <xsl:attribute name="code">
-                                                    <xsl:value-of select="diagnose_code"/>
-                                                </xsl:attribute>
+                                            <value xsi:type="CD">
+                                                <xsl:choose>
+                                                    <xsl:when test="diagnose_code = ''">
+                                                        <xsl:attribute name="nullFlavor">
+                                                            <xsl:text>UNK</xsl:text>
+                                                        </xsl:attribute>
+                                                    </xsl:when>
+                                                    <xsl:otherwise>
+                                                        <xsl:attribute name="code">
+                                                            <xsl:value-of select="diagnose_code"/>
+                                                        </xsl:attribute>
+                                                        <xsl:attribute name="codeSystem">
+                                                            <xsl:text>1.2.276.0.76.5.424</xsl:text>
+                                                        </xsl:attribute>
+                                                        <xsl:attribute name="codeSystemName">
+                                                            <xsl:text>icd10gm2015</xsl:text>
+                                                        </xsl:attribute>
+                                                    </xsl:otherwise>
+                                                </xsl:choose>
+
                                                 <originalText>
-                                                    <xsl:value-of select="diagnose_name"/>
+                                                    <xsl:choose>
+                                                        <xsl:when test="diagnose_name = ''">
+                                                            <xsl:attribute name="nullFlavor">
+                                                                <xsl:text>UNK</xsl:text>
+                                                            </xsl:attribute>
+                                                        </xsl:when>
+                                                        <xsl:otherwise>
+                                                            <xsl:value-of select="diagnose_name"/>
+                                                        </xsl:otherwise>
+                                                    </xsl:choose>
+
                                                 </originalText>
                                             </value>
                                         </observation>
