@@ -5,5 +5,4 @@ xslt_file = "../resources/EmergencyNote.xslt"
 output_dir = "../output/"
 
 [csv_paths]
-diagnostik_csv = "../resources/value_sets/diagnostik.csv"
 cities_csv = "../resources/value_sets/cities.csv"

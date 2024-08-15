@@ -124,12 +124,10 @@ def calculate_dependencies(filename: str) -> None:
         calculate_timestamps(row)
 
     # Get environment variables for each csv path
-    diagnostik_csv = os.environ['DIAGNOSTIK_CSV']
     cities_csv = os.environ['CITIES_CSV']
 
     # Define tasks for reading CSV files and mapping values
     tasks = [
-        (diagnostik_csv, "diagnostik_code", "diagnostik_id", "_diagnostik_id"),
         (cities_csv, "city", "klinik_name", "organisation_name"),
         (cities_csv, "city", "postleitzahl", "postleitzahl")
     ]

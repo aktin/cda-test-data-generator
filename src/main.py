@@ -17,7 +17,6 @@ def main():
     os.environ['EXCEL_PATH'] = config['cda_paths']['excel_path']
     os.environ['XSLT_FILE'] = config['cda_paths']['xslt_file']
     os.environ['OUTPUT_DIR'] = config['cda_paths']['output_dir']
-    os.environ['DIAGNOSTIK_CSV'] = config['csv_paths']['diagnostik_csv']
     os.environ['CITIES_CSV'] = config['csv_paths']['cities_csv']
     # Get environment variables
     csv_path = os.environ['CSV_PATH']
