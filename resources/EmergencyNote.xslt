@@ -282,6 +282,10 @@
                                         </high>
                                     </effectiveTime>
                                     <value xsi:type="CV" codeSystem="1.2.276.0.76.3.1.195.5.41">
+                                        <xsl:if test="transportmittel = 'OTH' or transportmittel = 'NA">
+                                            <xsl:attribute name="code">
+                                                <xsl:value-of select="transportmittel"/>
+                                            </xsl:attribute>
                                         <xsl:attribute name="code">
                                             <xsl:value-of select="transportmittel"/>
                                         </xsl:attribute>
