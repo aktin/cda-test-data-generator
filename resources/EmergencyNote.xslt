@@ -446,7 +446,6 @@
 
 
                                 ||Schwanger:|<xsl:value-of select="schwanger_name"/>|
-                                ||Tetanusschutz:|<xsl:value-of select="tetanusschutz_text"/>|
 
                                 ||Rankin Skala Score:|<xsl:value-of select="rankin"/>|
 
@@ -1098,8 +1097,7 @@
                                                 <low value="20150117"/>
                                             </effectiveTime>
                                             <value xsi:type="CD" code="S93.6" codeSystem="1.2.276.0.76.5.424"
-                                                   codeSystemName="icd10gm2015"
-                                                   displayName="Verstauchung und Zerrung sonstiger und nicht näher bezeichneter Teile des Fußes">
+                                                   codeSystemName="icd10gm2015">
                                                 <xsl:attribute name="code">
                                                     <xsl:value-of select="diagnose_code"/>
                                                 </xsl:attribute>
