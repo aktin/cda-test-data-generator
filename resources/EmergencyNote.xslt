@@ -417,10 +417,27 @@
                                             </effectiveTime>
                                             <value xsi:type="CE">
                                                 <xsl:choose>
-                                                    <xsl:when test="cedis = '' or cedis = 'OTH'">
+                                                    <xsl:when test="cedis = ''">
                                                         <xsl:attribute name="nullFlavor">
                                                             <xsl:text>UNK</xsl:text>
                                                         </xsl:attribute>
+                                                    </xsl:when>
+                                                    <xsl:when test="cedis = 'OTH'">
+                                                        <xsl:attribute name="nullFlavor">
+                                                            <xsl:text>OTH</xsl:text>
+                                                        </xsl:attribute>
+                                                        <originalText>
+                                                            <xsl:choose>
+                                                                <xsl:when test="beschwerden_txt = ''">
+                                                                    <xsl:attribute name="nullFlavor">
+                                                                        <xsl:text>UNK</xsl:text>
+                                                                    </xsl:attribute>
+                                                                </xsl:when>
+                                                                <xsl:otherwise>
+                                                                    <xsl:value-of select="beschwerden_txt"/>
+                                                                </xsl:otherwise>
+                                                            </xsl:choose>
+                                                        </originalText>
                                                     </xsl:when>
                                                     <xsl:otherwise>
                                                         <xsl:attribute name="code">
