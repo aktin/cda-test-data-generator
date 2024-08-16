@@ -13,3 +13,4 @@ urllib3~=2.2.2
 six~=1.16.0
 idna~=3.7
 toml~=0.10.2
+aiohttp~=3.10.3

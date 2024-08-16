@@ -36,7 +36,7 @@ def parse_variable_parameters(excel_input: pd.DataFrame) -> dict:
     variables_dict = {}
     for _, row in excel_input.iterrows():
         variables_dict[row['Concept Id']] = (
-            row['Default values'], row['Generation type'], row['Parameters'], row['NullFlavor'])
+            row['Default values'], row['Generation type'], row['Parameters'], row['Nullflavor'])
     return variables_dict
 
 
