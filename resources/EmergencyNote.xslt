@@ -417,7 +417,7 @@
                                             </effectiveTime>
                                             <value xsi:type="CE">
                                                 <xsl:choose>
-                                                    <xsl:when test="cedis = ''">
+                                                    <xsl:when test="cedis = '' or cedis = 'OTH'">
                                                         <xsl:attribute name="nullFlavor">
                                                             <xsl:text>UNK</xsl:text>
                                                         </xsl:attribute>
