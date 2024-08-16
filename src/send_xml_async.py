@@ -1,11 +1,11 @@
 import asyncio
 import aiohttp
-import os
 import logging
 
 from src import main
 
 logging.basicConfig(level=logging.INFO)
+
 
 async def send_xml_file_async(session, url, input_file, output_file):
     try:
