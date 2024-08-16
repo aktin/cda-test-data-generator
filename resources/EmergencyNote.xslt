@@ -1694,6 +1694,11 @@
                                                             <xsl:text>UNK</xsl:text>
                                                         </xsl:attribute>
                                                     </xsl:when>
+                                                    <xsl:when test="diagnose_code = 'OTH'">
+                                                        <xsl:attribute name="nullFlavor">
+                                                            <xsl:text>OTH</xsl:text>
+                                                        </xsl:attribute>
+                                                    </xsl:when>
                                                     <xsl:otherwise>
                                                         <xsl:attribute name="code">
                                                             <xsl:value-of select="diagnose_code"/>

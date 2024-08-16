@@ -1,8 +1,11 @@
 import asyncio
+import os
+
 import aiohttp
 import logging
 
 from src import main
+from lxml import etree
 
 logging.basicConfig(level=logging.INFO)
 
@@ -43,5 +46,42 @@ async def main_and_send_test_async():
 
         await asyncio.gather(*tasks)
 
+def count_issue_elements(xml_file_path: str) -> int:
+    """
+    Count the number of <issue> elements that are children of <OperationOutcome> in an XML file.
+
+    Args:
+        xml_file_path (str): The path to the XML file.
+
+    Returns:
+        int: The number of <issue> elements in the XML file.
+    """
+    # Parse the XML file
+    tree = etree.parse(xml_file_path)
+
+    # Find all <issue> elements that are children of <OperationOutcome>
+    issue_elements = tree.xpath('//f:OperationOutcome/f:issue', namespaces={'f': 'http://hl7.org/fhir'})
+
+    # Return the count of <issue> elements
+    return len(issue_elements)
+
+def get_stats():
+    order = f"../output/fehlercodes/"
+    all_files = os.listdir(order)
+    stats = {"Correct": 0, "Error": 0}
+    issue_cdas = []
+    for file in all_files:
+        if count_issue_elements(order + file) == 1:
+            stats["Correct"] += 1
+        else:
+            stats["Error"] += 1
+            issue_cdas.append(file)
+
+    print(stats)
+    print(issue_cdas)
+
+
 if __name__ == "__main__":
     asyncio.run(main_and_send_test_async())
+    get_stats()
+
