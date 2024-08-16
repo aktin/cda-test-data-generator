@@ -295,7 +295,7 @@
                                     </effectiveTime>
                                     <value xsi:type="CV" codeSystem="1.2.276.0.76.3.1.195.5.41">
                                         <xsl:choose>
-                                            <xsl:when test="transportmittel = ''">
+                                            <xsl:when test="transportmittel = '' or transportmittel = 'OTH'">
                                                 <xsl:attribute name="nullFlavor">
                                                     <xsl:text>NA</xsl:text>
                                                 </xsl:attribute>

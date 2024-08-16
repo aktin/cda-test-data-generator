@@ -40,6 +40,25 @@ def parse_variable_parameters(excel_input: pd.DataFrame) -> dict:
     return variables_dict
 
 
+def generate_column_list(generator, num_datasets, null_flavors, probability_missing=0.5):
+    """
+    Generate a list of data for a column, with optional handling for missing values.
+
+    Args:
+        generator (generator): A generator object that produces data values.
+        num_datasets (int): The number of data values to generate.
+        null_flavors (str or None): A value indicating if null values should be included.
+        probability_missing (float, optional): The probability of a value being missing. Defaults to 0.5.
+
+    Returns:
+        list: A list of generated data values, with some values possibly being empty strings if null_flavors is specified.
+    """
+    if pd.isna(null_flavors):
+        return [next(generator) for _ in range(num_datasets)]
+    else:
+        return [next(generator) if np.random.rand() > probability_missing else "" for _ in range(num_datasets)]
+
+
 def generate_csv(excel_path: str, csv_path, num_datasets=1) -> None:
     """
     Generate a CSV file from an Excel input file.
@@ -69,10 +88,7 @@ def generate_csv(excel_path: str, csv_path, num_datasets=1) -> None:
         if var_type in types:
             # Generate data column
             generator = GeneratorFactory.create_generator(GeneratorType(var_type), value_set=params).generate()
-            if null_flavors is np.nan:
-                column_list = [next(generator) for _ in range(num_datasets)]
-            else:
-                column_list = [next(generator) if np.random.rand() > 0.5 else "" for _ in range(num_datasets)]
+            column_list = generate_column_list(generator, num_datasets, null_flavors, 0.5)
         else:
             # Fill in default values
             column_list = [default_values for _ in range(num_datasets)]
