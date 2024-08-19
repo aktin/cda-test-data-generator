@@ -6,8 +6,7 @@ import pandas as pd
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
 from enum import Enum
-from typing import Optional, Any, Dict, Callable
-from src.parser import Parser
+from typing import Dict
 
 
 class GeneratorType(Enum):
@@ -208,18 +207,20 @@ class GeneratorFactory:
         GeneratorType.DATE: DateGenerator
     }
 
-    #TODO Rename value_set
     @classmethod
     def create_generator(cls, generator_type: GeneratorType, params: dict) -> AbstractGenerator:
         """
-        Create a generator instance based on the generator type and value set.
+        Create a generator instance based on the provided generator type and parameters.
 
         Args:
             generator_type (GeneratorType): The type of generator to create.
-            value_set (str): The value set or parameters for the generator.
+            params (dict): A dictionary of parameters to initialize the generator.
 
         Returns:
-            AbstractGenerator: An instance of the specified generator type.
+            AbstractGenerator: An instance of a generator corresponding to the specified type.
+
+        Raises:
+            ValueError: If the provided generator type is unknown.
         """
         try:
             generator_class = cls._generator_map[generator_type]

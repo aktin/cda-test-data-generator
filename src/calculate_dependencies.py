@@ -123,13 +123,15 @@ def calculate_dependencies(filename: str) -> None:
         (cities_csv, "city", "postleitzahl", "postleitzahl")
     ]
 
+    # Define tasks for each diagnose
+    # Set originalText(diagnose_name) matching to diagnose_code
     diagnose_cols = [col for col in df.columns if re.match(r'diagnose_code_\d+', col)]
     for diagnose in diagnose_cols:
         num = re.match(r'diagnose_code_(\d+)', diagnose).group(1)
         task = (diagnose_csv, diagnose, "diagnose_name_" + num, "diagnose_name_" + num, "Schlüsselnummer ohne Strich, Stern und  Ausrufezeichen", "Titel des dreistelligen Kodes")
         tasks.append(task)
 
-
+    # Do the Tasks
     # Read CSV files and map values to DataFrame
     for task in tasks:
         read_csv_and_map(df, *task)
@@ -140,6 +142,7 @@ def calculate_dependencies(filename: str) -> None:
     # Abort pregnant men
     make_pregnant_man_not_pregnant(df)
 
+    # Associated persons are only family member
     make_associated_person_family_member(df)
 
     df.to_csv(filename, index=False)

@@ -84,17 +84,23 @@ def generate_csv(excel_path: str, csv_path, num_datasets=1) -> None:
     # Dictionary has form { conceptId -> (Default values, Type, Parameters, NullFlavors) }
     variables_dict = extract_concept_id_attributes(excel_input)
 
-    # Valid generation types. Test purposes only
+    # Valid generation types.
+    # For test purposes
     types = ["date", "int", "float", "UUID", "String"]
 
+    # Parse parameters in dictionary
     variables_dict = parse_parameters_to_dict(variables_dict)
+
+    # Extract only the variables that should be generated more than once (they have a number parameter)
     new_variables = dict(filter(lambda x: "number" in x[1][2], variables_dict.items()))
 
+    # Add new variables to the dictionary
     for concept_id, (default_values, var_type, params, null_flavors) in new_variables.items():
         variables_dict.pop(concept_id)
         for i in range(params["number"]):
             variables_dict[f"{concept_id}_{i}"] = (default_values, var_type, params, null_flavors)
 
+    # Output declaration
     output_data = pd.DataFrame()
     # Loop through all variables and generate data
     for concept_id, (default_values, var_type, params, null_flavors) in variables_dict.items():
@@ -106,7 +112,7 @@ def generate_csv(excel_path: str, csv_path, num_datasets=1) -> None:
             # Fill in default values
             column_list = [default_values for _ in range(num_datasets)]
 
-        # TODO Perfomance improvement
+        # TODO Performance improvement
         output_data[concept_id] = pd.Series(data=column_list)
 
     # Output to CSV

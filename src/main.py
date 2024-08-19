@@ -5,35 +5,65 @@ import argparse
 from generate_csv import generate_csv
 from csv_to_cda import csv_to_cda
 from calculate_dependencies import calculate_dependencies
-from src.sent_to_server_and_print_error import send_xml_file
+
+
+def set_environment_variables(config):
+    """
+    Set environment variables based on the provided configuration dictionary.
+
+    Args:
+        config (dict): Configuration dictionary containing paths for environment variables.
+
+    Returns:
+        None
+    """
+    env_vars = [
+        ('CSV_PATH', 'cda_paths.csv_path'),
+        ('EXCEL_PATH', 'cda_paths.excel_path'),
+        ('XSLT_FILE', 'cda_paths.xslt_file'),
+        ('OUTPUT_DIR', 'cda_paths.output_dir'),
+        ('CITIES_CSV', 'csv_paths.cities_csv'),
+        ('DIAGNOSES_CSV', 'csv_paths.diagnoses_csv')
+    ]
+
+    for env_var, config_key in env_vars:
+        section, key = config_key.split('.')
+        os.environ[env_var] = config[section][key]
+
+
+def parse_command_line():
+    global parser, args, rows
+    parser = argparse.ArgumentParser(description='Process Excel to CDA.')
+    parser.add_argument('--rows', type=int, required=True, help='Number of rows to generate in the CSV file')
+    args = parser.parse_args()
+    rows = args.rows
 
 
 def main():
     global config, parser, args, rows
     # Load configuration from config.toml
     config = toml.load('../config.toml')
-    # Set environment variables TODO
-    os.environ['CSV_PATH'] = config['cda_paths']['csv_path']
-    os.environ['EXCEL_PATH'] = config['cda_paths']['excel_path']
-    os.environ['XSLT_FILE'] = config['cda_paths']['xslt_file']
-    os.environ['OUTPUT_DIR'] = config['cda_paths']['output_dir']
-    os.environ['CITIES_CSV'] = config['csv_paths']['cities_csv']
-    os.environ['DIAGNOSES_CSV'] = config['csv_paths']['diagnoses_csv']
+
+    # Set environment variables
+    set_environment_variables(config)
+
+    # Parse command line arguments(e.g. --rows 10)
+    parse_command_line()
+
     # Get environment variables
     csv_path = os.environ['CSV_PATH']
     excel_path = os.environ['EXCEL_PATH']
     xslt_file = os.environ['XSLT_FILE']
-    # Parse command line arguments
-    parser = argparse.ArgumentParser(description='Process Excel to CDA.')
-    parser.add_argument('--rows', type=int, required=True, help='Number of rows to generate in the CSV file')
-    args = parser.parse_args()
-    rows = args.rows
+
     # First step: Generate csv with rows as patients
     generate_csv(excel_path, csv_path, rows)
+
     # Second step: Set dependable variables
     calculate_dependencies(csv_path)
+
     # Third step: Transform to CDA
     csv_to_cda(csv_path, xslt_file)
+
     # Remove data.csv
     # os.remove(csv_path)
 
