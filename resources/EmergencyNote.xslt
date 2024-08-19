@@ -1777,38 +1777,40 @@
                                                                 <xsl:text>icd10gm2015</xsl:text>
                                                             </xsl:attribute>
 
-                                                            <originalText>
-                                                                <!-- Find the corresponding diagnose_name element -->
-                                                                <xsl:variable name="correspondingName"
-                                                                              select="/aktin_raw/*[starts-with(name(), 'diagnose_name_')][position() = $position]"/>
-                                                                <xsl:choose>
-                                                                    <xsl:when test="$correspondingName = ''">
-                                                                        <xsl:attribute name="nullFlavor">
-                                                                            <xsl:text>UNK</xsl:text>
-                                                                        </xsl:attribute>
-                                                                    </xsl:when>
-                                                                    <xsl:otherwise>
-                                                                        <xsl:value-of select="$correspondingName"/>
-                                                                    </xsl:otherwise>
-                                                                </xsl:choose>
-                                                            </originalText>
 
-                                                            <xsl:variable name="correspondingQualifier"
-                                                                          select="/aktin_raw/*[starts-with(name(), 'diagnose_qualifier_')][position() = $position]"/>
-                                                            <xsl:if test="$correspondingQualifier != ''">
-                                                                <qualifier>
-                                                                    <name code="8"
-                                                                          codeSystem="2.16.840.1.113883.3.7.1.0"/>
-                                                                    <value codeSystem="1.2.276.0.76.3.1.1.5.1.21">
-                                                                        <xsl:attribute name="code">
-                                                                            <xsl:value-of
-                                                                                    select="$correspondingQualifier"/>
-                                                                        </xsl:attribute>
-                                                                    </value>
-                                                                </qualifier>
-                                                            </xsl:if>
                                                         </xsl:otherwise>
                                                     </xsl:choose>
+
+                                                    <originalText>
+                                                        <!-- Find the corresponding diagnose_name element -->
+                                                        <xsl:variable name="correspondingName"
+                                                                      select="/aktin_raw/*[starts-with(name(), 'diagnose_name_')][position() = $position]"/>
+                                                        <xsl:choose>
+                                                            <xsl:when test="$correspondingName = ''">
+                                                                <xsl:attribute name="nullFlavor">
+                                                                    <xsl:text>UNK</xsl:text>
+                                                                </xsl:attribute>
+                                                            </xsl:when>
+                                                            <xsl:otherwise>
+                                                                <xsl:value-of select="$correspondingName"/>
+                                                            </xsl:otherwise>
+                                                        </xsl:choose>
+                                                    </originalText>
+
+                                                    <xsl:variable name="correspondingQualifier"
+                                                                  select="/aktin_raw/*[starts-with(name(), 'diagnose_qualifier_')][position() = $position]"/>
+                                                    <xsl:if test="$correspondingQualifier != ''">
+                                                        <qualifier>
+                                                            <name code="8"
+                                                                  codeSystem="2.16.840.1.113883.3.7.1.0"/>
+                                                            <value codeSystem="1.2.276.0.76.3.1.1.5.1.21">
+                                                                <xsl:attribute name="code">
+                                                                    <xsl:value-of
+                                                                            select="$correspondingQualifier"/>
+                                                                </xsl:attribute>
+                                                            </value>
+                                                        </qualifier>
+                                                    </xsl:if>
                                                 </value>
                                             </observation>
                                         </entryRelationship>
