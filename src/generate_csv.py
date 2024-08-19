@@ -3,26 +3,10 @@ import pandas as pd
 
 from generator import GeneratorFactory
 from generator import GeneratorType
+from parser import Parser
 
 
-def convert_concept_id_to_header(excel_input: pd.DataFrame) -> pd.DataFrame:
-    """
-    Convert the column "Concept Id" from Excel input to header row of output DataFrame.
-
-    Args:
-        excel_input (pd.DataFrame): The input DataFrame read from the Excel file.
-
-    Returns:
-        pd.DataFrame: A DataFrame with the first row converted to column names.
-    """
-    output_data = excel_input['Concept Id'].to_frame().transpose()
-    output_data.columns = output_data.iloc[0]
-    output_data = output_data[1:]
-    output_data = output_data.reset_index(drop=True)
-    return output_data
-
-
-def parse_variable_parameters(excel_input: pd.DataFrame) -> dict:
+def extract_concept_id_attributes(excel_input: pd.DataFrame) -> dict:
     """
     Extract variables with their default values, generation type, and parameters from an Excel input.
 
@@ -59,6 +43,29 @@ def generate_column_list(generator, num_datasets, null_flavors, probability_miss
         return [next(generator) if np.random.rand() > probability_missing else "" for _ in range(num_datasets)]
 
 
+def parse_parameters_to_dict(variables_dict: dict) -> dict:
+    """
+    Parse the parameters in the variables dictionary to a dictionary format.
+
+    Args:
+        variables_dict (dict): A dictionary where the keys are concept IDs and the values are tuples containing
+                               default values, generation type, parameters, and null flavors.
+
+    Returns:
+        dict: A dictionary with the same keys, where the parameters are parsed into a dictionary format if they are strings.
+    """
+    variables_dict = {
+        concept_id: (
+            default_values,
+            var_type,
+            Parser.parse(params) if isinstance(params, str) else {},
+            null_flavors
+        )
+        for concept_id, (default_values, var_type, params, null_flavors) in variables_dict.items()
+    }
+    return variables_dict
+
+
 def generate_csv(excel_path: str, csv_path, num_datasets=1) -> None:
     """
     Generate a CSV file from an Excel input file.
@@ -74,25 +81,32 @@ def generate_csv(excel_path: str, csv_path, num_datasets=1) -> None:
     # Input from Excel
     excel_input = pd.read_excel(excel_path)
 
-    # Convert first row to column names
-    output_data = convert_concept_id_to_header(excel_input)
-
-    # Dictionary has form { conceptId -> (Default values, Type, Parameters) }
-    variables_dict = parse_variable_parameters(excel_input)
+    # Dictionary has form { conceptId -> (Default values, Type, Parameters, NullFlavors) }
+    variables_dict = extract_concept_id_attributes(excel_input)
 
     # Valid generation types. Test purposes only
     types = ["date", "int", "float", "UUID", "String"]
 
+    variables_dict = parse_parameters_to_dict(variables_dict)
+    new_variables = dict(filter(lambda x: "number" in x[1][2], variables_dict.items()))
+
+    for concept_id, (default_values, var_type, params, null_flavors) in new_variables.items():
+        variables_dict.pop(concept_id)
+        for i in range(params["number"]):
+            variables_dict[f"{concept_id}_{i}"] = (default_values, var_type, params, null_flavors)
+
+    output_data = pd.DataFrame()
     # Loop through all variables and generate data
     for concept_id, (default_values, var_type, params, null_flavors) in variables_dict.items():
         if var_type in types:
             # Generate data column
-            generator = GeneratorFactory.create_generator(GeneratorType(var_type), value_set=params).generate()
+            generator = GeneratorFactory.create_generator(GeneratorType(var_type), params).generate()
             column_list = generate_column_list(generator, num_datasets, null_flavors, 0.5)
         else:
             # Fill in default values
             column_list = [default_values for _ in range(num_datasets)]
 
+        # TODO Perfomance improvement
         output_data[concept_id] = pd.Series(data=column_list)
 
     # Output to CSV

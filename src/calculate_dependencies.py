@@ -1,5 +1,7 @@
 import os
+import re
 
+import numpy as np
 import pandas as pd
 import datetime as dt
 
@@ -48,24 +50,12 @@ def calculate_timestamps(row: pd.Series) -> None:
         row[output_key] = add_minutes_to_timestamp(row[input_key], row[minutes_key], format_in, format_out)
 
 
-def read_csv_and_map(df, csv, key_column, value_column, concept_id):
-    """
-    Reads a CSV file and maps its values to a DataFrame based on specified columns.
-
-    Args:
-        df (pd.DataFrame): The DataFrame to which the mapping will be applied.
-        csv (str): The path to the CSV file to be read.
-        key_column (str): The column in the DataFrame and CSV file to be used as the key for mapping.
-        value_column (str): The column in the CSV file whose values will be mapped to the DataFrame.
-        concept_id (str): The column name in the DataFrame where the mapped values will be stored.
-
-    Returns:
-        None
-    """
+def read_csv_and_map(df, csv, key_column, value_column, concept_id, key_csv=None, value_csv=None):
+    key_csv = key_csv if key_csv else key_column
+    value_csv = value_csv if value_csv else value_column
     df_csv = pd.read_csv(csv, dtype=str, delimiter=';')
-    tuples = dict(zip(df_csv[key_column], df_csv[value_column]))
-    df[concept_id] = df[key_column].map(tuples)
-
+    tuples = dict(zip(df_csv[key_csv], df_csv[value_csv]))
+    df[concept_id] = df[key_column].apply(lambda x: tuples.get(x) if x in tuples.keys() else "")
 
 def make_associated_person_family_member(df):
     """
@@ -125,12 +115,20 @@ def calculate_dependencies(filename: str) -> None:
 
     # Get environment variables for each csv path
     cities_csv = os.environ['CITIES_CSV']
+    diagnose_csv = os.environ['DIAGNOSES_CSV']
 
     # Define tasks for reading CSV files and mapping values
     tasks = [
         (cities_csv, "city", "klinik_name", "organisation_name"),
         (cities_csv, "city", "postleitzahl", "postleitzahl")
     ]
+
+    diagnose_cols = [col for col in df.columns if re.match(r'diagnose_code_\d+', col)]
+    for diagnose in diagnose_cols:
+        num = re.match(r'diagnose_code_(\d+)', diagnose).group(1)
+        task = (diagnose_csv, diagnose, "diagnose_name_" + num, "diagnose_name_" + num, "Schlüsselnummer ohne Strich, Stern und  Ausrufezeichen", "Titel des dreistelligen Kodes")
+        tasks.append(task)
+
 
     # Read CSV files and map values to DataFrame
     for task in tasks:

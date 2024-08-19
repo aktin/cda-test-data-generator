@@ -210,7 +210,7 @@ class GeneratorFactory:
 
     #TODO Rename value_set
     @classmethod
-    def create_generator(cls, generator_type: GeneratorType, value_set: str) -> AbstractGenerator:
+    def create_generator(cls, generator_type: GeneratorType, params: dict) -> AbstractGenerator:
         """
         Create a generator instance based on the generator type and value set.
 
@@ -221,10 +221,6 @@ class GeneratorFactory:
         Returns:
             AbstractGenerator: An instance of the specified generator type.
         """
-        params = {}
-        if isinstance(value_set, str):
-            params = Parser.parse(value_set)
-
         try:
             generator_class = cls._generator_map[generator_type]
         except:

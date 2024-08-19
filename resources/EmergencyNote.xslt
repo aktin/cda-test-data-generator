@@ -1673,61 +1673,146 @@
                                     <effectiveTime>
                                         <low value="20150117"/>
                                     </effectiveTime>
-                                    <entryRelationship typeCode="SUBJ">
-                                        <observation classCode="OBS" moodCode="EVN">
-                                            <templateId root="1.2.276.0.76.10.4049"/>
-                                            <id root="1.2.276.0.76.4.17.9814184919"
-                                                extension="45F99818-637B-4BE7-BC22-A7041C1CF813"/>
-                                            <code code="29308-4" codeSystem="2.16.840.1.113883.6.1"
-                                                  displayName="Diagnosis"/>
-                                            <text>
-                                                <reference value="#diag-1"/>
-                                            </text>
-                                            <statusCode code="completed"/>
-                                            <effectiveTime>
-                                                <low value="20150117"/>
-                                            </effectiveTime>
-                                            <value xsi:type="CD">
-                                                <xsl:choose>
-                                                    <xsl:when test="diagnose_code = ''">
-                                                        <xsl:attribute name="nullFlavor">
-                                                            <xsl:text>UNK</xsl:text>
-                                                        </xsl:attribute>
-                                                    </xsl:when>
-                                                    <xsl:when test="diagnose_code = 'OTH'">
-                                                        <xsl:attribute name="nullFlavor">
-                                                            <xsl:text>OTH</xsl:text>
-                                                        </xsl:attribute>
-                                                    </xsl:when>
-                                                    <xsl:otherwise>
-                                                        <xsl:attribute name="code">
-                                                            <xsl:value-of select="diagnose_code"/>
-                                                        </xsl:attribute>
-                                                        <xsl:attribute name="codeSystem">
-                                                            <xsl:text>1.2.276.0.76.5.424</xsl:text>
-                                                        </xsl:attribute>
-                                                        <xsl:attribute name="codeSystemName">
-                                                            <xsl:text>icd10gm2015</xsl:text>
-                                                        </xsl:attribute>
-                                                    </xsl:otherwise>
-                                                </xsl:choose>
 
-                                                <originalText>
+
+                                    <!--                                    <xsl:for-each select="*[starts-with(name(), 'diagnose_code')]">-->
+
+                                    <!--                                        <entryRelationship typeCode="SUBJ">-->
+                                    <!--                                            <observation classCode="OBS" moodCode="EVN">-->
+                                    <!--                                                <templateId root="1.2.276.0.76.10.4049"/>-->
+                                    <!--                                                <id root="1.2.276.0.76.4.17.9814184919"-->
+                                    <!--                                                    extension="45F99818-637B-4BE7-BC22-A7041C1CF813"/>-->
+                                    <!--                                                <code code="29308-4" codeSystem="2.16.840.1.113883.6.1"-->
+                                    <!--                                                      displayName="Diagnosis"/>-->
+                                    <!--                                                <text>-->
+                                    <!--                                                    <reference value="#diag-1"/>-->
+                                    <!--                                                </text>-->
+                                    <!--                                                <statusCode code="completed"/>-->
+                                    <!--                                                <effectiveTime>-->
+                                    <!--                                                    <low value="20150117"/>-->
+                                    <!--                                                </effectiveTime>-->
+                                    <!--                                                <value xsi:type="CD">-->
+                                    <!--                                                    <xsl:choose>-->
+                                    <!--                                                        <xsl:when test=". = ''">-->
+                                    <!--                                                            <xsl:attribute name="nullFlavor">-->
+                                    <!--                                                                <xsl:text>UNK</xsl:text>-->
+                                    <!--                                                            </xsl:attribute>-->
+                                    <!--                                                        </xsl:when>-->
+                                    <!--                                                        <xsl:when test=". = 'OTH'">-->
+                                    <!--                                                            <xsl:attribute name="nullFlavor">-->
+                                    <!--                                                                <xsl:text>OTH</xsl:text>-->
+                                    <!--                                                            </xsl:attribute>-->
+                                    <!--                                                        </xsl:when>-->
+                                    <!--                                                        <xsl:otherwise>-->
+                                    <!--                                                            <xsl:attribute name="code">-->
+                                    <!--                                                                <xsl:value-of select="."/>-->
+                                    <!--                                                            </xsl:attribute>-->
+                                    <!--                                                            <xsl:attribute name="codeSystem">-->
+                                    <!--                                                                <xsl:text>1.2.276.0.76.5.424</xsl:text>-->
+                                    <!--                                                            </xsl:attribute>-->
+                                    <!--                                                            <xsl:attribute name="codeSystemName">-->
+                                    <!--                                                                <xsl:text>icd10gm2015</xsl:text>-->
+                                    <!--                                                            </xsl:attribute>-->
+                                    <!--                                                        </xsl:otherwise>-->
+                                    <!--                                                    </xsl:choose>-->
+
+                                    <!--                                                    <originalText>-->
+
+                                    <!--                                                            <xsl:variable name="correspondingName" select="/aktin_raw/*[starts-with(name(), 'diagnose_name_')][position() = current()/position()]"/>-->
+                                    <!--                                                            <xsl:choose>-->
+                                    <!--                                                                <xsl:when test="$correspondingName = ''">-->
+                                    <!--                                                                    <xsl:attribute name="nullFlavor">-->
+                                    <!--                                                                        <xsl:text>UNK</xsl:text>-->
+                                    <!--                                                                    </xsl:attribute>-->
+                                    <!--                                                                </xsl:when>-->
+                                    <!--                                                                <xsl:otherwise>-->
+                                    <!--                                                                    <xsl:value-of select="$correspondingName"/>-->
+                                    <!--                                                                </xsl:otherwise>-->
+                                    <!--                                                            </xsl:choose>-->
+
+                                    <!--                                                    </originalText>-->
+                                    <!--                                                </value>-->
+                                    <!--                                            </observation>-->
+                                    <!--                                        </entryRelationship>-->
+                                    <!--                                    </xsl:for-each>-->
+
+
+                                    <xsl:for-each select="*[starts-with(name(), 'diagnose_code')]">
+                                        <xsl:variable name="position" select="position()"/>
+                                        <entryRelationship typeCode="SUBJ">
+                                            <observation classCode="OBS" moodCode="EVN">
+                                                <templateId root="1.2.276.0.76.10.4049"/>
+                                                <id root="1.2.276.0.76.4.17.9814184919"
+                                                    extension="45F99818-637B-4BE7-BC22-A7041C1CF813"/>
+                                                <code code="29308-4" codeSystem="2.16.840.1.113883.6.1"
+                                                      displayName="Diagnosis"/>
+                                                <text>
+                                                    <reference value="#diag-{$position}"/>
+                                                </text>
+                                                <statusCode code="completed"/>
+                                                <effectiveTime>
+                                                    <low value="20150117"/>
+                                                </effectiveTime>
+                                                <value xsi:type="CD">
+                                                    <!-- Handle the diagnose_code value -->
                                                     <xsl:choose>
-                                                        <xsl:when test="diagnose_name = ''">
+                                                        <xsl:when test=". = ''">
                                                             <xsl:attribute name="nullFlavor">
                                                                 <xsl:text>UNK</xsl:text>
                                                             </xsl:attribute>
                                                         </xsl:when>
+                                                        <xsl:when test=". = 'OTH'">
+                                                            <xsl:attribute name="nullFlavor">
+                                                                <xsl:text>OTH</xsl:text>
+                                                            </xsl:attribute>
+                                                        </xsl:when>
                                                         <xsl:otherwise>
-                                                            <xsl:value-of select="diagnose_name"/>
+                                                            <xsl:attribute name="code">
+                                                                <xsl:value-of select="."/>
+                                                            </xsl:attribute>
+                                                            <xsl:attribute name="codeSystem">
+                                                                <xsl:text>1.2.276.0.76.5.424</xsl:text>
+                                                            </xsl:attribute>
+                                                            <xsl:attribute name="codeSystemName">
+                                                                <xsl:text>icd10gm2015</xsl:text>
+                                                            </xsl:attribute>
+
+                                                            <originalText>
+                                                                <!-- Find the corresponding diagnose_name element -->
+                                                                <xsl:variable name="correspondingName"
+                                                                              select="/aktin_raw/*[starts-with(name(), 'diagnose_name_')][position() = $position]"/>
+                                                                <xsl:choose>
+                                                                    <xsl:when test="$correspondingName = ''">
+                                                                        <xsl:attribute name="nullFlavor">
+                                                                            <xsl:text>UNK</xsl:text>
+                                                                        </xsl:attribute>
+                                                                    </xsl:when>
+                                                                    <xsl:otherwise>
+                                                                        <xsl:value-of select="$correspondingName"/>
+                                                                    </xsl:otherwise>
+                                                                </xsl:choose>
+                                                            </originalText>
+
+                                                            <xsl:variable name="correspondingQualifier"
+                                                                          select="/aktin_raw/*[starts-with(name(), 'diagnose_qualifier_')][position() = $position]"/>
+                                                            <xsl:if test="$correspondingQualifier != ''">
+                                                                <qualifier>
+                                                                    <name code="8"
+                                                                          codeSystem="2.16.840.1.113883.3.7.1.0"/>
+                                                                    <value codeSystem="1.2.276.0.76.3.1.1.5.1.21">
+                                                                        <xsl:attribute name="code">
+                                                                            <xsl:value-of
+                                                                                    select="$correspondingQualifier"/>
+                                                                        </xsl:attribute>
+                                                                    </value>
+                                                                </qualifier>
+                                                            </xsl:if>
                                                         </xsl:otherwise>
                                                     </xsl:choose>
-
-                                                </originalText>
-                                            </value>
-                                        </observation>
-                                    </entryRelationship>
+                                                </value>
+                                            </observation>
+                                        </entryRelationship>
+                                    </xsl:for-each>
                                 </act>
                             </entry>
                         </section>
