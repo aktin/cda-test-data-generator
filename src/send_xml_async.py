@@ -46,6 +46,7 @@ async def main_and_send_test_async():
 
         await asyncio.gather(*tasks)
 
+
 def count_issue_elements(xml_file_path: str) -> int:
     """
     Count the number of <issue> elements that are children of <OperationOutcome> in an XML file.
@@ -64,6 +65,7 @@ def count_issue_elements(xml_file_path: str) -> int:
 
     # Return the count of <issue> elements
     return len(issue_elements)
+
 
 def get_stats():
     order = f"../output/fehlercodes/"
@@ -84,4 +86,3 @@ def get_stats():
 if __name__ == "__main__":
     asyncio.run(main_and_send_test_async())
     get_stats()
-
