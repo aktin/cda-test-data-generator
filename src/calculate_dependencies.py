@@ -57,6 +57,7 @@ def read_csv_and_map(df, csv, key_column, value_column, concept_id, key_csv=None
     tuples = dict(zip(df_csv[key_csv], df_csv[value_csv]))
     df[concept_id] = df[key_column].apply(lambda x: tuples.get(x) if x in tuples.keys() else "")
 
+
 def make_associated_person_family_member(df):
     """
     Maps the 'family_patient' column to the '_associatedPerson_family' column in the DataFrame.
@@ -128,7 +129,8 @@ def calculate_dependencies(filename: str) -> None:
     diagnose_cols = [col for col in df.columns if re.match(r'diagnose_code_\d+', col)]
     for diagnose in diagnose_cols:
         num = re.match(r'diagnose_code_(\d+)', diagnose).group(1)
-        task = (diagnose_csv, diagnose, "diagnose_name_" + num, "diagnose_name_" + num, "Schlüsselnummer ohne Strich, Stern und  Ausrufezeichen", "Titel des dreistelligen Kodes")
+        task = (diagnose_csv, diagnose, "diagnose_name_" + num, "diagnose_name_" + num,
+                "Schlüsselnummer ohne Strich, Stern und  Ausrufezeichen", "Titel des dreistelligen Kodes")
         tasks.append(task)
 
     # Do the Tasks
