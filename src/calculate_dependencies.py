@@ -8,15 +8,15 @@ import datetime as dt
 from generator import GeneratorFactory, GeneratorType
 
 
-def calculate_timestamps(row: pd.Series) -> None:
+def calculate_timestamps(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Calculate and update various timestamp dependencies in a row of a DataFrame.
+    Calculate and update various timestamp dependencies in a DataFrame.
 
     Args:
-        row (pd.Series): A row from a DataFrame containing timestamp and minute offset information.
+        df (pd.DataFrame): A DataFrame containing timestamp and minute offset information.
 
     Returns:
-        None
+        pd.DataFrame: The updated DataFrame with calculated timestamp dependencies.
     """
 
     def add_minutes_to_timestamp(timestamp, minutes, format_in="%Y%m%d%H%M%S", format_out="%Y%m%d%H%M%S"):
@@ -47,7 +47,10 @@ def calculate_timestamps(row: pd.Series) -> None:
     # Process each operation
     for output_key, input_key, minutes_key, *formats in operations:
         format_in, format_out = formats if formats else ("%Y%m%d%H%M%S", "%Y%m%d%H%M%S")
-        row[output_key] = add_minutes_to_timestamp(row[input_key], row[minutes_key], format_in, format_out)
+        df[output_key] = df.apply(
+            lambda row: add_minutes_to_timestamp(row[input_key], row[minutes_key], format_in, format_out), axis=1)
+
+    return df
 
 
 def read_csv_and_map(df, csv, key_column, value_column, concept_id, key_csv=None, value_csv=None):
@@ -126,8 +129,7 @@ def calculate_dependencies(filename: str) -> None:
     df = pd.read_csv(filename, dtype=str, na_values=[], keep_default_na=False)
 
     # Calculate timestamps
-    for _, row in df.iterrows():
-        calculate_timestamps(row)
+    calculate_timestamps(df)
 
     # Get environment variables for each csv path
     cities_csv = os.environ['CITIES_CSV']
