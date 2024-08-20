@@ -112,8 +112,8 @@ def generate_csv(excel_path: str, csv_path, num_datasets=1) -> None:
             # Fill in default values
             column_list = [default_values for _ in range(num_datasets)]
 
-        # TODO Performance improvement
-        output_data[concept_id] = pd.Series(data=column_list)
+        new_column = pd.Series(data=column_list, name=concept_id)
+        output_data = pd.concat([output_data, new_column], axis=1)
 
     # Output to CSV
     output_data.to_csv(csv_path, index=False)
