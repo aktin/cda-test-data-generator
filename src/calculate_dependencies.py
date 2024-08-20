@@ -51,6 +51,21 @@ def calculate_timestamps(row: pd.Series) -> None:
 
 
 def read_csv_and_map(df, csv, key_column, value_column, concept_id, key_csv=None, value_csv=None):
+    """
+    Read a CSV file and map its values to a DataFrame based on specified columns.
+
+    Args:
+        df (pd.DataFrame): The DataFrame to update.
+        csv (str): The path to the CSV file.
+        key_column (str): The column in the DataFrame to use as the key for mapping.
+        value_column (str): The column in the DataFrame to use as the value for mapping.
+        concept_id (str): The column in the DataFrame to store the mapped values.
+        key_csv (str, optional): The column in the CSV file to use as the key. Defaults to key_column.
+        value_csv (str, optional): The column in the CSV file to use as the value. Defaults to value_column.
+
+    Returns:
+        None
+    """
     key_csv = key_csv if key_csv else key_column
     value_csv = value_csv if value_csv else value_column
     df_csv = pd.read_csv(csv, dtype=str, delimiter=';')
