@@ -33,7 +33,7 @@ async def send_xml_file_async(session, url, input_file, output_file):
 
 async def main_and_send_test_async():
     main.main()
-    rows = main.args.rows
+    rows = main.args.n
 
     async with aiohttp.ClientSession() as session:
         tasks = []

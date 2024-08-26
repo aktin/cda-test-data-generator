@@ -32,11 +32,11 @@ def set_environment_variables(config):
 
 
 def parse_command_line():
-    global parser, args, rows
+    global parser, args, n
     parser = argparse.ArgumentParser(description='Process Excel to CDA.')
-    parser.add_argument('--rows', type=int, required=True, help='Number of rows to generate in the CSV file')
+    parser.add_argument('--n', type=int, required=True, help='Number of patients to generate.')
     args = parser.parse_args()
-    rows = args.rows
+    n = args.n
 
 
 def main():
@@ -55,7 +55,7 @@ def main():
     xslt_file = os.environ['XSLT_FILE']
 
     # First step: Generate csv with rows as patients
-    generate_csv(excel_path, csv_path, rows)
+    generate_csv(excel_path, csv_path, n)
 
     # Second step: Set dependable variables
     calculate_dependencies(csv_path)
