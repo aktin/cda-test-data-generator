@@ -167,14 +167,8 @@ class StringGenerator(AbstractGenerator):
 
 
 class UUIDGenerator(AbstractGenerator):
-    """
-    Generator for random UUID values.
-    """
 
     def __init__(self, **kwargs):
-        """
-        Initialize the UUIDGenerator.
-        """
         pass
 
     def generate(self):
