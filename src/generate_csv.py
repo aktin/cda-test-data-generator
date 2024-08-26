@@ -131,7 +131,7 @@ def generate_data_columns(variables_dict, num_datasets, output_data):
     return output_data
 
 
-def generate_csv(excel_path: str, csv_path, num_datasets=1) -> None:
+def generate_csv(excel_path: str, csv_path, num_datasets) -> None:
     """
     Generate a CSV file from an Excel input file.
 
