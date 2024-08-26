@@ -23,6 +23,7 @@ def _add_minutes_to_timestamp(timestamp, minutes, format_in="%Y%m%d%H%M%S", form
     """
     return (dt.datetime.strptime(timestamp, format_in) + dt.timedelta(minutes=int(minutes))).strftime(format_out)
 
+
 def calculate_timestamps(df: pd.DataFrame) -> pd.DataFrame:
     """
     Calculate and update various timestamp dependencies in a DataFrame.
@@ -44,7 +45,6 @@ def calculate_timestamps(df: pd.DataFrame) -> pd.DataFrame:
         ("triage_ts_end", "triage_ts_start", "_triagestart_triageend", "%Y%m%d%H%M", "%Y%m%d%H%M")
     ]
 
-    # Process each operation
     for output_key, input_key, minutes_key, *formats in operations:
         format_in, format_out = formats if formats else ("%Y%m%d%H%M%S", "%Y%m%d%H%M%S")
         df[output_key] = df.apply(
@@ -115,6 +115,17 @@ def calculate_gcs_sum(df):
     df['gcs_summe'] = df['gcs_motorisch'].astype(int) + df['gcs_verbal'].astype(int) + df['gcs_augen'].astype(int)
 
 
+def define_tasks_for_diagnoses(df, tasks):
+    diagnose_csv = os.environ['DIAGNOSES_CSV']
+
+    diagnose_cols = [col for col in df.columns if re.match(r'diagnose_code_\d+', col)]
+    for diagnose in diagnose_cols:
+        num = re.match(r'diagnose_code_(\d+)', diagnose).group(1)
+        task = (diagnose_csv, diagnose, "diagnose_name_" + num, "diagnose_name_" + num,
+                "Schlüsselnummer ohne Strich, Stern und  Ausrufezeichen", "Titel des dreistelligen Kodes")
+        tasks.append(task)
+
+
 def calculate_dependencies(filename: str) -> None:
     """
     Calculate and update dependent variables in a CSV file.
@@ -125,43 +136,26 @@ def calculate_dependencies(filename: str) -> None:
     Returns:
         None
     """
-    # Read the CSV file with generated data
     df = pd.read_csv(filename, dtype=str, na_values=[], keep_default_na=False)
 
-    # Calculate timestamps
     calculate_timestamps(df)
 
-    # Get environment variables for each csv path
     cities_csv = os.environ['CITIES_CSV']
-    diagnose_csv = os.environ['DIAGNOSES_CSV']
 
-    # Define tasks for reading CSV files and mapping values
     tasks = [
         (cities_csv, "city", "klinik_name", "organisation_name"),
         (cities_csv, "city", "postleitzahl", "postleitzahl")
     ]
 
-    # Define tasks for each diagnose
-    # Set originalText(diagnose_name) matching to diagnose_code
-    diagnose_cols = [col for col in df.columns if re.match(r'diagnose_code_\d+', col)]
-    for diagnose in diagnose_cols:
-        num = re.match(r'diagnose_code_(\d+)', diagnose).group(1)
-        task = (diagnose_csv, diagnose, "diagnose_name_" + num, "diagnose_name_" + num,
-                "Schlüsselnummer ohne Strich, Stern und  Ausrufezeichen", "Titel des dreistelligen Kodes")
-        tasks.append(task)
+    define_tasks_for_diagnoses(df, tasks)
 
-    # Do the Tasks
-    # Read CSV files and map values to DataFrame
     for task in tasks:
         read_csv_and_map(df, *task)
 
-    # GCS Sum
     calculate_gcs_sum(df)
 
-    # Abort pregnant men
     make_pregnant_man_not_pregnant(df)
 
-    # Associated persons are only family member
     make_associated_person_family_member(df)
 
     df.to_csv(filename, index=False)
