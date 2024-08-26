@@ -20,7 +20,7 @@ class ParserFactory:
         handlers = {
             "scope": ScopeHandler,
             "value_set": ValueSetHandler,
-            "format": FormatHandler,
+            "date_format": FormatHandler,
             "link": LinkHandler,
             "regex": RegexHandler,
             "start_date": StartDateHandler,
@@ -51,7 +51,7 @@ class ValueSetHandler:
 
 class FormatHandler:
     def handle(self, param_dict, value):
-        param_dict["format"] = value
+        param_dict["date_format"] = value
 
 
 class LinkHandler:

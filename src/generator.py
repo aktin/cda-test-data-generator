@@ -31,18 +31,31 @@ class DateGenerator(AbstractGenerator):
     Generator for random dates within a specified range.
     """
 
-    def __init__(self, **kwargs):
+    # def __init__(self, **kwargs):
+    #     """
+    #     Initialize the DateGenerator with optional parameters.
+#
+    #     Args:
+    #         start_date (datetime, optional): The start date for the range. Defaults to January 1, 2000.
+    #         end_date (datetime, optional): The end date for the range. Defaults to today.
+    #         format (str, optional): The format of the generated date strings. Defaults to "yyyymmddhhmmss".
+    #     """
+    #     self.start_date = kwargs.get('start_date', datetime(2000, 1, 1))
+    #     self.end_date = kwargs.get('end_date', datetime.today())
+    #     self.format = kwargs.get('format', "yyyymmddhhmmss")
+
+    def __init__(self, start_date=None, end_date=None, date_format="yyyymmddhhmmss"):
         """
         Initialize the DateGenerator with optional parameters.
 
         Args:
             start_date (datetime, optional): The start date for the range. Defaults to January 1, 2000.
             end_date (datetime, optional): The end date for the range. Defaults to today.
-            format (str, optional): The format of the generated date strings. Defaults to "yyyymmddhhmmss".
+            date_format (str, optional): The format of the generated date strings. Defaults to "yyyymmddhhmmss".
         """
-        self.start_date = kwargs.get('start_date', datetime(2000, 1, 1))
-        self.end_date = kwargs.get('end_date', datetime.today())
-        self.format = kwargs.get('format', "yyyymmddhhmmss")
+        self.start_date = start_date if start_date else datetime(2000, 1, 1)
+        self.end_date = end_date if end_date else datetime.today()
+        self.format = date_format
 
     def generate(self):
         """
