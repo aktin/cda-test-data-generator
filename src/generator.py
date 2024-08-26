@@ -156,13 +156,13 @@ class StringGenerator(AbstractGenerator):
         Yields:
             str: A randomly generated string value.
         """
-        if self.value_set:
+        if self.value_set:  # If value set is provided, choose from it
             while True:
                 yield random.choice(tuple(self.value_set))
-        elif self.regex:
+        elif self.regex:  # If regex pattern is provided, generate strings based on it
             while True:
                 yield exrex.getone(self.regex)
-        else:
+        else:  # Default to random alphanumeric strings
             while True:
                 yield ''.join(random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') for _ in range(10))
 
