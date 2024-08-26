@@ -40,16 +40,12 @@ def parse_command_line():
 
 
 def main():
-    # Load configuration from config.toml
     config = toml.load('../config.toml')
 
-    # Set environment variables
     set_environment_variables(config)
 
-    # Parse command line arguments(e.g. --rows 10)
     parse_command_line()
 
-    # Get environment variables
     csv_path = os.environ['CSV_PATH']
     excel_path = os.environ['EXCEL_PATH']
     xslt_file = os.environ['XSLT_FILE']
