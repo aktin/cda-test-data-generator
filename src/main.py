@@ -40,7 +40,6 @@ def parse_command_line():
 
 
 def main():
-    global config, parser, args, rows
     # Load configuration from config.toml
     config = toml.load('../config.toml')
 
