@@ -8,6 +8,21 @@ import datetime as dt
 from generator import GeneratorFactory, GeneratorType
 
 
+def _add_minutes_to_timestamp(timestamp, minutes, format_in="%Y%m%d%H%M%S", format_out="%Y%m%d%H%M%S"):
+    """
+    Add a specified number of minutes to a timestamp and return the new timestamp in the desired format.
+
+    Args:
+        timestamp (str): The original timestamp as a string.
+        minutes (int): The number of minutes to add to the timestamp.
+        format_in (str, optional): The format of the input timestamp. Defaults to "%Y%m%d%H%M%S".
+        format_out (str, optional): The format of the output timestamp. Defaults to "%Y%m%d%H%M%S".
+
+    Returns:
+        str: The new timestamp after adding the specified minutes, formatted according to format_out.
+    """
+    return (dt.datetime.strptime(timestamp, format_in) + dt.timedelta(minutes=int(minutes))).strftime(format_out)
+
 def calculate_timestamps(df: pd.DataFrame) -> pd.DataFrame:
     """
     Calculate and update various timestamp dependencies in a DataFrame.
@@ -18,21 +33,6 @@ def calculate_timestamps(df: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame: The updated DataFrame with calculated timestamp dependencies.
     """
-
-    def add_minutes_to_timestamp(timestamp, minutes, format_in="%Y%m%d%H%M%S", format_out="%Y%m%d%H%M%S"):
-        """
-        Add a specified number of minutes to a timestamp and return the new timestamp in the desired format.
-
-        Args:
-            timestamp (str): The original timestamp as a string.
-            minutes (int): The number of minutes to add to the timestamp.
-            format_in (str, optional): The format of the input timestamp. Defaults to "%Y%m%d%H%M%S".
-            format_out (str, optional): The format of the output timestamp. Defaults to "%Y%m%d%H%M%S".
-
-        Returns:
-            str: The new timestamp after adding the specified minutes, formatted according to format_out.
-        """
-        return (dt.datetime.strptime(timestamp, format_in) + dt.timedelta(minutes=int(minutes))).strftime(format_out)
 
     # Define the sequence of operations: (timestamp, start_timestamp, minutes_to_add, format_input, format_output)
     operations = [
@@ -48,7 +48,7 @@ def calculate_timestamps(df: pd.DataFrame) -> pd.DataFrame:
     for output_key, input_key, minutes_key, *formats in operations:
         format_in, format_out = formats if formats else ("%Y%m%d%H%M%S", "%Y%m%d%H%M%S")
         df[output_key] = df.apply(
-            lambda row: add_minutes_to_timestamp(row[input_key], row[minutes_key], format_in, format_out), axis=1)
+            lambda row: _add_minutes_to_timestamp(row[input_key], row[minutes_key], format_in, format_out), axis=1)
 
     return df
 
