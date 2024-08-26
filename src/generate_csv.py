@@ -107,7 +107,7 @@ def remove_number_from_params(concept_id, new_variables):
     return num
 
 
-def generate_data_columns(variables_dict, num_datasets, output_data):
+def generate_data_columns(variables_dict, num_datasets, output_data, probability_missing=0.5):
     """
     Loop through all variables and generate data columns.
 
@@ -116,6 +116,7 @@ def generate_data_columns(variables_dict, num_datasets, output_data):
                                default values, generation type, parameters, and null flavors.
         num_datasets (int): The number of data values to generate.
         output_data (pd.DataFrame): The DataFrame to update with the generated data columns.
+        probability_missing (float, optional): The probability of a value being missing. Defaults to 0.5.
 
     Returns:
         pd.DataFrame: The updated DataFrame with the generated data columns.
@@ -123,7 +124,7 @@ def generate_data_columns(variables_dict, num_datasets, output_data):
     for concept_id, (default_values, var_type, params, null_flavors) in variables_dict.items():
         # Generate data column
         generator = GeneratorFactory.create_generator(GeneratorType(var_type), params).generate()
-        column_list = generate_column_list(generator, num_datasets, null_flavors, 0.5)
+        column_list = generate_column_list(generator, num_datasets, null_flavors, probability_missing)
 
         new_column = pd.Series(data=column_list, name=concept_id)
         output_data = pd.concat([output_data, new_column], axis=1)
@@ -161,7 +162,7 @@ def generate_csv(excel_path: str, csv_path, num_datasets) -> None:
     output_data = pd.DataFrame()
 
     # Generate data columns
-    output_data = generate_data_columns(variables_dict, num_datasets, output_data)
+    output_data = generate_data_columns(variables_dict, num_datasets, output_data, 0.5)
 
     # Output to CSV
     output_data.to_csv(csv_path, index=False)
