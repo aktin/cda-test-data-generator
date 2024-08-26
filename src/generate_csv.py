@@ -6,19 +6,19 @@ from generator import GeneratorType
 from parser import Parser
 
 
-def extract_concept_id_attributes(excel_input: pd.DataFrame) -> dict:
+def extract_concept_id_attributes(input_df: pd.DataFrame) -> dict:
     """
     Extract variables with their default values, generation type, and parameters from an Excel input.
 
     Args:
-        excel_input (pd.DataFrame): The input DataFrame read from the Excel file.
+        input_df (pd.DataFrame): The input DataFrame read from the Excel file.
 
     Returns:
         dict: A dictionary where the keys are concept IDs and the values are tuples containing
               default values, generation type, and parameters.
     """
     variables_dict = {}
-    for _, row in excel_input.iterrows():
+    for _, row in input_df.iterrows():
         variables_dict[row['Concept Id']] = (
             row['Default values'], row['Generation type'], row['Parameters'], row['Nullflavor'])
     return variables_dict
