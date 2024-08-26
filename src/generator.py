@@ -208,11 +208,11 @@ class GeneratorFactory:
             AbstractGenerator: An instance of a generator corresponding to the specified type.
 
         Raises:
-            ValueError: If the provided generator type is unknown.
+            KeyError: If the provided generator type is unknown.
         """
         try:
             generator_class = cls._generator_map[generator_type]
         except:
-            raise ValueError(f"Unknown generator type: {generator_type}")
+            raise KeyError(f"Unknown generator type: {generator_type}")
 
         return generator_class(**params)
