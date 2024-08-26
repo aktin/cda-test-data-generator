@@ -138,14 +138,16 @@ class StringGenerator(AbstractGenerator):
         self.value_set = value_set
         self.regex = regex
         if link is not None:
-            df = pd.read_csv(f"../resources/value_sets/{link}", delimiter=";", dtype=str, header=0)
-            if column is not None:
-                if column in df.columns:
-                    self.value_set = set(df[column])
-                else:
-                    raise ValueError("Column not found in file")
-            else:
-                raise ValueError("Column not specified in parameters")
+            self._load_value_set_from_csv(link, column)
+
+    def _load_value_set_from_csv(self, link, column):
+        if not column:
+            raise ValueError("Column not specified in parameters")
+        df = pd.read_csv(f"../resources/value_sets/{link}", delimiter=";", dtype=str, header=0)
+        if column not in df.columns:
+            raise ValueError(f"Column '{column}' not found in file")
+
+        self.value_set = set(df[column])
 
     def generate(self):
         """
