@@ -97,7 +97,12 @@ def generate_csv(excel_path: str, csv_path, num_datasets=1) -> None:
     # Add new variables to the dictionary
     for concept_id, (default_values, var_type, params, null_flavors) in new_variables.items():
         variables_dict.pop(concept_id)
-        for i in range(params["number"]):
+        # remove number from params
+        new_params = new_variables[concept_id][2]
+        num = new_params.pop("number")
+        new_variables[concept_id] = (default_values, var_type, new_params, null_flavors)
+
+        for i in range(num):
             variables_dict[f"{concept_id}_{i}"] = (default_values, var_type, params, null_flavors)
 
     # Output declaration

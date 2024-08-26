@@ -30,20 +30,6 @@ class DateGenerator(AbstractGenerator):
     """
     Generator for random dates within a specified range.
     """
-
-    # def __init__(self, **kwargs):
-    #     """
-    #     Initialize the DateGenerator with optional parameters.
-#
-    #     Args:
-    #         start_date (datetime, optional): The start date for the range. Defaults to January 1, 2000.
-    #         end_date (datetime, optional): The end date for the range. Defaults to today.
-    #         format (str, optional): The format of the generated date strings. Defaults to "yyyymmddhhmmss".
-    #     """
-    #     self.start_date = kwargs.get('start_date', datetime(2000, 1, 1))
-    #     self.end_date = kwargs.get('end_date', datetime.today())
-    #     self.format = kwargs.get('format', "yyyymmddhhmmss")
-
     def __init__(self, start_date=None, end_date=None, date_format="yyyymmddhhmmss"):
         """
         Initialize the DateGenerator with optional parameters.
@@ -83,7 +69,7 @@ class FloatGenerator(AbstractGenerator):
     Generator for random float values within a specified range.
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, min_value=0.0, max_value=0.0, precision=2):
         """
         Initialize the FloatGenerator with optional parameters.
 
@@ -92,9 +78,9 @@ class FloatGenerator(AbstractGenerator):
             max_value (float, optional): The maximum value for the range. Defaults to 0.0.
             precision (int, optional): The number of decimal places for the generated values. Defaults to 2.
         """
-        self.min_value = kwargs.get('min_value', 0.0)
-        self.max_value = kwargs.get('max_value', 0.0)
-        self.precision = kwargs.get('precision', 2)
+        self.min_value = min_value
+        self.max_value = max_value
+        self.precision = precision
 
     def generate(self):
         """
@@ -112,7 +98,7 @@ class IntGenerator(AbstractGenerator):
     Generator for random integer values within a specified range.
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, min_value=0, max_value=100):
         """
         Initialize the IntGenerator with optional parameters.
 
@@ -120,8 +106,8 @@ class IntGenerator(AbstractGenerator):
             min_value (int, optional): The minimum value for the range. Defaults to 0.
             max_value (int, optional): The maximum value for the range. Defaults to 100.
         """
-        self.min_value = kwargs.get('min_value', 0)
-        self.max_value = kwargs.get('max_value', 100)
+        self.min_value = min_value
+        self.max_value = max_value
 
     def generate(self):
         """
@@ -139,7 +125,7 @@ class StringGenerator(AbstractGenerator):
     Generator for random string values based on a value set or regex pattern.
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, value_set=None, regex=None, link=None, column=None):
         """
         Initialize the StringGenerator with optional parameters.
 
@@ -149,13 +135,13 @@ class StringGenerator(AbstractGenerator):
             link (str, optional): A path to a CSV file containing a column of string values.
             column (str, optional): The column name in the CSV file to use for the value set.
         """
-        self.value_set = kwargs.get('value_set', None)
-        self.regex = kwargs.get('regex', None)
-        if 'link' in kwargs:
-            df = pd.read_csv(f"../resources/value_sets/{kwargs['link']}", delimiter=";", dtype=str, header=0)
-            if 'column' in kwargs:
-                if kwargs['column'] in df.columns:
-                    self.value_set = set(df[kwargs['column']])
+        self.value_set = value_set
+        self.regex = regex
+        if link is not None:
+            df = pd.read_csv(f"../resources/value_sets/{link}", delimiter=";", dtype=str, header=0)
+            if column is not None:
+                if column in df.columns:
+                    self.value_set = set(df[column])
                 else:
                     raise ValueError("Column not found in file")
             else:
