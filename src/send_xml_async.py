@@ -35,12 +35,18 @@ async def main_and_send_test_async():
     main.main()
     rows = main.args.n
 
+    output_dir = os.environ['output_dir']
+    response_path = os.path.join(output_dir, 'responses')
+
+    if not os.path.isdir(response_path):
+        os.mkdir(response_path)
+
     async with aiohttp.ClientSession() as session:
         tasks = []
         for i in range(rows):
             url = "http://localhost:5080/aktin/cda/fhir/Binary/$validate"
             input_file = f"../output/cda/cda_{i + 1}.cda"
-            output_file = f"../output/fehlercodes/response_{i + 1}.xml"
+            output_file = f"../output/responses/response_{i + 1}.xml"
             task = send_xml_file_async(session, url, input_file, output_file)
             tasks.append(task)
 
@@ -68,7 +74,7 @@ def count_issue_elements(xml_file_path: str) -> int:
 
 
 def get_stats():
-    order = f"../output/fehlercodes/"
+    order = f"../output/responses/"
     all_files = os.listdir(order)
     stats = {"Correct": 0, "Error": 0}
     issue_cdas = []
