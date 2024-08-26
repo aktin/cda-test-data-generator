@@ -116,13 +116,35 @@ def calculate_gcs_sum(df):
 
 
 def define_tasks_for_diagnoses(df, tasks):
+    """
+    Define tasks for each diagnose column in the DataFrame.
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing the data.
+        tasks (list): The list to which the tasks will be appended.
+
+    Returns:
+        None
+    """
     diagnose_csv = os.environ['DIAGNOSES_CSV']
 
+    # Identify all diagnose columns in the DataFrame
     diagnose_cols = [col for col in df.columns if re.match(r'diagnose_code_\d+', col)]
+
     for diagnose in diagnose_cols:
+        # Extract the number from the column name
         num = re.match(r'diagnose_code_(\d+)', diagnose).group(1)
-        task = (diagnose_csv, diagnose, "diagnose_name_" + num, "diagnose_name_" + num,
-                "Schlüsselnummer ohne Strich, Stern und  Ausrufezeichen", "Titel des dreistelligen Kodes")
+
+        task = (
+            diagnose_csv,
+            diagnose,
+            "diagnose_name_" + num,
+            "diagnose_name_" + num,
+            "Schlüsselnummer ohne Strich, Stern und  Ausrufezeichen",
+            "Titel des dreistelligen Kodes"
+        )
+
+        # Append the task to the tasks list
         tasks.append(task)
 
 
