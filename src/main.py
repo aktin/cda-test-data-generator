@@ -27,7 +27,7 @@ def set_environment_variables(config_path):
         ('CEDIS_CSV', 'csv_paths.cedis_csv')
     ]
 
-    base_path = os.path.dirname(os.path.abspath(config_path))  # The directory of the config.toml
+    base_path =  os.path.dirname(os.path.dirname(os.path.abspath(config_path)))  # The directory of the directory of the config.toml (directory of resources and src) TODO: Make dir prettier
 
     with open(config_path, 'r') as file:
         config = toml.load(file)
