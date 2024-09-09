@@ -163,10 +163,13 @@ def calculate_dependencies(filename: str) -> None:
     calculate_timestamps(df)
 
     cities_csv = os.environ['CITIES_CSV']
+    cedis_csv = os.environ['CEDIS_CSV']
 
+    # TODO: Refactor this to use a dictionary instead of a list of tuples
     tasks = [
         (cities_csv, "city", "klinik_name", "organisation_name"),
-        (cities_csv, "city", "postleitzahl", "postleitzahl")
+        (cities_csv, "city", "postleitzahl", "postleitzahl"),
+        (cedis_csv, "cedis", "display_name", "beschwerden_txt")
     ]
 
     define_tasks_for_diagnoses(df, tasks)

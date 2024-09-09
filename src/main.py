@@ -23,7 +23,8 @@ def set_environment_variables(config):
         ('XSLT_FILE', 'cda_paths.xslt_file'),
         ('OUTPUT_DIR', 'cda_paths.output_dir'),
         ('CITIES_CSV', 'csv_paths.cities_csv'),
-        ('DIAGNOSES_CSV', 'csv_paths.diagnoses_csv')
+        ('DIAGNOSES_CSV', 'csv_paths.diagnoses_csv'),
+        ('CEDIS_CSV', 'csv_paths.cedis_csv')
     ]
 
     for env_var, config_key in env_vars:

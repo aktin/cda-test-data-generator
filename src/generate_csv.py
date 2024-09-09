@@ -162,7 +162,7 @@ def generate_csv(excel_path: str, csv_path, num_datasets) -> None:
     output_data = pd.DataFrame()
 
     # Generate data columns
-    output_data = generate_data_columns(variables_dict, num_datasets, output_data, 0.5)
+    output_data = generate_data_columns(variables_dict, num_datasets, output_data, 0.2)
 
     # Output to CSV
     output_data.to_csv(csv_path, index=False)
