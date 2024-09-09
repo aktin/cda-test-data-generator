@@ -7,7 +7,7 @@ from csv_to_cda import csv_to_cda
 from calculate_dependencies import calculate_dependencies
 
 
-def set_environment_variables(config):
+def set_environment_variables(config_path):
     """
     Set environment variables based on the provided configuration dictionary.
 
@@ -27,6 +27,20 @@ def set_environment_variables(config):
         ('CEDIS_CSV', 'csv_paths.cedis_csv')
     ]
 
+    base_path = os.path.dirname(os.path.abspath(config_path))  # The directory of the config.toml
+
+    with open(config_path, 'r') as file:
+        config = toml.load(file)
+
+    config['cda_paths']['csv_path'] = resolve_path(base_path, config['cda_paths']['csv_path'])
+    config['cda_paths']['excel_path'] = resolve_path(base_path, config['cda_paths']['excel_path'])
+    config['cda_paths']['xslt_file'] = resolve_path(base_path, config['cda_paths']['xslt_file'])
+    config['cda_paths']['output_dir'] = resolve_path(base_path, config['cda_paths']['output_dir'])
+
+    config['csv_paths']['cities_csv'] = resolve_path(base_path, config['csv_paths']['cities_csv'])
+    config['csv_paths']['diagnoses_csv'] = resolve_path(base_path, config['csv_paths']['diagnoses_csv'])
+    config['csv_paths']['cedis_csv'] = resolve_path(base_path, config['csv_paths']['cedis_csv'])
+
     for env_var, config_key in env_vars:
         section, key = config_key.split('.')
         os.environ[env_var] = config[section][key]
@@ -39,8 +53,11 @@ def parse_command_line():
     parser.add_argument('--config', type=str, required=True, help='Filepath for configuration TOML file.')
     args = parser.parse_args()
     n = args.n
-    config = toml.load(args.config)
+    config = args.config
 
+
+def resolve_path(base_path, relative_path):
+    return os.path.abspath(os.path.join(base_path, relative_path))
 
 def main():
     parse_command_line()
