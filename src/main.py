@@ -33,19 +33,19 @@ def set_environment_variables(config):
 
 
 def parse_command_line():
-    global parser, args, n
+    global parser, args, n, config
     parser = argparse.ArgumentParser(description='Process Excel to CDA.')
     parser.add_argument('--n', type=int, required=True, help='Number of patients to generate.')
+    parser.add_argument('--config', type=str, required=True, help='Filepath for configuration TOML file.')
     args = parser.parse_args()
     n = args.n
+    config = toml.load(args.config)
 
 
 def main():
-    config = toml.load('../config.toml')
+    parse_command_line()
 
     set_environment_variables(config)
-
-    parse_command_line()
 
     csv_path = os.environ['CSV_PATH']
     excel_path = os.environ['EXCEL_PATH']
