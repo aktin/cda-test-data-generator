@@ -112,7 +112,7 @@ def csv_to_cda(csv_file: str, xslt_file: str) -> None:
     Returns:
         None
     """
-    output_dir = os.environ['output_dir']
+    output_dir = os.environ['OUTPUT_DIR']
     raw_path = os.path.join(output_dir, 'raw')
     cda_path = os.path.join(output_dir, 'cda')
 
