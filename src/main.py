@@ -14,7 +14,7 @@ ENV_VARS: List[Tuple[str, str]] = [
     ('EXCEL_PATH', 'cda_paths.excel_path'),
     ('XSLT_FILE', 'cda_paths.xslt_file'),
     ('OUTPUT_DIR', 'cda_paths.output_dir'),
-    ('CITIES_CSV', 'csv_paths.cities_csv'),
+    ('CLINICS_CSV', 'csv_paths.clinics_csv'),
     ('DIAGNOSES_CSV', 'csv_paths.diagnoses_csv'),
     ('CEDIS_CSV', 'csv_paths.cedis_csv')
 ]
