@@ -62,7 +62,7 @@ def map_csv_to_dataframe(
     df_target_column: str,
     csv_key_column: Optional[str] = None,
     csv_value_column: Optional[str] = None,
-    csv_delimiter: str = ';'
+    csv_delimiter: Optional[str] = ';'
 ) -> pd.DataFrame:
     """
     Map values from a CSV file to a DataFrame based on specified columns.
@@ -170,14 +170,14 @@ def define_tasks_for_diagnoses(df, tasks):
         # Extract the number from the column name
         num = re.match(r'diagnose_code_(\d+)', diagnose).group(1)
 
-        task = (
-            diagnose_csv,
-            diagnose,
-            "diagnose_name_" + num,
-            "diagnose_name_" + num,
-            "Schlüsselnummer ohne Strich, Stern und  Ausrufezeichen",
-            "Titel des dreistelligen Kodes"
-        )
+        task = {
+            'csv_path': diagnose_csv,
+            'df_key_column': diagnose,
+            'df_value_column': "diagnose_name_" + num,
+            'df_target_column': "diagnose_name_" + num,
+            'csv_key_column': "Schlüsselnummer ohne Strich, Stern und  Ausrufezeichen",
+            'csv_value_column': "Titel des dreistelligen Kodes"
+        }
 
         # Append the task to the tasks list
         tasks.append(task)
@@ -197,20 +197,34 @@ def calculate_dependencies(filename: str) -> None:
 
     calculate_timestamps(df)
 
-    cities_csv = os.environ['CITIES_CSV']
+    clinics_csv = os.environ['CLINICS_CSV']
     cedis_csv = os.environ['CEDIS_CSV']
 
-    # TODO: Refactor this to use a dictionary instead of a list of tuples
     tasks = [
-        (cities_csv, "city", "klinik_name", "organisation_name"),
-        (cities_csv, "city", "postleitzahl", "postleitzahl"),
-        (cedis_csv, "cedis", "display_name", "beschwerden_txt")
+        {
+            'csv_path': clinics_csv,
+            'df_key_column': 'city',
+            'df_value_column': 'klinik_name',
+            'df_target_column': 'organisation_name',
+        },
+        {
+            'csv_path': clinics_csv,
+            'df_key_column': 'city',
+            'df_value_column': 'postleitzahl',
+            'df_target_column': 'postleitzahl',
+        },
+        {
+            'csv_path': cedis_csv,
+            'df_key_column': 'cedis',
+            'df_value_column': 'display_name',
+            'df_target_column': 'beschwerden_txt',
+        }
     ]
 
     define_tasks_for_diagnoses(df, tasks)
 
     for task in tasks:
-        map_csv_to_dataframe(df, *task)
+        map_csv_to_dataframe(df, **task)
 
     calculate_gcs_sum(df)
 
