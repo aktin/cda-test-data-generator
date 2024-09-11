@@ -1,5 +1,6 @@
 import os
 import re
+from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -53,27 +54,61 @@ def calculate_timestamps(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def read_csv_and_map(df, csv, key_column, value_column, concept_id, key_csv=None, value_csv=None):
+def map_csv_to_dataframe(
+    df: pd.DataFrame,
+    csv_path: str,
+    df_key_column: str,
+    df_value_column: str,
+    df_target_column: str,
+    csv_key_column: Optional[str] = None,
+    csv_value_column: Optional[str] = None,
+    csv_delimiter: str = ';'
+) -> pd.DataFrame:
     """
-    Read a CSV file and map its values to a DataFrame based on specified columns.
+    Map values from a CSV file to a DataFrame based on specified columns.
+
+    This function reads a CSV file, creates a mapping between two of its columns,
+    and uses this mapping to populate a new column in the input DataFrame.
 
     Args:
-        df (pd.DataFrame): The DataFrame to update.
-        csv (str): The path to the CSV file.
-        key_column (str): The column in the DataFrame to use as the key for mapping.
-        value_column (str): The column in the DataFrame to use as the value for mapping.
-        concept_id (str): The column in the DataFrame to store the mapped values.
-        key_csv (str, optional): The column in the CSV file to use as the key. Defaults to key_column.
-        value_csv (str, optional): The column in the CSV file to use as the value. Defaults to value_column.
+        df (pd.DataFrame): The input DataFrame to update.
+        csv_path (str): The path to the CSV file containing the mapping data.
+        df_key_column (str): The column in the DataFrame to use as the key for mapping.
+        df_value_column (str): The column in the DataFrame containing the values to be mapped.
+        df_target_column (str): The new column in the DataFrame to store the mapped values.
+        csv_key_column (str, optional): The column in the CSV file to use as the key.
+                                        If None, defaults to df_key_column.
+        csv_value_column (str, optional): The column in the CSV file to use as the value.
+                                          If None, defaults to df_value_column.
+        csv_delimiter (str, optional): The delimiter used in the CSV file. Defaults to ';'.
 
     Returns:
-        None
+        pd.DataFrame: The updated DataFrame with the new mapped column.
+
+    Example:
+        df = pd.DataFrame({'ID': ['1', '2', '3'], 'Value': ['A', 'B', 'C']})
+        result = map_csv_to_dataframe(
+            df,
+            'mapping.csv',
+            'ID',
+            'Value',
+            'MappedValue'
+        )
     """
-    key_csv = key_csv if key_csv else key_column
-    value_csv = value_csv if value_csv else value_column
-    df_csv = pd.read_csv(csv, dtype=str, delimiter=';')
-    tuples = dict(zip(df_csv[key_csv], df_csv[value_csv]))
-    df[concept_id] = df[key_column].apply(lambda x: tuples.get(x) if x in tuples.keys() else "")
+    # Use DataFrame column names for CSV if not specified
+    csv_key_column = csv_key_column or df_key_column
+    csv_value_column = csv_value_column or df_value_column
+
+    # Read the CSV file
+    csv_df = pd.read_csv(csv_path, dtype=str, delimiter=csv_delimiter)
+
+    # Create a mapping dictionary from the CSV data
+    mapping = dict(zip(csv_df[csv_key_column], csv_df[csv_value_column]))
+
+    # Apply the mapping to create the new column
+    df[df_target_column] = df[df_key_column].map(mapping).fillna('')
+
+    return df
 
 
 def make_associated_person_family_member(df):
@@ -175,7 +210,7 @@ def calculate_dependencies(filename: str) -> None:
     define_tasks_for_diagnoses(df, tasks)
 
     for task in tasks:
-        read_csv_and_map(df, *task)
+        map_csv_to_dataframe(df, *task)
 
     calculate_gcs_sum(df)
 
