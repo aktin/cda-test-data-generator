@@ -1,84 +1,136 @@
 import os
 import toml
 import argparse
+import logging
+from typing import Dict, List, Tuple
 
 from generate_csv import generate_csv
 from csv_to_cda import csv_to_cda
 from calculate_dependencies import calculate_dependencies
 
+# Constants
+ENV_VARS: List[Tuple[str, str]] = [
+    ('CSV_PATH', 'cda_paths.csv_path'),
+    ('EXCEL_PATH', 'cda_paths.excel_path'),
+    ('XSLT_FILE', 'cda_paths.xslt_file'),
+    ('OUTPUT_DIR', 'cda_paths.output_dir'),
+    ('CITIES_CSV', 'csv_paths.cities_csv'),
+    ('DIAGNOSES_CSV', 'csv_paths.diagnoses_csv'),
+    ('CEDIS_CSV', 'csv_paths.cedis_csv')
+]
 
-def set_environment_variables(config_path):
+
+def setup_logging() -> None:
+    """Set up logging configuration."""
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+
+def set_environment_variables(config_path: str) -> None:
     """
-    Set environment variables based on the provided configuration dictionary.
+    Set environment variables based on the provided configuration file.
 
     Args:
-        config (dict): Configuration dictionary containing paths for environment variables.
+        config_path (str): Path to the configuration file.
+
+    Raises:
+        FileNotFoundError: If the configuration file is not found.
+        toml.TomlDecodeError: If the configuration file is not valid TOML.
+    """
+    try:
+        base_path = os.path.dirname(os.path.dirname(os.path.abspath(config_path)))
+
+        with open(config_path, 'r') as file:
+            config = toml.load(file)
+
+        for section in ['cda_paths', 'csv_paths']:
+            for key in config[section]:
+                config[section][key] = resolve_path(base_path, config[section][key])
+
+        for env_var, config_key in ENV_VARS:
+            section, key = config_key.split('.')
+            os.environ[env_var] = config[section][key]
+
+        logging.info("Environment variables set successfully.")
+    except FileNotFoundError:
+        logging.error(f"Configuration file not found: {config_path}")
+        raise
+    except toml.TomlDecodeError:
+        logging.error(f"Invalid TOML file: {config_path}")
+        raise
+
+
+def parse_command_line() -> Tuple[int, str, bool]:
+    """
+    Parse command line arguments.
 
     Returns:
-        None
+        Tuple[int, str, bool]: Number of patients, config file path, and cleanup flag.
     """
-    env_vars = [
-        ('CSV_PATH', 'cda_paths.csv_path'),
-        ('EXCEL_PATH', 'cda_paths.excel_path'),
-        ('XSLT_FILE', 'cda_paths.xslt_file'),
-        ('OUTPUT_DIR', 'cda_paths.output_dir'),
-        ('CITIES_CSV', 'csv_paths.cities_csv'),
-        ('DIAGNOSES_CSV', 'csv_paths.diagnoses_csv'),
-        ('CEDIS_CSV', 'csv_paths.cedis_csv')
-    ]
-
-    base_path =  os.path.dirname(os.path.dirname(os.path.abspath(config_path)))  # The directory of the directory of the config.toml (directory of resources and src) TODO: Make dir prettier
-
-    with open(config_path, 'r') as file:
-        config = toml.load(file)
-
-    config['cda_paths']['csv_path'] = resolve_path(base_path, config['cda_paths']['csv_path'])
-    config['cda_paths']['excel_path'] = resolve_path(base_path, config['cda_paths']['excel_path'])
-    config['cda_paths']['xslt_file'] = resolve_path(base_path, config['cda_paths']['xslt_file'])
-    config['cda_paths']['output_dir'] = resolve_path(base_path, config['cda_paths']['output_dir'])
-
-    config['csv_paths']['cities_csv'] = resolve_path(base_path, config['csv_paths']['cities_csv'])
-    config['csv_paths']['diagnoses_csv'] = resolve_path(base_path, config['csv_paths']['diagnoses_csv'])
-    config['csv_paths']['cedis_csv'] = resolve_path(base_path, config['csv_paths']['cedis_csv'])
-
-    for env_var, config_key in env_vars:
-        section, key = config_key.split('.')
-        os.environ[env_var] = config[section][key]
-
-
-def parse_command_line():
-    global parser, args, n, config
     parser = argparse.ArgumentParser(description='Process Excel to CDA.')
     parser.add_argument('--n', type=int, required=True, help='Number of patients to generate.')
     parser.add_argument('--config', type=str, required=True, help='Filepath for configuration TOML file.')
+    parser.add_argument('--cleanup', action='store_true', help='Remove intermediate CSV file after processing.')
     args = parser.parse_args()
-    n = args.n
-    config = args.config
+    return args.n, args.config, args.cleanup
 
 
-def resolve_path(base_path, relative_path):
+def resolve_path(base_path: str, relative_path: str) -> str:
+    """
+    Resolve relative path to absolute path.
+
+    Args:
+        base_path (str): Base directory path.
+        relative_path (str): Relative path to resolve.
+
+    Returns:
+        str: Absolute path.
+    """
     return os.path.abspath(os.path.join(base_path, relative_path))
 
-def main():
-    parse_command_line()
 
-    set_environment_variables(config)
+def process_excel_to_cda(n: int, cleanup: bool) -> None:
+    """
+    Process Excel file to CDA.
 
+    Args:
+        n (int): Number of patients to generate.
+        cleanup (bool): Whether to remove the intermediate CSV file.
+    """
     csv_path = os.environ['CSV_PATH']
     excel_path = os.environ['EXCEL_PATH']
     xslt_file = os.environ['XSLT_FILE']
 
-    # First step: Generate csv with rows as patients
-    generate_csv(excel_path, csv_path, n)
+    try:
+        logging.info("Generating CSV...")
+        generate_csv(excel_path, csv_path, n)
 
-    # Second step: Set dependable variables
-    calculate_dependencies(csv_path)
+        logging.info("Calculating dependencies...")
+        calculate_dependencies(csv_path)
 
-    # Third step: Transform to CDA
-    csv_to_cda(csv_path, xslt_file)
+        logging.info("Transforming to CDA...")
+        csv_to_cda(csv_path, xslt_file)
 
-    # Remove data.csv
-    # os.remove(csv_path)
+        if cleanup:
+            logging.info("Cleaning up intermediate CSV file...")
+            os.remove(csv_path)
+
+        logging.info("Processing completed successfully.")
+    except Exception as e:
+        logging.error(f"An error occurred during processing: {str(e)}")
+        raise
+
+
+def main() -> None:
+    """Main function to orchestrate the Excel to CDA conversion process."""
+    setup_logging()
+
+    try:
+        n, config, cleanup = parse_command_line()
+        set_environment_variables(config)
+        process_excel_to_cda(n, cleanup)
+    except Exception as e:
+        logging.error(f"Script execution failed: {str(e)}")
+        exit(1)
 
 
 if __name__ == '__main__':
