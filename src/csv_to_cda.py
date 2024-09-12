@@ -134,4 +134,4 @@ def csv_to_cda(csv_file: str, xslt_file: str) -> None:
         tree = add_processing_instructions(etree.ElementTree(xml_root))
 
         # Save CDA
-        save_xml(tree, os.path.join(cda_path, f'cda_{i}.cda'))
+        save_xml(tree, os.path.join(cda_path, f'cda_{i}.xml'))
