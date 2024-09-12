@@ -2,6 +2,7 @@ import os
 import toml
 import argparse
 import logging
+import glob
 from typing import Dict, List, Tuple
 
 from generate_csv import generate_csv
@@ -113,6 +114,12 @@ def process_excel_to_cda(n: int, cleanup: bool) -> None:
         if cleanup:
             logging.info("Cleaning up intermediate CSV file...")
             os.remove(csv_path)
+
+            logging.info("Cleaning up intermediate RAW files")
+            # Remove all files in the raw directory
+            raw_dir = os.path.join(os.environ['OUTPUT_DIR'], 'raw')
+            for file_path in glob.glob(os.path.join(raw_dir, '*')):
+                os.remove(file_path)
 
         logging.info("Processing completed successfully.")
     except Exception as e:
