@@ -1,0 +1,172 @@
+cedis;display_name
+001;Herzstillstand (nicht traumatisch)
+002;Herzstillstand (traumatisch)
+003;Brustschmerz (kardial)
+004;Brustschmerz (nicht kardial)
+005;Palpitationen/unregelmäßiger Herzschlag
+006;Hypertonie
+007;Allgemeine Schwäche
+008;Synkope/Präsynkope
+009;Ödem, generalisiert
+010;Beinschwellung/Ödem
+011;Kühle, pulslose Extremität
+012;Eine Extremität gerötet, überwärmt
+051;Ohrenschmerzen
+052;Fremdkörper im Ohr
+053;Hörverlust
+054;Tinnitus
+055;Ausfluss aus dem Ohr
+056;Ohrverletzung
+101;Zahn-/Zahnfleischprobleme
+102;Trauma Gesicht
+103;Halsschmerzen (wunder Rachen)
+104;Halsschwellung/-schmerzen
+105;Trauma Hals
+106;Schluckbeschwerden/Dysphagie
+107;Schmerzen im Gesicht (nicht traumatisch, nicht dental)
+151;Nasenbluten
+152;Verstopfte Nase/Heuschnupfen
+153;Fremdkörper in der Nase
+154;Beschwerden eines Infektes der oberen Luftwege
+155;Trauma Nase
+201;Erfrierung/Kälteverletzung
+202;Schädliche Inhalation
+203;Stromunfall
+204;Exposition gegenüber Chemikalien
+205;Unterkühlung
+206;Beinahe-Ertrinken
+251;Bauchschmerzen
+252;Appetitlosigkeit
+253;Verstopfung
+254;Durchfall
+255;Fremdkörper im Rektum
+256;Leistenschmerzen/-schwellung
+257;Übelkeit und/oder Erbrechen
+258;Rektale/perineale Schmerzen
+259;Bluterbrechen
+260;Peranaler Blutabgang/Teerstuhl
+261;Ikterus
+262;Schluckauf
+263;Abdominelle Raumforderung/gespanntes Abdomen
+264;Trauma anal/rektal
+265;Fremdkörper oral/ösophageal
+266;Trinkstörung des Neugeborenen
+267;Neugeborenenikterus
+301;Flankenschmerz
+302;Hämaturie
+303;Genitaler Ausfluss/Läsion
+304;Penisschwellung
+305;Skrotale Schmerzen und/oder Schwellung
+306;Harnverhalt
+307;Beschwerden eines Harnwegsinfektes
+308;Oligurie
+309;Polyurie
+310;Trauma genital
+351;Depression/Suizidalität/absichtliche Selbstschädigung
+352;Angst/situationsbezogene Krise
+353;Halluzinationen/Wahnvorstellungen
+354;Schlafstörung
+355;Gewalttätiges Verhalten/Fremdgefährdung
+356;Soziales Problem
+358;Sonderbares Verhalten
+359;Sorge um das Wohlergehen des Patienten
+360;Kindliche Verhaltensauffälligkeit
+401;Veränderter Bewußtseinszustand
+402;Verwirrtheit
+403;Schwindel
+404;Kopfschmerz
+405;Krampfanfall
+406;Gangstörung/Ataxie
+407;Kopfverletzung
+408;Zittern
+409;Schwäche in den Extremitäten/Symptome eines Schlaganfalls oder TIA
+410;Sensibilitätsstörung/Parästhesie
+411;Schlaffes Kind
+451;Menstruationsbeschwerden
+452;Fremdkörper in der Vagina
+453;Vaginaler Ausfluss
+454;Sexueller Übergriff
+455;Vaginale Blutung
+456;Schamlippenschwellung
+457;Schwangerschaftsprobleme ≤ 20. SSW
+458;Schwangerschaftsprobleme > 20. SSW
+460;Vaginale Schmerzen/Schmerzen beim Geschlechtsverkehr
+502;Exposition des Auges gegenüber Chemikalien
+503;Fremdkörper im Auge
+504;Sehstörung
+505;Augenschmerzen
+506;Rote Augen, Ausfluss aus dem Auge
+507;Lichtscheu
+508;Doppelbilder
+509;Periorbitale Schwellung
+510;Trauma Auge
+511;Kontrolluntersuchung der Augen
+551;Rückenschmerzen
+552;Traumatische Rücken-/Wirbelsäulenverletzung
+553;Amputation
+554;Schmerzen obere Extremität
+555;Schmerzen untere Extremität
+556;Verletzung obere Extremität
+557;Verletzung untere Extremität
+558;Gelenkschwellung
+559;Kindliche Gangstörung/Schmerzen beim Gehen
+651;Luftnot
+652;Atemstillstand
+653;Husten/Verschleimung
+654;Hyperventilation
+655;Bluthusten
+656;Fremdkörper in den Atemwegen
+657;Allergische Reaktion
+658;Stridor
+659;Giemen ohne weitere Beschwerden
+660;Apnoeanfälle bei Säuglingen
+661;Grippeähnliche Erkrankung
+701;Biss
+702;Insektenstich
+703;Abschürfung
+704;Riss-/Quetsch-/Schnitt-/Stichwunde
+705;Verbrennung
+706;Kontakt mit Blut oder Körperflüssigkeiten
+707;Juckreiz
+708;Hautausschlag
+709;Lokalisierte Schwellung/Rötung
+710;Wundkontrolle
+711;Sonstige Hautprobleme
+712;Schwellung/Beule/Schwiele
+713;Rötung/Spannungsgefühl in der Brust
+714;Ausschluß eines Parasitenbefalls
+715;Zyanose
+716;Spontane Hauteinblutungen
+717;Fremdkörper in der Haut
+718;Nagelprobleme
+751;Substanzmissbrauch/Intoxikation
+752;Einnahme einer Überdosierung
+753;Substanzentzug
+801;Schweres Trauma - penetrierend
+802;Schweres Trauma - stumpf
+803;Isoliertes Thoraxtrauma - penetrierend
+804;Isoliertes Thoraxtrauma - stumpf
+805;Isoliertes Abdominaltrauma - penetrierend
+806;Isoliertes Abdominaltrauma - stumpf
+851;Exposition gegenüber einer übertragbaren Krankheit
+852;Fieber
+853;Hyperglykämie
+854;Hypoglykämie
+855;Direkte Überweisung/Weiterleitung
+856;Verbandswechsel
+857;Entfernung von Klammern/Nähten
+858;Gipskontrolle
+859;Bildgebung/Blutuntersuchung
+860;Problem mit Medizinprodukt
+861;Verschreibung/Bedarf an Medikamenten
+862;Entfernung Ring
+863;Auffällige Ergebnisse Labor/Bildgebung
+864;Blässe/Anämie
+865;Postoperative Komplikationen
+866;Geringfügige unspezifische Beschwerden
+867;Unstillbares Schreien
+868;Angeborene Probleme bei Kindern
+869;Neugeborenes
+870;Intravenöse Therapie
+998;Patient aufgenommen und vor Ersteinschätzung wieder gegangen
+OTH;Other
