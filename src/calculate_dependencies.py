@@ -1,12 +1,9 @@
+import datetime as dt
 import os
 import re
 from typing import Optional
 
-import numpy as np
 import pandas as pd
-import datetime as dt
-
-from generator import GeneratorFactory, GeneratorType
 
 
 def _add_minutes_to_timestamp(timestamp, minutes, format_in="%Y%m%d%H%M%S", format_out="%Y%m%d%H%M%S"):
@@ -121,7 +118,7 @@ def make_associated_person_family_member(df):
     Returns:
         None
     """
-    df['_associatedPerson_family'] = df['family_patient']
+    df['_associatedPerson_vorname'] = df['nachname_patient']
 
 
 def make_pregnant_man_not_pregnant(df):
@@ -203,13 +200,13 @@ def calculate_dependencies(filename: str) -> None:
     tasks = [
         {
             'csv_path': clinics_csv,
-            'df_key_column': 'city',
+            'df_key_column': 'stadt',
             'df_value_column': 'klinik_name',
             'df_target_column': 'organisation_name',
         },
         {
             'csv_path': clinics_csv,
-            'df_key_column': 'city',
+            'df_key_column': 'stadt',
             'df_value_column': 'postleitzahl',
             'df_target_column': 'postleitzahl',
         },

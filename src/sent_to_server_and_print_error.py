@@ -29,7 +29,7 @@ def send_xml_file(url: str, xml_file_path: str, response_file_path: str) -> None
 
 def main_and_sent_test():
     main.main()
-    rows = main.args.rows
+    rows = main.args.n
     for i in range(rows):
         send_xml_file("http://localhost:5080/aktin/cda/fhir/Binary/$validate", f"../output/cda/cda_{i+1}.cda",
                       f"../output/fehlercodes/response_{i+1}.xml")

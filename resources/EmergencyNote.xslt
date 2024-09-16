@@ -50,7 +50,7 @@
                     <!-- Adresse -->
                     <addr>
                         <streetAddressLine>
-                            <xsl:value-of select="street_address_line"/>
+                            <xsl:value-of select="strassenadressenzeile"/>
                         </streetAddressLine>
                         <postalCode>
                             <xsl:value-of select="postleitzahl"/>
@@ -63,10 +63,10 @@
                         <!-- Name -->
                         <name>
                             <given>
-                                <xsl:value-of select="given_patient"/>
+                                <xsl:value-of select="vorname_patient"/>
                             </given>
                             <family>
-                                <xsl:value-of select="family_patient"/>
+                                <xsl:value-of select="nachname_patient"/>
                             </family>
                         </name>
                         <!-- Geschlecht -->
@@ -99,10 +99,10 @@
                                 <xsl:value-of select="prefix_author"/>
                             </prefix>
                             <given>
-                                <xsl:value-of select="given_author"/>
+                                <xsl:value-of select="vorname_author"/>
                             </given>
                             <family>
-                                <xsl:value-of select="family_author"/>
+                                <xsl:value-of select="nachname_author"/>
                             </family>
                         </name>
                     </assignedPerson>
@@ -149,17 +149,17 @@
                     <id extension="123456789" root="1.2.276.0.76.3.1.131.1.4.3.9999.9999.999955"/>
                     <code code="SELF" codeSystem="2.16.840.1.113883.5.111" displayName="self">
                         <xsl:attribute name="code">
-                            <xsl:value-of select="insurance_case"/>
+                            <xsl:value-of select="versicherungsfall"/>
                         </xsl:attribute>
                     </code>
-                    <xsl:if test="insurance_case = 'FAMDEP'">
+                    <xsl:if test="versicherungsfall = 'FAMDEP'">
                         <associatedPerson>
                             <name>
                                 <given>
-                                    <xsl:value-of select="_associatedPerson_given"/>
+                                    <xsl:value-of select="_associatedPerson_vorname"/>
                                 </given>
                                 <family>
-                                    <xsl:value-of select="_associatedPerson_family"/>
+                                    <xsl:value-of select="_associatedPerson_nachname"/>
                                 </family>
                             </name>
                         </associatedPerson>
@@ -226,7 +226,7 @@
                     <!-- Aufnahme-Identifikator -->
                     <id root="1.2.276.0.76.3.87686">
                         <xsl:attribute name="extension">
-                            <xsl:value-of select="encounter_id"/>
+                            <xsl:value-of select="aufnahme_id"/>
                         </xsl:attribute>
                     </id>
                     <effectiveTime>
@@ -295,14 +295,14 @@
                                     </effectiveTime>
                                     <value xsi:type="CV" codeSystem="1.2.276.0.76.3.1.195.5.41">
                                         <xsl:choose>
-                                            <xsl:when test="transportmittel = '' or transportmittel = 'OTH'">
+                                            <xsl:when test="transportmethode = '' or transportmethode = 'OTH'">
                                                 <xsl:attribute name="nullFlavor">
                                                     <xsl:text>NA</xsl:text>
                                                 </xsl:attribute>
                                             </xsl:when>
                                             <xsl:otherwise>
                                                 <xsl:attribute name="code">
-                                                    <xsl:value-of select="transportmittel"/>
+                                                    <xsl:value-of select="transportmethode"/>
                                                 </xsl:attribute>
                                             </xsl:otherwise>
                                         </xsl:choose>
