@@ -1,13 +1,14 @@
-import os
-import toml
 import argparse
-import logging
 import glob
-from typing import Dict, List, Tuple
+import logging
+import os
+from typing import List, Tuple
 
-from generate_csv import generate_csv
-from csv_to_cda import csv_to_cda
+import toml
+
 from calculate_dependencies import calculate_dependencies
+from csv_to_cda import csv_to_cda
+from generate_csv import generate_csv
 
 # Constants
 ENV_VARS: List[Tuple[str, str]] = [
