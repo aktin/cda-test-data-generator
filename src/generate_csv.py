@@ -104,6 +104,7 @@ def generate_data_columns(variables_dict, num_datasets, output_data, probability
     for concept_id, (default_values, var_type, params, nullable) in variables_dict.items():
         # Generate data column
         column_list = GeneratorFactory.create_generator(GeneratorType(var_type), params).generate(num_datasets)
+        # Remove entries if possible
         if nullable:
             column_list = remove_with_probability(column_list, probability_missing)
         new_column = pd.Series(data=column_list, name=concept_id)

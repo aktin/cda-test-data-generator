@@ -996,7 +996,7 @@
                                             <id root="1.2.276.0.76.4.17.9814184919"
                                                 extension="944cd73e-4361-4fca-929b-9a404b063651"/>
                                             <code code="18767-4" codeSystem="2.16.840.1.113883.6.1"
-                                                  displayName="Blood gas studies"/>
+                                                      displayName="Blood gas studies"/>
                                             <text>
                                                 <reference value="#proc-10"/>
                                             </text>
