@@ -15,9 +15,10 @@ class GeneratorType(Enum):
     """
     INT = 'int'
     FLOAT = 'float'
-    STRING = 'String'
+    STRING = 'string'
     UUID = 'UUID'
     DATE = 'date'
+    LOOKUP = 'lookup'
 
 
 class AbstractGenerator(ABC):
@@ -30,6 +31,7 @@ class DateGenerator(AbstractGenerator):
     """
     Generator for random dates within a specified range.
     """
+
     def __init__(self, start_date=None, end_date=None, date_format="yyyymmddhhmmss"):
         """
         Initialize the DateGenerator with optional parameters.
@@ -120,6 +122,25 @@ class IntGenerator(AbstractGenerator):
             yield random.randint(self.min_value, self.max_value)
 
 
+class LookupGenerator(AbstractGenerator):
+    def __init__(self, link=None, column=None):
+        self.link = link
+        self.column = column
+        self._load_value_set_from_csv(link, column)
+
+    def _load_value_set_from_csv(self, link, column):
+        if not column:
+            raise ValueError("Column not specified in parameters")
+        df = pd.read_csv(f"../resources/value_sets/{link}", delimiter=";", dtype=str, header=0)
+        if column not in df.columns:
+            raise ValueError(f"Column '{column}' not found in file")
+        self.value_set = set(df[column])
+
+    def generate(self):
+        while True:
+            yield random.choice(tuple(self.value_set))
+
+
 class StringGenerator(AbstractGenerator):
     """
     Generator for random string values based on a value set or regex pattern.
@@ -137,17 +158,6 @@ class StringGenerator(AbstractGenerator):
         """
         self.value_set = value_set
         self.regex = regex
-        if link is not None:
-            self._load_value_set_from_csv(link, column)
-
-    def _load_value_set_from_csv(self, link, column):
-        if not column:
-            raise ValueError("Column not specified in parameters")
-        df = pd.read_csv(f"../resources/value_sets/{link}", delimiter=";", dtype=str, header=0)
-        if column not in df.columns:
-            raise ValueError(f"Column '{column}' not found in file")
-
-        self.value_set = set(df[column])
 
     def generate(self):
         """
@@ -192,7 +202,8 @@ class GeneratorFactory:
         GeneratorType.FLOAT: FloatGenerator,
         GeneratorType.STRING: StringGenerator,
         GeneratorType.UUID: UUIDGenerator,
-        GeneratorType.DATE: DateGenerator
+        GeneratorType.DATE: DateGenerator,
+        GeneratorType.LOOKUP: LookupGenerator
     }
 
     @classmethod
