@@ -118,7 +118,7 @@ def make_associated_person_family_member(df):
     Returns:
         None
     """
-    df['_associatedPerson_vorname'] = df['nachname_patient']
+    df['_associatedPerson_nachname'] = df['nachname_patient']
 
 
 def make_pregnant_man_not_pregnant(df):

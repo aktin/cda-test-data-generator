@@ -6,7 +6,7 @@ import pandas as pd
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
 from enum import Enum
-from typing import Dict
+from typing import Dict, List, Any
 
 
 class GeneratorType(Enum):
@@ -23,7 +23,7 @@ class GeneratorType(Enum):
 
 class AbstractGenerator(ABC):
     @abstractmethod
-    def generate(self):
+    def generate(self, count: int) -> List[Any]:
         pass
 
 
@@ -45,25 +45,24 @@ class DateGenerator(AbstractGenerator):
         self.end_date = end_date if end_date else datetime.today()
         self.format = date_format
 
-    def generate(self):
+    def generate(self, count: int) -> List[str]:
         """
         Generate random dates within the specified range and format.
 
         Yields:
             str: A randomly generated date string.
         """
-        while True:
-            random_date = self.start_date + timedelta(
-                seconds=random.randint(0, int((self.end_date - self.start_date).total_seconds()))
-            )
-            if self.format == 'yyyymmdd':
-                yield random_date.strftime('%Y%m%d')
-            elif self.format == 'yyyymmddhhmm':
-                yield random_date.strftime('%Y%m%d%H%M')
-            elif self.format == 'yyyymmddhhmmss':
-                yield random_date.strftime('%Y%m%d%H%M%S')
-            else:
-                yield random_date.strftime('%Y%m%d%H%M%S')  # Default to full format
+        random_date = self.start_date + timedelta(
+            seconds=random.randint(0, int((self.end_date - self.start_date).total_seconds()))
+        )
+        if self.format == 'yyyymmdd':
+            return [random_date.strftime('%Y%m%d') for _ in range(count)]
+        elif self.format == 'yyyymmddhhmm':
+            return [random_date.strftime('%Y%m%d%H%M') for _ in range(count)]
+        elif self.format == 'yyyymmddhhmmss':
+            return [random_date.strftime('%Y%m%d%H%M%S') for _ in range(count)]
+        else:
+            return [random_date.strftime('%Y%m%d%H%M%S') for _ in range(count)]
 
 
 class FloatGenerator(AbstractGenerator):
@@ -84,15 +83,14 @@ class FloatGenerator(AbstractGenerator):
         self.max_value = max_value
         self.precision = precision
 
-    def generate(self):
+    def generate(self, count):
         """
         Generate random float values within the specified range and precision.
 
         Yields:
             float: A randomly generated float value.
         """
-        while True:
-            yield round(random.uniform(self.min_value, self.max_value), self.precision)
+        return [round(random.uniform(self.min_value, self.max_value), self.precision) for _ in range(count)]
 
 
 class IntGenerator(AbstractGenerator):
@@ -111,15 +109,14 @@ class IntGenerator(AbstractGenerator):
         self.min_value = min_value
         self.max_value = max_value
 
-    def generate(self):
+    def generate(self, count):
         """
         Generate random integer values within the specified range.
 
         Yields:
             int: A randomly generated integer value.
         """
-        while True:
-            yield random.randint(self.min_value, self.max_value)
+        return [random.randint(self.min_value, self.max_value) for _ in range(count)]
 
 
 class LookupGenerator(AbstractGenerator):
@@ -157,15 +154,14 @@ class LookupGenerator(AbstractGenerator):
             raise ValueError(f"Column '{column}' not found in file")
         self.value_set = set(df[column])
 
-    def generate(self):
+    def generate(self, count):
         """
         Generate random values from the loaded value set.
 
         Yields:
             str: A randomly generated value from the value set.
         """
-        while True:
-            yield random.choice(tuple(self.value_set))
+        return [random.choice(tuple(self.value_set)) for _ in range(count)]
 
 
 class StringGenerator(AbstractGenerator):
@@ -186,7 +182,7 @@ class StringGenerator(AbstractGenerator):
         self.value_set = value_set
         self.regex = regex
 
-    def generate(self):
+    def generate(self, count):
         """
         Generate random string values based on the value set or regex pattern.
 
@@ -194,14 +190,11 @@ class StringGenerator(AbstractGenerator):
             str: A randomly generated string value.
         """
         if self.value_set:  # If value set is provided, choose from it
-            while True:
-                yield random.choice(tuple(self.value_set))
+            return [random.choice(tuple(self.value_set)) for _ in range(count)]
         elif self.regex:  # If regex pattern is provided, generate strings based on it
-            while True:
-                yield exrex.getone(self.regex)
-        else:  # Default to random alphanumeric strings
-            while True:
-                yield ''.join(random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') for _ in range(10))
+            return [exrex.getone(self.regex) for _ in range(count)]
+        else:  # Default to empty strings
+            return ['' for _ in range(count)]
 
 
 class UUIDGenerator(AbstractGenerator):
@@ -209,15 +202,14 @@ class UUIDGenerator(AbstractGenerator):
     def __init__(self, **kwargs):
         pass
 
-    def generate(self):
+    def generate(self, count):
         """
         Generate random UUID values.
 
         Yields:
             UUID: A randomly generated UUID.
         """
-        while True:
-            yield uuid.uuid4()
+        return [uuid.uuid4() for _ in range(count)]
 
 
 class GeneratorFactory:

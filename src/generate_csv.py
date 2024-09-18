@@ -1,3 +1,5 @@
+from random import random
+
 import numpy as np
 import pandas as pd
 
@@ -66,28 +68,6 @@ def parse_parameters_to_dict(variables_dict: dict) -> dict:
     return variables_dict
 
 
-def add_new_variables_to_dict(new_variables, variables_dict):
-    """
-    Add new variables to the dictionary by expanding variables with a 'number' parameter.
-
-    Args:
-        new_variables (dict): A dictionary of new variables to add, where the keys are concept IDs and the values are tuples containing
-                              default values, generation type, parameters, and null flavors.
-        variables_dict (dict): The original dictionary to update with the new variables.
-
-    Returns:
-        None
-    """
-    for concept_id, (default_values, var_type, params, null_flavors) in new_variables.items():
-        # Remove the original variable from the dictionary
-        variables_dict.pop(concept_id)
-        # How many times should the variable be generated
-        num = remove_number_from_params(concept_id, new_variables)
-
-        for i in range(num):
-            variables_dict[f"{concept_id}_{i}"] = (default_values, var_type, params, null_flavors)
-
-
 def remove_number_from_params(concept_id, new_variables):
     """
     Remove the 'number' parameter from the parameters of a given concept ID in the new variables dictionary.
@@ -123,14 +103,27 @@ def generate_data_columns(variables_dict, num_datasets, output_data, probability
     """
     for concept_id, (default_values, var_type, params, nullable) in variables_dict.items():
         # Generate data column
-        generator = GeneratorFactory.create_generator(GeneratorType(var_type), params).generate()
-        column_list = generate_column_list(generator, num_datasets, nullable, probability_missing)
-
+        column_list = GeneratorFactory.create_generator(GeneratorType(var_type), params).generate(num_datasets)
+        if nullable:
+            column_list = remove_with_probability(column_list, probability_missing)
         new_column = pd.Series(data=column_list, name=concept_id)
         output_data = pd.concat([output_data, new_column], axis=1)
 
     return output_data
 
+
+def remove_with_probability(column, probability):
+    """
+    Remove elements from the column with a given probability.
+
+    Args:
+        column (list): The list of values from which elements will be removed.
+        probability (float): The probability with which an element will be removed.
+
+    Returns:
+        list: A list with some elements replaced by None based on the given probability.
+    """
+    return [None if random() < probability else value for value in column]
 
 def generate_csv(excel_path: str, csv_path, num_datasets) -> None:
     """
