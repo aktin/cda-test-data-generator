@@ -20,27 +20,27 @@ def extract_concept_id_attributes(input_df: pd.DataFrame) -> dict:
     variables_dict = {}
     for _, row in input_df.iterrows():
         variables_dict[row['Concept Id']] = (
-            row['Default values'], row['Generation type'], row['Parameters'], row['Nullflavor'])
+            row['Default values'], row['Generation type'], row['Parameters'], row['Nullable'])
     return variables_dict
 
 
-def generate_column_list(generator, num_datasets, null_flavors, probability_missing=0.5):
+def generate_column_list(generator, num_datasets, nullable, probability_missing=0.5):
     """
     Generate a list of data for a column, with optional handling for missing values.
 
     Args:
         generator (generator): A generator object that produces data values.
         num_datasets (int): The number of data values to generate.
-        null_flavors (str or None): A value indicating if null values should be included.
+        nullable (bool): A value indicating if values can be missing.
         probability_missing (float, optional): The probability of a value being missing. Defaults to 0.5.
 
     Returns:
         list: A list of generated data values, with some values possibly being empty strings if null_flavors is specified.
     """
-    if pd.isna(null_flavors):
-        return [next(generator) for _ in range(num_datasets)]
-    else:
+    if nullable:
         return [next(generator) if np.random.rand() > probability_missing else "" for _ in range(num_datasets)]
+    else:
+        return [next(generator) for _ in range(num_datasets)]
 
 
 def parse_parameters_to_dict(variables_dict: dict) -> dict:
@@ -121,10 +121,10 @@ def generate_data_columns(variables_dict, num_datasets, output_data, probability
     Returns:
         pd.DataFrame: The updated DataFrame with the generated data columns.
     """
-    for concept_id, (default_values, var_type, params, null_flavors) in variables_dict.items():
+    for concept_id, (default_values, var_type, params, nullable) in variables_dict.items():
         # Generate data column
         generator = GeneratorFactory.create_generator(GeneratorType(var_type), params).generate()
-        column_list = generate_column_list(generator, num_datasets, null_flavors, probability_missing)
+        column_list = generate_column_list(generator, num_datasets, nullable, probability_missing)
 
         new_column = pd.Series(data=column_list, name=concept_id)
         output_data = pd.concat([output_data, new_column], axis=1)
