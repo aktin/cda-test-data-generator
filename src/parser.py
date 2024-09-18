@@ -45,7 +45,6 @@ class ParserFactory:
             "start_date": StartDateHandler,
             "end_date": EndDateHandler,
             "column": ColumnHandler,
-            "number": NumberHandler
         }
         return handlers.get(key, DefaultHandler)()
 
@@ -65,20 +64,6 @@ class RangeHandler:
         min_value, max_value = value.split("-")
         param_dict["min_value"] = int(min_value) if '.' not in min_value else float(min_value)
         param_dict["max_value"] = int(max_value) if '.' not in max_value else float(max_value)
-
-class NumberHandler:
-    def handle(self, param_dict, value):
-        """
-        Handle the 'number' parameter by converting the value to an integer and updating the parameter dictionary.
-
-        Args:
-            param_dict (dict): The dictionary to update with the parsed value.
-            value (str): The value to convert to an integer.
-
-        Returns:
-            None
-        """
-        param_dict["number"] = int(value)
 
 
 class ValueSetHandler:

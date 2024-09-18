@@ -152,12 +152,6 @@ def generate_csv(excel_path: str, csv_path, num_datasets) -> None:
     # Parse parameters in dictionary
     variables_dict = parse_parameters_to_dict(variables_dict)
 
-    # Extract only the variables that should be generated more than once (they have a number parameter)
-    new_variables = dict(filter(lambda x: "number" in x[1][2], variables_dict.items()))
-
-    # Add new variables to the dictionary by expanding variables with a 'number' parameter
-    add_new_variables_to_dict(new_variables, variables_dict)
-
     # Output declaration
     output_data = pd.DataFrame()
 
