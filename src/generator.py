@@ -123,12 +123,33 @@ class IntGenerator(AbstractGenerator):
 
 
 class LookupGenerator(AbstractGenerator):
+    """
+    Generator for random values from a specified column in a CSV file.
+    """
+
     def __init__(self, link=None, column=None):
+        """
+        Initialize the LookupGenerator with a link to a CSV file and a column name.
+
+        Args:
+            link (str, optional): The path to the CSV file. Defaults to None.
+            column (str, optional): The column name in the CSV file to use for the value set. Defaults to None.
+        """
         self.link = link
         self.column = column
         self._load_value_set_from_csv(link, column)
 
     def _load_value_set_from_csv(self, link, column):
+        """
+        Load the value set from the specified column in the CSV file.
+
+        Args:
+            link (str): The path to the CSV file.
+            column (str): The column name in the CSV file to use for the value set.
+
+        Raises:
+            ValueError: If the column is not specified or not found in the file.
+        """
         if not column:
             raise ValueError("Column not specified in parameters")
         df = pd.read_csv(f"../resources/value_sets/{link}", delimiter=";", dtype=str, header=0)
@@ -137,6 +158,12 @@ class LookupGenerator(AbstractGenerator):
         self.value_set = set(df[column])
 
     def generate(self):
+        """
+        Generate random values from the loaded value set.
+
+        Yields:
+            str: A randomly generated value from the value set.
+        """
         while True:
             yield random.choice(tuple(self.value_set))
 
