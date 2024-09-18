@@ -37,7 +37,7 @@ class ParserFactory:
                     If the key is not found, an instance of DefaultHandler is returned.
         """
         handlers = {
-            "scope": ScopeHandler,
+            "range": RangeHandler,
             "value_set": ValueSetHandler,
             "date_format": FormatHandler,
             "link": LinkHandler,
@@ -50,10 +50,10 @@ class ParserFactory:
         return handlers.get(key, DefaultHandler)()
 
 
-class ScopeHandler:
+class RangeHandler:
     def handle(self, param_dict, value):
         """
-        Handle the 'scope' parameter by parsing the value and updating the parameter dictionary.
+        Handle the 'range' parameter by parsing the value and updating the parameter dictionary.
 
         Args:
             param_dict (dict): The dictionary to update with the parsed values.
