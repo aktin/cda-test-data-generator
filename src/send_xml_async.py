@@ -14,8 +14,8 @@ from src import main
 # Constants
 URL = "http://localhost:9090/aktin/cda/fhir/Binary/$validate"
 OUTPUT_DIR = Path(os.environ.get('OUTPUT_DIR', '../output'))
-CDA_DIR = OUTPUT_DIR / 'cda'
-RESPONSE_DIR = OUTPUT_DIR / 'responses'
+CDA_DIR = Path('C:\\Users\\alexa\\PycharmProjects\\cda-test-data-generator\\output\\cda')
+RESPONSE_DIR = Path('C:\\Users\\alexa\\PycharmProjects\\cda-test-data-generator\\output\\responses')
 FHIR_NAMESPACE = {'f': 'http://hl7.org/fhir'}
 
 # Configure logging
@@ -66,6 +66,8 @@ async def send_xml_file_async(session: aiohttp.ClientSession, input_file: Path, 
             logger.warning(f"Empty response for {input_file.name}")
     except Exception as e:
         logger.error(f"Error processing {input_file.name}: {str(e)}")
+
+
 
 
 async def process_files_async(num_rows: int = None) -> None:
@@ -132,7 +134,6 @@ def get_stats() -> Dict[str, int]:
     logger.info(f"Files with issues: {issue_cdas}")
     return stats
 
-
 async def main_async() -> None:
     """
     Main asynchronous function to orchestrate the XML processing and analysis.
@@ -140,6 +141,8 @@ async def main_async() -> None:
     args = parse_arguments()
 
     main.main()  # Run the main function from src.main
+
+
 
     await process_files_async(args.n)
     get_stats()
