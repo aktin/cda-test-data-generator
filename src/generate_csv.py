@@ -124,7 +124,7 @@ def remove_with_probability(column, probability):
     Returns:
         list: A list with some elements replaced by None based on the given probability.
     """
-    return [None if random() < probability else value for value in column]
+    return ['' if random() < probability else value for value in column]
 
 def generate_csv(excel_path: str, csv_path, num_datasets) -> None:
     """

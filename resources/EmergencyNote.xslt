@@ -1661,7 +1661,6 @@
                                         <xsl:value-of select="diagnose_txt"/>
                                     </item>
                                 </list>
-
                             </text>
                             <entry typeCode="COMP">
                                 <act classCode="ACT" moodCode="EVN">
