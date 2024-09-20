@@ -1,7 +1,24 @@
+import argparse
+
 import requests
 from lxml import etree
 
 from src import main
+
+def parse_arguments():
+    """
+    Parse command line arguments.
+
+    Returns:
+        argparse.Namespace: Parsed command line arguments.
+    """
+    parser = argparse.ArgumentParser(description="Process CDA files and analyze responses.")
+    parser.add_argument('--n', type=int, default=None,
+                        help="Number of rows to process. If not provided, will process all files in the CDA directory.")
+    parser.add_argument('--config', type=str, required=True, help='Filepath for configuration TOML file.')
+    parser.add_argument('--cleanup', action='store_true', help='Remove intermediate CSV file after processing.')
+
+    return parser.parse_args()
 
 
 def send_xml_file(url: str, xml_file_path: str, response_file_path: str) -> None:
@@ -28,10 +45,11 @@ def send_xml_file(url: str, xml_file_path: str, response_file_path: str) -> None
 
 
 def main_and_sent_test():
+    args = parse_arguments()
     main.main()
-    rows = main.args.n
+    rows = args.n
     for i in range(rows):
-        send_xml_file("http://localhost:5080/aktin/cda/fhir/Binary/$validate", f"../output/cda/cda_{i+1}.cda",
+        send_xml_file("http://localhost:9090/aktin/cda/fhir/Binary/$validate", f"C:\\Users\\alexa\PycharmProjects\cda-test-data-generator\output\cda\cda_{i+1}.cda",
                       f"../output/fehlercodes/response_{i+1}.xml")
 
 

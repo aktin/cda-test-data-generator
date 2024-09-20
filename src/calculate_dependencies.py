@@ -180,6 +180,10 @@ def define_tasks_for_diagnoses(df, tasks):
         tasks.append(task)
 
 
+def add_insurace_information(df):
+    df['versicherung_txt'] = df['versicherungsfall'].apply(lambda x: 'Selbstzahler' if x == 'SELF' else 'Familienversicherung')
+
+
 def calculate_dependencies(filename: str) -> None:
     """
     Calculate and update dependent variables in a CSV file.
@@ -228,5 +232,7 @@ def calculate_dependencies(filename: str) -> None:
     make_pregnant_man_not_pregnant(df)
 
     make_associated_person_family_member(df)
+
+    add_insurace_information(df)
 
     df.to_csv(filename, index=False)
