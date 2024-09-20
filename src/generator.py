@@ -194,7 +194,7 @@ class StringGenerator(AbstractGenerator):
         elif self.regex:  # If regex pattern is provided, generate strings based on it
             return [exrex.getone(self.regex) for _ in range(count)]
         else:  # Default to empty strings TODO: Should be empty
-            return [''.join(random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') for _ in range(10)) for _ in range(count)]
+            return ['' for _ in range(count)]
 
 
 class UUIDGenerator(AbstractGenerator):
