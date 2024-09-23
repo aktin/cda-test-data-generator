@@ -18,7 +18,8 @@ ENV_VARS: List[Tuple[str, str]] = [
     ('OUTPUT_DIR', 'cda_paths.output_dir'),
     ('CLINICS_CSV', 'csv_paths.clinics_csv'),
     ('DIAGNOSES_CSV', 'csv_paths.diagnoses_csv'),
-    ('CEDIS_CSV', 'csv_paths.cedis_csv')
+    ('CEDIS_CSV', 'csv_paths.cedis_csv'),
+    ('INDIVIDUAL_ATTRIBUTES_CSV', 'csv_paths.individual_attributes_csv'),
 ]
 
 
