@@ -1,5 +1,6 @@
 import datetime as dt
 import os
+import random
 import re
 from typing import Optional
 
@@ -184,6 +185,16 @@ def add_insurace_information(df):
     df['versicherung_txt'] = df['versicherungsfall'].apply(lambda x: 'Selbstzahler' if x == 'SELF' else 'Familienversicherung')
 
 
+def add_allergie_information(df):
+    df['allergie_txt'] = df['allergie'].apply(lambda x: f"")
+
+
+def assign_names_to_patients(individual_attributes_csv, df):
+    csv_df = pd.read_csv(individual_attributes_csv, dtype=str, delimiter=';')
+    df['vorname_patient'] = df['gender'].apply(lambda x:
+        random.choice(csv_df['vorname_m']) if x == 'M' else random.choice(csv_df['vorname_f']))
+
+
 def calculate_dependencies(filename: str) -> None:
     """
     Calculate and update dependent variables in a CSV file.
@@ -200,6 +211,7 @@ def calculate_dependencies(filename: str) -> None:
 
     clinics_csv = os.environ['CLINICS_CSV']
     cedis_csv = os.environ['CEDIS_CSV']
+    individual_attributes_csv = os.environ['INDIVIDUAL_ATTRIBUTES_CSV']
 
     tasks = [
         {
@@ -234,5 +246,9 @@ def calculate_dependencies(filename: str) -> None:
     make_associated_person_family_member(df)
 
     add_insurace_information(df)
+
+    add_allergie_information(df)
+
+    assign_names_to_patients(individual_attributes_csv, df)
 
     df.to_csv(filename, index=False)
