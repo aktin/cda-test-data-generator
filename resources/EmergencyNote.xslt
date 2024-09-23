@@ -144,7 +144,11 @@
                 </time>
                 <associatedEntity classCode="POLHOLD">
                     <!-- eGK Nummer -->
-                    <id extension="A123456789" root="1.2.276.0.76.4.8"/>
+                    <id root="1.2.276.0.76.4.8">
+                        <xsl:attribute name="extension">
+                            <xsl:value-of select="versicherung_egk"/>
+                        </xsl:attribute>
+                    </id>
                     <!-- Versicherungsnummer -->
                     <id extension="123456789" root="1.2.276.0.76.3.1.131.1.4.3.9999.9999.999955"/>
                     <code code="SELF" codeSystem="2.16.840.1.113883.5.111" displayName="self">
