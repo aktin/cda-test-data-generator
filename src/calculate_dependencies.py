@@ -53,14 +53,14 @@ def calculate_timestamps(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def map_csv_to_dataframe(
-    df: pd.DataFrame,
-    csv_path: str,
-    df_key_column: str,
-    df_value_column: str,
-    df_target_column: str,
-    csv_key_column: Optional[str] = None,
-    csv_value_column: Optional[str] = None,
-    csv_delimiter: Optional[str] = ';'
+        df: pd.DataFrame,
+        csv_path: str,
+        df_key_column: str,
+        df_value_column: str,
+        df_target_column: str,
+        csv_key_column: Optional[str] = None,
+        csv_value_column: Optional[str] = None,
+        csv_delimiter: Optional[str] = ';'
 ) -> pd.DataFrame:
     """
     Map values from a CSV file to a DataFrame based on specified columns.
@@ -182,7 +182,8 @@ def define_tasks_for_diagnoses(df, tasks):
 
 
 def add_insurace_information(df):
-    df['versicherung_txt'] = df['versicherungsfall'].apply(lambda x: 'Selbstzahler' if x == 'SELF' else 'Familienversicherung')
+    df['versicherung_txt'] = df['versicherungsfall'].apply(
+        lambda x: 'Selbstzahler' if x == 'SELF' else 'Familienversicherung')
 
 
 def add_allergie_information(df):
@@ -192,7 +193,8 @@ def add_allergie_information(df):
 def assign_names_to_patients(individual_attributes_csv, df):
     csv_df = pd.read_csv(individual_attributes_csv, dtype=str, delimiter=';')
     df['vorname_patient'] = df['gender'].apply(lambda x:
-        random.choice(csv_df['vorname_m']) if x == 'M' else random.choice(csv_df['vorname_f']))
+                                               random.choice(csv_df['vorname_m']) if x == 'M' else random.choice(
+                                                   csv_df['vorname_f']))
 
 
 def calculate_dependencies(filename: str) -> None:
