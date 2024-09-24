@@ -1,9 +1,9 @@
 import argparse
 
 import requests
-from lxml import etree
 
 from src import main
+
 
 def parse_arguments():
     """
@@ -49,11 +49,10 @@ def main_and_sent_test():
     main.main()
     rows = args.n
     for i in range(rows):
-        send_xml_file("http://localhost:9090/aktin/cda/fhir/Binary/$validate", f"C:\\Users\\alexa\PycharmProjects\cda-test-data-generator\output\cda\cda_{i+1}.cda",
-                      f"../output/fehlercodes/response_{i+1}.xml")
-
+        send_xml_file("http://localhost:9090/aktin/cda/fhir/Binary/$validate",
+                      f"C:\\Users\\alexa\PycharmProjects\cda-test-data-generator\output\cda\cda_{i + 1}.cda",
+                      f"../output/fehlercodes/response_{i + 1}.xml")
 
 
 if __name__ == '__main__':
     main_and_sent_test()
-
