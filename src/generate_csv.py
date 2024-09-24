@@ -126,6 +126,7 @@ def remove_with_probability(column, probability):
     """
     return ['' if random() < probability else value for value in column]
 
+
 def generate_csv(excel_path: str, csv_path, num_datasets) -> None:
     """
     Generate a CSV file from an Excel input file.
