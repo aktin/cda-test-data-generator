@@ -91,6 +91,22 @@ def resolve_path(base_path: str, relative_path: str) -> str:
     return os.path.abspath(os.path.join(base_path, relative_path))
 
 
+def clean_up(csv_path):
+    """
+    Clean up intermediate files including the specified CSV file and all files in the raw directory.
+
+    Args:
+        csv_path (str): The path to the intermediate CSV file to be removed.
+    """
+    logging.info("Cleaning up intermediate CSV file...")
+    os.remove(csv_path)
+    logging.info("Cleaning up intermediate RAW files")
+    # Remove all files in the raw directory
+    raw_dir = os.path.join(os.environ['OUTPUT_DIR'], 'raw')
+    for file_path in glob.glob(os.path.join(raw_dir, '*')):
+        os.remove(file_path)
+
+
 def process_excel_to_cda(n: int, cleanup: bool) -> None:
     """
     Process Excel file to CDA.
@@ -114,14 +130,7 @@ def process_excel_to_cda(n: int, cleanup: bool) -> None:
         csv_to_cda(csv_path, xslt_file)
 
         if cleanup:
-            logging.info("Cleaning up intermediate CSV file...")
-            os.remove(csv_path)
-
-            logging.info("Cleaning up intermediate RAW files")
-            # Remove all files in the raw directory
-            raw_dir = os.path.join(os.environ['OUTPUT_DIR'], 'raw')
-            for file_path in glob.glob(os.path.join(raw_dir, '*')):
-                os.remove(file_path)
+            clean_up(csv_path)
 
         logging.info("Processing completed successfully.")
     except Exception as e:
