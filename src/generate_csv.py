@@ -61,9 +61,9 @@ def parse_parameters_to_dict(variables_dict: dict) -> dict:
             default_values,
             var_type,
             Parser.parse(params) if isinstance(params, str) else {},
-            null_flavors
+            nullable
         )
-        for concept_id, (default_values, var_type, params, null_flavors) in variables_dict.items()
+        for concept_id, (default_values, var_type, params, nullable) in variables_dict.items()
     }
     return variables_dict
 
@@ -87,20 +87,24 @@ def remove_number_from_params(concept_id, new_variables):
     return num
 
 
-def generate_data_columns(variables_dict, num_datasets, output_data, probability_missing=0.5):
+def generate_data_columns(variables_dict, num_datasets, probability_missing=0.5):
     """
     Loop through all variables and generate data columns.
+    Generates data columns based on the generation type and parameters specified in the variables dictionary.
+    Removes entries with a certain probability if nullable is True.
 
     Args:
         variables_dict (dict): A dictionary where the keys are concept IDs and the values are tuples containing
                                default values, generation type, parameters, and null flavors.
         num_datasets (int): The number of data values to generate.
-        output_data (pd.DataFrame): The DataFrame to update with the generated data columns.
         probability_missing (float, optional): The probability of a value being missing. Defaults to 0.5.
 
     Returns:
         pd.DataFrame: The updated DataFrame with the generated data columns.
     """
+
+    output_data = pd.DataFrame()
+
     for concept_id, (default_values, var_type, params, nullable) in variables_dict.items():
         # Generate data column
         column_list = GeneratorFactory.create_generator(GeneratorType(var_type), params).generate(num_datasets)
@@ -141,17 +145,14 @@ def generate_csv(excel_path: str, csv_path, num_datasets) -> None:
     """
     excel_input = pd.read_excel(excel_path)
 
-    # Dictionary has form { conceptId -> (Default values, Type, Parameters, NullFlavors) }
+    # Dictionary has form { conceptId -> (Default values, Type, Parameters, Nullable) }
     variables_dict = extract_concept_id_attributes(excel_input)
 
-    # Parse parameters in dictionary
+    # Parse parameters inside dictionary (Parameters now in dictionary format)
     variables_dict = parse_parameters_to_dict(variables_dict)
 
-    # Output declaration
-    output_data = pd.DataFrame()
-
     # Generate data columns
-    output_data = generate_data_columns(variables_dict, num_datasets, output_data, 0.2)
+    output_data = generate_data_columns(variables_dict, num_datasets, 0.2)
 
     # Output to CSV
     output_data.to_csv(csv_path, index=False)
