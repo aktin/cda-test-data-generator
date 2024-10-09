@@ -12,10 +12,10 @@ import logging
 from src import main
 
 # Constants
-URL = "http://localhost:9090/aktin/cda/fhir/Binary/$validate"
+URL = "http://localhost:5080/aktin/cda/fhir/Binary/$validate"
 OUTPUT_DIR = Path(os.environ.get('OUTPUT_DIR', '../output'))
-CDA_DIR = Path('C:\\Users\\alexa\\PycharmProjects\\cda-test-data-generator\\output\\cda')
-RESPONSE_DIR = Path('C:\\Users\\alexa\\PycharmProjects\\cda-test-data-generator\\output\\responses')
+CDA_DIR = OUTPUT_DIR.joinpath('cda')
+RESPONSE_DIR = OUTPUT_DIR.joinpath('responses')
 FHIR_NAMESPACE = {'f': 'http://hl7.org/fhir'}
 
 # Configure logging
