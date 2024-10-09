@@ -207,10 +207,13 @@ def calculate_dependencies(filename: str) -> None:
     Returns:
         None
     """
+    # Read the input CSV file
     df = pd.read_csv(filename, dtype=str, na_values=[], keep_default_na=False)
 
+    # Calculate timestamp dependencies (Mandatory for passing the import Validator
     calculate_timestamps(df)
 
+    # Define tasks for mapping values from CSV files
     clinics_csv = os.environ['CLINICS_CSV']
     cedis_csv = os.environ['CEDIS_CSV']
     individual_attributes_csv = os.environ['INDIVIDUAL_ATTRIBUTES_CSV']
@@ -238,9 +241,11 @@ def calculate_dependencies(filename: str) -> None:
 
     define_tasks_for_diagnoses(df, tasks)
 
+    # do the tasks
     for task in tasks:
         map_csv_to_dataframe(df, **task)
 
+    # Further dependencies
     calculate_gcs_sum(df)
 
     make_pregnant_man_not_pregnant(df)
@@ -253,4 +258,5 @@ def calculate_dependencies(filename: str) -> None:
 
     assign_names_to_patients(individual_attributes_csv, df)
 
+    # Write the updated DataFrame back to a CSV file
     df.to_csv(filename, index=False)
