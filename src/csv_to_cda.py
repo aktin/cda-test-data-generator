@@ -19,7 +19,7 @@ def create_directory(path: str) -> None:
         os.mkdir(path)
 
 
-def csv_to_dict(csv_file: str) -> tuple[int, dict]:
+def csv_to_dict(csv_file: str) -> dict:
     """
     Convert a CSV file to a dictionary.
 
@@ -27,13 +27,13 @@ def csv_to_dict(csv_file: str) -> tuple[int, dict]:
         csv_file (str): The path to the CSV file.
 
     Yields:
-        tuple: A tuple containing the row index and a dictionary where the keys are the header fields and the values are the corresponding row values.
+        dict: A dictionary where the keys are the CSV header fields and the values are the corresponding row values.
     """
     with open(csv_file, 'r', newline='', encoding="UTF-8") as f:
         csv_reader = csv.reader(f)
         header_row = next(csv_reader)
-        for i, row in enumerate(csv_reader, start=1):
-            yield i, {field.strip(): value.strip() for field, value in zip(header_row, row)}
+        for row in csv_reader:
+            yield {field.strip(): value.strip() for field, value in zip(header_row, row)}
 
 
 def dict_to_xml(data: dict) -> etree.Element:
@@ -120,10 +120,12 @@ def csv_to_cda(csv_file: str, xslt_file: str) -> None:
     create_directory(raw_path)
     create_directory(cda_path)
 
+    # Load XSLT transformation from Skeleton
     xslt_transform = etree.XSLT(etree.parse(xslt_file))
+    # Create Parser
     parser = etree.XMLParser(remove_blank_text=True)
 
-    for i, csv_data in csv_to_dict(csv_file):
+    for i, csv_data in enumerate(csv_to_dict(csv_file), start=1):
         # Create and save raw XML
         raw_xml = dict_to_xml(csv_data)
         save_xml(raw_xml, os.path.join(raw_path, f'aktin_raw_{i}.xml'))
