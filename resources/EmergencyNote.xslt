@@ -56,7 +56,7 @@
                             <xsl:value-of select="postleitzahl"/>
                         </postalCode>
                         <city>
-                            <xsl:value-of select="city"/>
+                            <xsl:value-of select="stadt"/>
                         </city>
                     </addr>
                     <patient classCode="PSN" determinerCode="INSTANCE">
@@ -529,7 +529,7 @@
                             <text>
 
 
-                                ||Schwanger:|<xsl:value-of select="schwanger_name"/>|
+                                ||Schwanger:|<xsl:value-of select="schwangerschaft"/>|
 
                                 ||Rankin Skala Score:|<xsl:value-of select="rankin"/>|
 
@@ -682,7 +682,7 @@
                             <text>
                                 <list>
                                     <item ID="proc-1">
-                                        <xsl:value-of select="diagnostik_text"/>
+                                        <xsl:value-of select="diagnostik_txt"/>
                                     </item>
                                 </list>
                             </text>
@@ -1384,6 +1384,7 @@
                                                     displayName="Auge rechts"/>
                                 </observation>
                             </entry>
+
                             <entry typeCode="COMP" contextConductionInd="true">
                                 <observation classCode="OBS" moodCode="EVN">
                                     <templateId root="1.2.276.0.76.10.4047"/>
@@ -1391,41 +1392,7 @@
                                     <code code="RPPL" codeSystem="1.2.276.0.76.3.1.195.5.1"
                                           displayName="Pupillenreaktion"/>
                                     <text>
-                                        <reference value="PupilLeft"/>
-                                    </text>
-                                    <statusCode code="completed"/>
-                                    <effectiveTime value="20200620"/>
-                                    <value xsi:type="CV">
-                                        <xsl:choose>
-                                            <xsl:when test="pupillenreaktion_rechts = ''">
-                                                <xsl:attribute name="nullFlavor">
-                                                    <xsl:text>UNK</xsl:text>
-                                                </xsl:attribute>
-                                            </xsl:when>
-                                            <xsl:otherwise>
-                                                <xsl:attribute name="codeSystem">
-                                                    <xsl:text>1.2.276.0.76.3.1.195.5.50</xsl:text>
-                                                </xsl:attribute>
-                                                <xsl:attribute name="code">
-                                                    <xsl:value-of select="pupillenreaktion_rechts"/>
-                                                </xsl:attribute>
-                                            </xsl:otherwise>
-                                        </xsl:choose>
-                                    </value>
-                                    <!--<value xsi:type="CV" code="#PupilRL#" codeSystem="1.2.276.0.76.3.1.195.5.50" displayName="prompt"/>
-                                    -->
-                                    <targetSiteCode code="R" codeSystem="1.2.276.0.76.3.1.195.5.48"
-                                                    displayName="Auge rechts"/>
-                                </observation>
-                            </entry>
-                            <entry typeCode="COMP" contextConductionInd="true">
-                                <observation classCode="OBS" moodCode="EVN">
-                                    <templateId root="1.2.276.0.76.10.4047"/>
-                                    <id root="DEEE672E-A620-4AA4-9117-BDD8B2505AAF"/>
-                                    <code code="RPPL" codeSystem="1.2.276.0.76.3.1.195.5.1"
-                                          displayName="Pupillenreaktion"/>
-                                    <text>
-                                        <reference value="PupilRight"/>
+                                        <reference value="PupiLeft"/>
                                     </text>
                                     <statusCode code="completed"/>
                                     <effectiveTime value="20200620"/>
@@ -1452,6 +1419,42 @@
                                                     displayName="Auge links"/>
                                 </observation>
                             </entry>
+
+                            <entry typeCode="COMP" contextConductionInd="true">
+                                <observation classCode="OBS" moodCode="EVN">
+                                    <templateId root="1.2.276.0.76.10.4047"/>
+                                    <id root="DEEE672E-A620-4AA4-9117-BDD8B2505AAF"/>
+                                    <code code="RPPL" codeSystem="1.2.276.0.76.3.1.195.5.1"
+                                          displayName="Pupillenreaktion"/>
+                                    <text>
+                                        <reference value="PupilRight"/>
+                                    </text>
+                                    <statusCode code="completed"/>
+                                    <effectiveTime value="20200620"/>
+                                    <value xsi:type="CV">
+                                        <xsl:choose>
+                                            <xsl:when test="pupillenreaktion_rechts = ''">
+                                                <xsl:attribute name="nullFlavor">
+                                                    <xsl:text>UNK</xsl:text>
+                                                </xsl:attribute>
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                <xsl:attribute name="codeSystem">
+                                                    <xsl:text>1.2.276.0.76.3.1.195.5.50</xsl:text>
+                                                </xsl:attribute>
+                                                <xsl:attribute name="code">
+                                                    <xsl:value-of select="pupillenreaktion_rechts"/>
+                                                </xsl:attribute>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
+                                    </value>
+                                    <!--<value xsi:type="CV" code="#PupilRL#" codeSystem="1.2.276.0.76.3.1.195.5.50" displayName="prompt"/>
+                                    -->
+                                    <targetSiteCode code="R" codeSystem="1.2.276.0.76.3.1.195.5.48"
+                                                    displayName="Auge rechts"/>
+                                </observation>
+                            </entry>
+
                             <entry typeCode="COMP" contextConductionInd="true">
                                 <observation classCode="OBS" moodCode="EVN">
                                     <templateId root="1.2.276.0.76.10.4035"/>
@@ -1470,6 +1473,7 @@
                                     </value>
                                 </observation>
                             </entry>
+
                             <entry typeCode="COMP" contextConductionInd="true">
                                 <observation classCode="OBS" moodCode="EVN">
                                     <templateId root="1.2.276.0.76.10.4036"/>
