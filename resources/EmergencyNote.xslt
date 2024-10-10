@@ -15,7 +15,7 @@
             <!-- Identifikation des Dokuments -->
             <id root="1.2.276.0.76.4.17.9814184919" extension="14025fda-3f25-4c64-8883-4f7e6cabc0b6">
                 <xsl:attribute name="extension">
-                    <xsl:value-of select="dokument_id"/>
+                    <xsl:value-of select="document_id"/>
                 </xsl:attribute>
             </id>
             <!-- Fixer Dokumententype-Code -->
@@ -24,7 +24,7 @@
             <!-- Datum und Zeit der Erstellung -->
             <effectiveTime>
                 <xsl:attribute name="value">
-                    <xsl:value-of select="datum_erstellung"/>
+                    <xsl:value-of select="date_creation"/>
                 </xsl:attribute>
             </effectiveTime>
             <!-- Vertraulichkeitsstufe -->
@@ -50,23 +50,23 @@
                     <!-- Adresse -->
                     <addr>
                         <streetAddressLine>
-                            <xsl:value-of select="strassenadressenzeile"/>
+                            <xsl:value-of select="street_address_line"/>
                         </streetAddressLine>
                         <postalCode>
-                            <xsl:value-of select="postleitzahl"/>
+                            <xsl:value-of select="postal_code"/>
                         </postalCode>
                         <city>
-                            <xsl:value-of select="stadt"/>
+                            <xsl:value-of select="city"/>
                         </city>
                     </addr>
                     <patient classCode="PSN" determinerCode="INSTANCE">
                         <!-- Name -->
                         <name>
                             <given>
-                                <xsl:value-of select="vorname_patient"/>
+                                <xsl:value-of select="patient_first_name"/>
                             </given>
                             <family>
-                                <xsl:value-of select="nachname_patient"/>
+                                <xsl:value-of select="patient_last_name"/>
                             </family>
                         </name>
                         <!-- Geschlecht -->
@@ -78,7 +78,7 @@
                         <!-- Geburtsdatum -->
                         <birthTime>
                             <xsl:attribute name="value">
-                                <xsl:value-of select="geburtsdatum_ts"/>
+                                <xsl:value-of select="birth_date_ts"/>
                             </xsl:attribute>
                         </birthTime>
                     </patient>
@@ -96,13 +96,13 @@
                     <assignedPerson classCode="PSN" determinerCode="INSTANCE">
                         <name>
                             <prefix>
-                                <xsl:value-of select="prefix_author"/>
+                                <xsl:value-of select="author_prefix"/>
                             </prefix>
                             <given>
-                                <xsl:value-of select="vorname_author"/>
+                                <xsl:value-of select="author_first_name"/>
                             </given>
                             <family>
-                                <xsl:value-of select="nachname_author"/>
+                                <xsl:value-of select="author_last_name"/>
                             </family>
                         </name>
                     </assignedPerson>
@@ -110,11 +110,11 @@
                     <representedOrganization classCode="ORG" determinerCode="INSTANCE">
                         <id root="1.2.276.0.76.4.17">
                             <xsl:attribute name="extension">
-                                <xsl:value-of select="organisation_id"/>
+                                <xsl:value-of select="organization_id"/>
                             </xsl:attribute>
                         </id>
                         <name>
-                            <xsl:value-of select="organisation_name"/>
+                            <xsl:value-of select="organization_name"/>
                         </name>
                     </representedOrganization>
                 </assignedAuthor>
@@ -125,11 +125,11 @@
                     <representedCustodianOrganization>
                         <id root="1.2.276.0.76.4.17">
                             <xsl:attribute name="extension">
-                                <xsl:value-of select="organisation_id"/>
+                                <xsl:value-of select="organization_id"/>
                             </xsl:attribute>
                         </id>
                         <name>
-                            <xsl:value-of select="organisation_name"/>
+                            <xsl:value-of select="organization_name"/>
                         </name>
                     </representedCustodianOrganization>
                 </assignedCustodian>
@@ -146,24 +146,24 @@
                     <!-- eGK Nummer -->
                     <id root="1.2.276.0.76.4.8">
                         <xsl:attribute name="extension">
-                            <xsl:value-of select="versicherung_egk"/>
+                            <xsl:value-of select="insurance_egk"/>
                         </xsl:attribute>
                     </id>
                     <!-- Versicherungsnummer -->
                     <id extension="123456789" root="1.2.276.0.76.3.1.131.1.4.3.9999.9999.999955"/>
                     <code code="SELF" codeSystem="2.16.840.1.113883.5.111" displayName="self">
                         <xsl:attribute name="code">
-                            <xsl:value-of select="versicherungsfall"/>
+                            <xsl:value-of select="insurance_case"/>
                         </xsl:attribute>
                     </code>
-                    <xsl:if test="versicherungsfall = 'FAMDEP'">
+                    <xsl:if test="insurance_case = 'FAMDEP'">
                         <associatedPerson>
                             <name>
                                 <given>
-                                    <xsl:value-of select="_associatedPerson_vorname"/>
+                                    <xsl:value-of select="_associated_person_first_name"/>
                                 </given>
                                 <family>
-                                    <xsl:value-of select="_associatedPerson_nachname"/>
+                                    <xsl:value-of select="_associated_person_last_name"/>
                                 </family>
                             </name>
                         </associatedPerson>
@@ -172,13 +172,13 @@
                         <!-- IK-NR -->
                         <id extension="987654321" root="1.2.276.0.76.4.5">
                             <xsl:attribute name="extension">
-                                <xsl:value-of select="versicherung_iknr"/>
+                                <xsl:value-of select="insurance_iknr"/>
                             </xsl:attribute>
                         </id>
                         <!-- VK-NR -->
                         <id extension="3333" root="1.2.276.0.76.4.7"/>
                         <name>
-                            <xsl:value-of select="versicherung_txt"/>
+                            <xsl:value-of select="insurance_txt"/>
                         </name>
                     </scopingOrganization>
                 </associatedEntity>
@@ -192,13 +192,13 @@
                         <!-- Start der Behandlung (Datum und Zeit), Therapiebeginn, Zeitangabe genau bis auf die Minute -->
                         <low>
                             <xsl:attribute name="value">
-                                <xsl:value-of select="therapiebeginn_ts"/>
+                                <xsl:value-of select="therapy_start_ts"/>
                             </xsl:attribute>
                         </low>
                         <!-- Verlegungs-/Entlassungszeitpunkt (Datum und Zeit), Zeitangabe genau bis auf die Minute-->
                         <high>
                             <xsl:attribute name="value">
-                                <xsl:value-of select="entlassung_ts"/>
+                                <xsl:value-of select="discharge_ts"/>
                             </xsl:attribute>
                         </high>
                     </effectiveTime>
@@ -208,13 +208,13 @@
                             <!-- Begin des Arztkontaktes -->
                             <low>
                                 <xsl:attribute name="value">
-                                    <xsl:value-of select="arztkontakt_ts"/>
+                                    <xsl:value-of select="doctor_contact_ts"/>
                                 </xsl:attribute>
                             </low>
                             <!-- Ende des Arztkontaktes -->
                             <high>
                                 <xsl:attribute name="value">
-                                    <xsl:value-of select="end_arztkontakt_ts"/>
+                                    <xsl:value-of select="end_doctor_contact_ts"/>
                                 </xsl:attribute>
                             </high>
                         </time>
@@ -230,34 +230,34 @@
                     <!-- Aufnahme-Identifikator -->
                     <id root="1.2.276.0.76.3.87686">
                         <xsl:attribute name="extension">
-                            <xsl:value-of select="aufnahme_id"/>
+                            <xsl:value-of select="admission_id"/>
                         </xsl:attribute>
                     </id>
                     <effectiveTime>
                         <!-- Start Patientenkontakt -->
                         <low>
                             <xsl:attribute name="value">
-                                <xsl:value-of select="aufnahme_ts"/>
+                                <xsl:value-of select="admission_ts"/>
                             </xsl:attribute>
                         </low>
                         <!-- Ende Patientenkontakt = Zeitpunkt der Verlegung/Entlassung -->
                         <high>
                             <xsl:attribute name="value">
-                                <xsl:value-of select="entlassung_ts"/>
+                                <xsl:value-of select="discharge_ts"/>
                             </xsl:attribute>
                         </high>
                     </effectiveTime>
                     <!-- Entlassung des Patienten mit Entlassungsgrund -->
                     <dischargeDispositionCode>
                         <xsl:choose>
-                            <xsl:when test="entlassung = ''">
+                            <xsl:when test="discharge = ''">
                                 <xsl:attribute name="nullFlavor">
                                     <xsl:text>OTH</xsl:text>
                                 </xsl:attribute>
                             </xsl:when>
                             <xsl:otherwise>
                                 <xsl:attribute name="code">
-                                    <xsl:value-of select="entlassung"/>
+                                    <xsl:value-of select="discharge"/>
                                 </xsl:attribute>
                                 <xsl:attribute name="codeSystem">
                                     <xsl:text>1.2.276.0.76.3.1.195.5.56</xsl:text>
@@ -293,20 +293,20 @@
                                     <effectiveTime>
                                         <high>
                                             <xsl:attribute name="value">
-                                                <xsl:value-of select="aufnahme_ts"/>
+                                                <xsl:value-of select="admission_id"/>
                                             </xsl:attribute>
                                         </high>
                                     </effectiveTime>
                                     <value xsi:type="CV" codeSystem="1.2.276.0.76.3.1.195.5.41">
                                         <xsl:choose>
-                                            <xsl:when test="transportmethode = '' or transportmethode = 'OTH'">
+                                            <xsl:when test="transport_method = '' or transport_method = 'OTH'">
                                                 <xsl:attribute name="nullFlavor">
                                                     <xsl:text>NA</xsl:text>
                                                 </xsl:attribute>
                                             </xsl:when>
                                             <xsl:otherwise>
                                                 <xsl:attribute name="code">
-                                                    <xsl:value-of select="transportmethode"/>
+                                                    <xsl:value-of select="transport_method"/>
                                                 </xsl:attribute>
                                             </xsl:otherwise>
                                         </xsl:choose>
@@ -332,7 +332,7 @@
                                         <participantRole classCode="AGNT">
                                             <code codeSystem="1.2.276.0.76.5.440">
                                                 <xsl:attribute name="code">
-                                                    <xsl:value-of select="zuweisung"/>
+                                                    <xsl:value-of select="referral"/>
                                                 </xsl:attribute>
                                             </code>
                                         </participantRole>
@@ -350,7 +350,7 @@
                                   displayName="History of present illness"/>
                             <title>Notfallanamnese</title>
                             <text>
-                                <xsl:value-of select="notfallanamnese"/>
+                                <xsl:value-of select="emergency_medical_history"/>
                             </text>
                         </section>
                     </component>
@@ -364,7 +364,7 @@
                             <title>Beschwerden bei Vorstellung</title>
                             <text>
                                 <content ID="compl-1">
-                                    <xsl:value-of select="beschwerde_liste"/>
+                                    <xsl:value-of select="complaint_list"/>
                                 </content>
                             </text>
                             <entry typeCode="COMP">
@@ -377,14 +377,14 @@
                                     <effectiveTime>
                                         <low>
                                             <xsl:choose>
-                                                <xsl:when test="beschwerde_begin = ''">
+                                                <xsl:when test="complaint_start = ''">
                                                     <xsl:attribute name="nullFlavor">
                                                         <xsl:text>UNK</xsl:text>
                                                     </xsl:attribute>
                                                 </xsl:when>
                                                 <xsl:otherwise>
                                                     <xsl:attribute name="value">
-                                                        <xsl:value-of select="beschwerde_begin"/>
+                                                        <xsl:value-of select="complaint_start"/>
                                                     </xsl:attribute>
                                                 </xsl:otherwise>
                                             </xsl:choose>
@@ -403,14 +403,14 @@
                                             <effectiveTime>
                                                 <width>
                                                     <xsl:choose>
-                                                        <xsl:when test="symptomdauer = ''">
+                                                        <xsl:when test="symptom_duration = ''">
                                                             <xsl:attribute name="nullFlavor">
                                                                 <xsl:text>UNK</xsl:text>
                                                             </xsl:attribute>
                                                         </xsl:when>
                                                         <xsl:otherwise>
                                                             <xsl:attribute name="value">
-                                                                <xsl:value-of select="symptomdauer"/>
+                                                                <xsl:value-of select="symptom_duration"/>
                                                             </xsl:attribute>
                                                             <xsl:attribute name="unit">
                                                                 <xsl:text>h</xsl:text>
@@ -432,13 +432,13 @@
                                                         </xsl:attribute>
                                                         <originalText>
                                                             <xsl:choose>
-                                                                <xsl:when test="beschwerden_txt = ''">
+                                                                <xsl:when test="complaints_txt = ''">
                                                                     <xsl:attribute name="nullFlavor">
                                                                         <xsl:text>UNK</xsl:text>
                                                                     </xsl:attribute>
                                                                 </xsl:when>
                                                                 <xsl:otherwise>
-                                                                    <xsl:value-of select="beschwerden_txt"/>
+                                                                    <xsl:value-of select="complaints_txt"/>
                                                                 </xsl:otherwise>
                                                             </xsl:choose>
                                                         </originalText>
@@ -452,13 +452,13 @@
                                                         </xsl:attribute>
                                                         <originalText>
                                                             <xsl:choose>
-                                                                <xsl:when test="beschwerden_txt = ''">
+                                                                <xsl:when test="complaints_txt = ''">
                                                                     <xsl:attribute name="nullFlavor">
                                                                         <xsl:text>UNK</xsl:text>
                                                                     </xsl:attribute>
                                                                 </xsl:when>
                                                                 <xsl:otherwise>
-                                                                    <xsl:value-of select="beschwerden_txt"/>
+                                                                    <xsl:value-of select="complaints_txt"/>
                                                                 </xsl:otherwise>
                                                             </xsl:choose>
                                                         </originalText>
@@ -480,7 +480,7 @@
                                   displayName="Acuity assessment"/>
                             <title>Ersteinschätzung</title>
                             <text>
-                                <xsl:value-of select="ersteinschaetzung_text"/>
+                                <xsl:value-of select="initial_assessment_text"/>
                             </text>
                             <entry typeCode="COMP" contextConductionInd="true">
                                 <observation classCode="OBS" moodCode="EVN">
@@ -529,12 +529,12 @@
                             <text>
 
 
-                                ||Schwanger:|<xsl:value-of select="schwangerschaft"/>|
+                                ||Schwanger:|<xsl:value-of select="pregnancy"/>|
 
                                 ||Rankin Skala Score:|<xsl:value-of select="rankin"/>|
 
                                 |Multi|
-                                <xsl:value-of select="keime"/>
+                                <xsl:value-of select="germs"/>
                                 |Multi|
                                 |Verdacht|CONF|Verdacht|
 
@@ -554,14 +554,14 @@
                                     <effectiveTime value="202006201545"/>
                                     <value xsi:type="CV">
                                         <xsl:choose>
-                                            <xsl:when test="schwangerschaft = ''">
+                                            <xsl:when test="pregnancy = ''">
                                                 <xsl:attribute name="nullFlavor">
                                                     <xsl:text>UNK</xsl:text>
                                                 </xsl:attribute>
                                             </xsl:when>
                                             <xsl:otherwise>
                                                 <xsl:attribute name="code">
-                                                    <xsl:value-of select="schwangerschaft"/>
+                                                    <xsl:value-of select="pregnancy"/>
                                                 </xsl:attribute>
                                                 <xsl:attribute name="codeSystem">
                                                     <xsl:text>1.2.276.0.76.3.1.195.5.46</xsl:text>
@@ -577,7 +577,7 @@
                             <entry typeCode="COMP" contextConductionInd="true">
                                 <substanceAdministration moodCode="EVN" classCode="SBADM" negationInd="true">
                                     <xsl:choose>
-                                        <xsl:when test="tetanusschutz = ''">
+                                        <xsl:when test="tetanus_vaccination = ''">
                                             <xsl:attribute name="negationInd">
                                                 <xsl:text>false</xsl:text>
                                             </xsl:attribute>
@@ -587,7 +587,7 @@
                                         </xsl:when>
                                         <xsl:otherwise>
                                             <xsl:attribute name="negationInd">
-                                                <xsl:value-of select="tetanusschutz"/>
+                                                <xsl:value-of select="tetanus_vaccination"/>
                                             </xsl:attribute>
                                         </xsl:otherwise>
                                     </xsl:choose>
@@ -652,14 +652,14 @@
                                             </effectiveTime>
                                             <value codeSystem="1.2.276.0.76.5.441" xsi:type="CD">
                                                 <xsl:choose>
-                                                    <xsl:when test="keime = ''">
+                                                    <xsl:when test="germs = ''">
                                                         <xsl:attribute name="nullFlavor">
                                                             <xsl:text>OTH</xsl:text>
                                                         </xsl:attribute>
                                                     </xsl:when>
                                                     <xsl:otherwise>
                                                         <xsl:attribute name="code">
-                                                            <xsl:value-of select="keime"/>
+                                                            <xsl:value-of select="germs"/>
                                                         </xsl:attribute>
                                                     </xsl:otherwise>
                                                 </xsl:choose>
@@ -682,13 +682,13 @@
                             <text>
                                 <list>
                                     <item ID="proc-1">
-                                        <xsl:value-of select="diagnostik_txt"/>
+                                        <xsl:value-of select="diagnostics_txt"/>
                                     </item>
                                 </list>
                             </text>
                             <xsl:choose>
                                 <xsl:when
-                                        test="diagnostik_roentgen_thorax = 'PB' or diagnostik_roentgen_thorax = 'OPB'">
+                                        test="diagnostics_xray_thorax = 'PB' or diagnostics_xray_thorax = 'OPB'">
                                     <entry typeCode="COMP" contextConductionInd="true">
                                         <observation classCode="OBS" moodCode="EVN">
                                             <templateId root="1.2.276.0.76.10.4050"/>
@@ -702,13 +702,13 @@
                                             <statusCode code="completed"/>
                                             <effectiveTime value="201501171650">
                                                 <xsl:attribute name="value">
-                                                    <xsl:value-of select="diagnostik_ts"/>
+                                                    <xsl:value-of select="diagnostics_ts"/>
                                                 </xsl:attribute>
                                             </effectiveTime>
                                             <value xsi:type="CE" codeSystem="1.2.276.0.76.3.1.195.5.51"
                                                    displayName="Chest X-Ray">
                                                 <xsl:attribute name="code">
-                                                    <xsl:value-of select="diagnostik_roentgen_thorax"/>
+                                                    <xsl:value-of select="diagnostics_xray_thorax"/>
                                                 </xsl:attribute>
                                             </value>
                                             <participant typeCode="LOC">
@@ -723,7 +723,7 @@
                             </xsl:choose>
                             <xsl:choose>
                                 <xsl:when
-                                        test="diagnostik_roentgen_wirbelsaeule = 'PB' or diagnostik_roentgen_wirbelsaeule = 'OPB'">
+                                        test="diagnostics_xray_spine = 'PB' or diagnostics_xray_spine = 'OPB'">
                                     <entry typeCode="COMP" contextConductionInd="true">
 
                                         <observation classCode="OBS" moodCode="EVN">
@@ -738,12 +738,12 @@
                                             <statusCode code="completed"/>
                                             <effectiveTime value="201501171650">
                                                 <xsl:attribute name="value">
-                                                    <xsl:value-of select="diagnostik_ts"/>
+                                                    <xsl:value-of select="diagnostics_ts"/>
                                                 </xsl:attribute>
                                             </effectiveTime>
                                             <value xsi:type="CE" codeSystem="1.2.276.0.76.3.1.195.5.51">
                                                 <xsl:attribute name="code">
-                                                    <xsl:value-of select="diagnostik_roentgen_wirbelsaeule"/>
+                                                    <xsl:value-of select="diagnostics_xray_spine"/>
                                                 </xsl:attribute>
                                             </value>
                                             <participant typeCode="LOC">
@@ -758,7 +758,7 @@
                             </xsl:choose>
                             <xsl:choose>
                                 <xsl:when
-                                        test="diagnostik_roentgen_becken = 'PB' or diagnostik_roentgen_becken = 'OPB'">
+                                        test="diagnostics_xray_pelvis = 'PB' or diagnostics_xray_pelvis = 'OPB'">
                                     <entry typeCode="COMP" contextConductionInd="true">
 
                                         <observation classCode="OBS" moodCode="EVN">
@@ -773,12 +773,12 @@
                                             <statusCode code="completed"/>
                                             <effectiveTime value="201501171650">
                                                 <xsl:attribute name="value">
-                                                    <xsl:value-of select="diagnostik_ts"/>
+                                                    <xsl:value-of select="diagnostics_ts"/>
                                                 </xsl:attribute>
                                             </effectiveTime>
                                             <value xsi:type="CE" codeSystem="1.2.276.0.76.3.1.195.5.51">
                                                 <xsl:attribute name="code">
-                                                    <xsl:value-of select="diagnostik_roentgen_becken"/>
+                                                    <xsl:value-of select="diagnostics_xray_pelvis"/>
                                                 </xsl:attribute>
                                             </value>
                                             <participant typeCode="LOC">
@@ -793,7 +793,7 @@
                             </xsl:choose>
                             <xsl:choose>
                                 <xsl:when
-                                        test="diagnostik_roentgen_extremitaeten = 'PB' or diagnostik_roentgen_extremitaeten = 'OPB'">
+                                        test="diagnostics_xray_extremities = 'PB' or diagnostics_xray_extremities = 'OPB'">
                                     <entry typeCode="COMP" contextConductionInd="true">
 
                                         <observation classCode="OBS" moodCode="EVN">
@@ -808,12 +808,12 @@
                                             <statusCode code="completed"/>
                                             <effectiveTime value="201501171650">
                                                 <xsl:attribute name="value">
-                                                    <xsl:value-of select="diagnostik_ts"/>
+                                                    <xsl:value-of select="diagnostics_ts"/>
                                                 </xsl:attribute>
                                             </effectiveTime>
                                             <value xsi:type="CE" codeSystem="1.2.276.0.76.3.1.195.5.51">
                                                 <xsl:attribute name="code">
-                                                    <xsl:value-of select="diagnostik_roentgen_extremitaeten"/>
+                                                    <xsl:value-of select="diagnostics_xray_extremities"/>
                                                 </xsl:attribute>
                                             </value>
                                             <participant typeCode="LOC">
@@ -828,7 +828,7 @@
                             </xsl:choose>
                             <xsl:choose>
                                 <xsl:when
-                                        test="diagnostik_roentgen_sonstiges = 'PB' or diagnostik_roentgen_sonstiges = 'OPB'">
+                                        test="diagnostics_xray_others = 'PB' or diagnostics_xray_others = 'OPB'">
                                     <entry typeCode="COMP" contextConductionInd="true">
 
                                         <observation classCode="OBS" moodCode="EVN">
@@ -843,12 +843,12 @@
                                             <statusCode code="completed"/>
                                             <effectiveTime value="201501171650">
                                                 <xsl:attribute name="value">
-                                                    <xsl:value-of select="diagnostik_ts"/>
+                                                    <xsl:value-of select="diagnostics_ts"/>
                                                 </xsl:attribute>
                                             </effectiveTime>
                                             <value xsi:type="CE" codeSystem="1.2.276.0.76.3.1.195.5.51">
                                                 <xsl:attribute name="code">
-                                                    <xsl:value-of select="diagnostik_roentgen_sonstiges"/>
+                                                    <xsl:value-of select="diagnostics_xray_others"/>
                                                 </xsl:attribute>
                                             </value>
                                             <participant typeCode="LOC">
@@ -863,7 +863,7 @@
                             </xsl:choose>
                             <xsl:choose>
                                 <xsl:when
-                                        test="diagnostik_ct_kopf = 'PB' or diagnostik_ct_kopf = 'OPB'">
+                                        test="diagnostics_ct_head = 'PB' or diagnostics_ct_head = 'OPB'">
                                     <entry typeCode="COMP" contextConductionInd="true">
 
                                         <observation classCode="OBS" moodCode="EVN">
@@ -878,12 +878,12 @@
                                             <statusCode code="completed"/>
                                             <effectiveTime value="201501171650">
                                                 <xsl:attribute name="value">
-                                                    <xsl:value-of select="diagnostik_ts"/>
+                                                    <xsl:value-of select="diagnostics_ts"/>
                                                 </xsl:attribute>
                                             </effectiveTime>
                                             <value xsi:type="CE" codeSystem="1.2.276.0.76.3.1.195.5.51">
                                                 <xsl:attribute name="code">
-                                                    <xsl:value-of select="diagnostik_ct_kopf"/>
+                                                    <xsl:value-of select="diagnostics_ct_head"/>
                                                 </xsl:attribute>
                                             </value>
                                             <participant typeCode="LOC">
@@ -898,7 +898,7 @@
                             </xsl:choose>
                             <xsl:choose>
                                 <xsl:when
-                                        test="diagnostik_ct = 'PB' or diagnostik_ct = 'OPB'">
+                                        test="diagnostics_ct = 'PB' or diagnostics_ct = 'OPB'">
                                     <entry typeCode="COMP" contextConductionInd="true">
 
                                         <observation classCode="OBS" moodCode="EVN">
@@ -913,12 +913,12 @@
                                             <statusCode code="completed"/>
                                             <effectiveTime value="201501171650">
                                                 <xsl:attribute name="value">
-                                                    <xsl:value-of select="diagnostik_ts"/>
+                                                    <xsl:value-of select="diagnostics_ts"/>
                                                 </xsl:attribute>
                                             </effectiveTime>
                                             <value xsi:type="CE" codeSystem="1.2.276.0.76.3.1.195.5.51">
                                                 <xsl:attribute name="code">
-                                                    <xsl:value-of select="diagnostik_ct"/>
+                                                    <xsl:value-of select="diagnostics_ct"/>
                                                 </xsl:attribute>
                                             </value>
                                             <participant typeCode="LOC">
@@ -934,7 +934,7 @@
 
                             <xsl:choose>
                                 <xsl:when
-                                        test="diagnostik_labor = 'PB' or diagnostik_labor = 'OPB'">
+                                        test="diagnostics_laboratory = 'PB' or diagnostics_laboratory = 'OPB'">
                                     <entry typeCode="COMP" contextConductionInd="true">
 
                                         <observation classCode="OBS" moodCode="EVN">
@@ -949,12 +949,12 @@
                                             <statusCode code="completed"/>
                                             <effectiveTime value="201501171650">
                                                 <xsl:attribute name="value">
-                                                    <xsl:value-of select="diagnostik_ts"/>
+                                                    <xsl:value-of select="diagnostics_ts"/>
                                                 </xsl:attribute>
                                             </effectiveTime>
                                             <value xsi:type="CE" codeSystem="1.2.276.0.76.3.1.195.5.51">
                                                 <xsl:attribute name="code">
-                                                    <xsl:value-of select="diagnostik_labor"/>
+                                                    <xsl:value-of select="diagnostics_laboratory"/>
                                                 </xsl:attribute>
                                             </value>
                                         </observation>
@@ -963,7 +963,7 @@
                             </xsl:choose>
                             <xsl:choose>
                                 <xsl:when
-                                        test="diagnostik_mrt = 'PB' or diagnostik_mrt = 'OPB'">
+                                        test="diagnostics_mrt = 'PB' or diagnostics_mrt = 'OPB'">
                                     <entry typeCode="COMP" contextConductionInd="true">
 
                                         <observation classCode="OBS" moodCode="EVN">
@@ -978,12 +978,12 @@
                                             <statusCode code="completed"/>
                                             <effectiveTime value="201501171650">
                                                 <xsl:attribute name="value">
-                                                    <xsl:value-of select="diagnostik_ts"/>
+                                                    <xsl:value-of select="diagnostics_ts"/>
                                                 </xsl:attribute>
                                             </effectiveTime>
                                             <value xsi:type="CE" codeSystem="1.2.276.0.76.3.1.195.5.51">
                                                 <xsl:attribute name="code">
-                                                    <xsl:value-of select="diagnostik_mrt"/>
+                                                    <xsl:value-of select="diagnostics_mrt"/>
                                                 </xsl:attribute>
                                             </value>
                                         </observation>
@@ -992,7 +992,7 @@
                             </xsl:choose>
                             <xsl:choose>
                                 <xsl:when
-                                        test="diagnostik_blutgase = 'PB' or diagnostik_blutgase = 'OPB'">
+                                        test="diagnostics_blood_gases = 'PB' or diagnostics_blood_gases = 'OPB'">
                                     <entry typeCode="COMP" contextConductionInd="true">
 
                                         <observation classCode="OBS" moodCode="EVN">
@@ -1007,12 +1007,12 @@
                                             <statusCode code="completed"/>
                                             <effectiveTime value="201501171650">
                                                 <xsl:attribute name="value">
-                                                    <xsl:value-of select="diagnostik_ts"/>
+                                                    <xsl:value-of select="diagnostics_ts"/>
                                                 </xsl:attribute>
                                             </effectiveTime>
                                             <value xsi:type="CE" codeSystem="1.2.276.0.76.3.1.195.5.51">
                                                 <xsl:attribute name="code">
-                                                    <xsl:value-of select="diagnostik_blutgase"/>
+                                                    <xsl:value-of select="diagnostics_blood_gases"/>
                                                 </xsl:attribute>
                                             </value>
                                         </observation>
@@ -1021,7 +1021,7 @@
                             </xsl:choose>
                             <xsl:choose>
                                 <xsl:when
-                                        test="diagnostik_urinschnelltest = 'PB' or diagnostik_urinschnelltest = 'OPB'">
+                                        test="diagnostics_urine_quick_test = 'PB' or diagnostics_urine_quick_test = 'OPB'">
                                     <entry typeCode="COMP" contextConductionInd="true">
 
                                         <observation classCode="OBS" moodCode="EVN">
@@ -1036,12 +1036,12 @@
                                             <statusCode code="completed"/>
                                             <effectiveTime value="201501171650">
                                                 <xsl:attribute name="value">
-                                                    <xsl:value-of select="diagnostik_ts"/>
+                                                    <xsl:value-of select="diagnostics_ts"/>
                                                 </xsl:attribute>
                                             </effectiveTime>
                                             <value xsi:type="CE" codeSystem="1.2.276.0.76.3.1.195.5.51">
                                                 <xsl:attribute name="code">
-                                                    <xsl:value-of select="diagnostik_urinschnelltest"/>
+                                                    <xsl:value-of select="diagnostics_urine_quick_test"/>
                                                 </xsl:attribute>
                                             </value>
                                         </observation>
@@ -1050,7 +1050,7 @@
                             </xsl:choose>
                             <xsl:choose>
                                 <xsl:when
-                                        test="diagnostik_ekg = 'PB' or diagnostik_ekg = 'OPB'">
+                                        test="diagnostics_ecg = 'PB' or diagnostics_ecg = 'OPB'">
                                     <entry typeCode="COMP" contextConductionInd="true">
 
                                         <observation classCode="OBS" moodCode="EVN">
@@ -1065,12 +1065,12 @@
                                             <statusCode code="completed"/>
                                             <effectiveTime value="201501171650">
                                                 <xsl:attribute name="value">
-                                                    <xsl:value-of select="diagnostik_ts"/>
+                                                    <xsl:value-of select="diagnostics_ts"/>
                                                 </xsl:attribute>
                                             </effectiveTime>
                                             <value xsi:type="CE" codeSystem="1.2.276.0.76.3.1.195.5.51">
                                                 <xsl:attribute name="code">
-                                                    <xsl:value-of select="diagnostik_ekg"/>
+                                                    <xsl:value-of select="diagnostics_ecg"/>
                                                 </xsl:attribute>
                                             </value>
                                         </observation>
@@ -1079,7 +1079,7 @@
                             </xsl:choose>
                             <xsl:choose>
                                 <xsl:when
-                                        test="diagnostik_sonographie = 'PB' or diagnostik_sonographie = 'OPB'">
+                                        test="diagnostics_ultrasound = 'PB' or diagnostics_ultrasound = 'OPB'">
                                     <entry typeCode="COMP" contextConductionInd="true">
 
                                         <observation classCode="OBS" moodCode="EVN">
@@ -1094,12 +1094,12 @@
                                             <statusCode code="completed"/>
                                             <effectiveTime value="201501171650">
                                                 <xsl:attribute name="value">
-                                                    <xsl:value-of select="diagnostik_ts"/>
+                                                    <xsl:value-of select="diagnostics_ts"/>
                                                 </xsl:attribute>
                                             </effectiveTime>
                                             <value xsi:type="CE" codeSystem="1.2.276.0.76.3.1.195.5.51">
                                                 <xsl:attribute name="code">
-                                                    <xsl:value-of select="diagnostik_sonographie"/>
+                                                    <xsl:value-of select="diagnostics_ultrasound"/>
                                                 </xsl:attribute>
                                             </value>
                                         </observation>
@@ -1108,7 +1108,7 @@
                             </xsl:choose>
                             <xsl:choose>
                                 <xsl:when
-                                        test="diagnostik_ct_trauma = 'PB' or diagnostik_ct_trauma = 'OPB'">
+                                        test="diagnostics_ct_trauma = 'PB' or diagnostics_ct_trauma = 'OPB'">
                                     <entry typeCode="COMP" contextConductionInd="true">
 
                                         <observation classCode="OBS" moodCode="EVN">
@@ -1123,12 +1123,12 @@
                                             <statusCode code="completed"/>
                                             <effectiveTime value="201501171650">
                                                 <xsl:attribute name="value">
-                                                    <xsl:value-of select="diagnostik_ts"/>
+                                                    <xsl:value-of select="diagnostics_ts"/>
                                                 </xsl:attribute>
                                             </effectiveTime>
                                             <value xsi:type="CE" codeSystem="1.2.276.0.76.3.1.195.5.51">
                                                 <xsl:attribute name="code">
-                                                    <xsl:value-of select="diagnostik_ct_trauma"/>
+                                                    <xsl:value-of select="diagnostics_ct_trauma"/>
                                                 </xsl:attribute>
                                             </value>
                                         </observation>
@@ -1137,7 +1137,7 @@
                             </xsl:choose>
                             <xsl:choose>
                                 <xsl:when
-                                        test="diagnostik_echokardiographie = 'PB' or diagnostik_echokardiographie = 'OPB'">
+                                        test="diagnostics_echocardiographie = 'PB' or diagnostics_echocardiographie = 'OPB'">
                                     <entry typeCode="COMP" contextConductionInd="true">
 
                                         <observation classCode="OBS" moodCode="EVN">
@@ -1152,12 +1152,12 @@
                                             <statusCode code="completed"/>
                                             <effectiveTime value="201501171650">
                                                 <xsl:attribute name="value">
-                                                    <xsl:value-of select="diagnostik_ts"/>
+                                                    <xsl:value-of select="diagnostics_ts"/>
                                                 </xsl:attribute>
                                             </effectiveTime>
                                             <value xsi:type="CE" codeSystem="1.2.276.0.76.3.1.195.5.51">
                                                 <xsl:attribute name="code">
-                                                    <xsl:value-of select="diagnostik_echokardiographie"/>
+                                                    <xsl:value-of select="diagnostics_echocardiographie"/>
                                                 </xsl:attribute>
                                             </value>
                                         </observation>
@@ -1193,7 +1193,7 @@
                                     <effectiveTime value="20200620"/>
                                     <value xsi:type="PQ" value="54" unit="/min">
                                         <xsl:attribute name="value">
-                                            <xsl:value-of select="atemfrequenz"/>
+                                            <xsl:value-of select="respiratory_rate"/>
                                         </xsl:attribute>
                                     </value>
                                 </observation>
@@ -1211,7 +1211,7 @@
                                     <effectiveTime value="20200620"/>
                                     <value xsi:type="PQ" value="88" unit="%">
                                         <xsl:attribute name="value">
-                                            <xsl:value-of select="saettigung"/>
+                                            <xsl:value-of select="saturation"/>
                                         </xsl:attribute>
                                     </value>
                                 </observation>
@@ -1229,7 +1229,7 @@
                                     <effectiveTime value="20200620"/>
                                     <value xsi:type="PQ" value="174" unit="mm[Hg]">
                                         <xsl:attribute name="value">
-                                            <xsl:value-of select="blutdruck_sys"/>
+                                            <xsl:value-of select="blood_pressure_sys"/>
                                         </xsl:attribute>
                                     </value>
                                 </observation>
@@ -1246,7 +1246,7 @@
                                     <effectiveTime value="20200620"/>
                                     <value xsi:type="PQ" value="174" unit="/min">
                                         <xsl:attribute name="value">
-                                            <xsl:value-of select="herzfrequenz"/>
+                                            <xsl:value-of select="heart_rate"/>
                                         </xsl:attribute>
                                     </value>
                                 </observation>
@@ -1264,7 +1264,7 @@
                                     <effectiveTime value="20200620"/>
                                     <value xsi:type="PQ" value="9" unit="{score}">
                                         <xsl:attribute name="value">
-                                            <xsl:value-of select="gcs_summe"/>
+                                            <xsl:value-of select="gcs_total"/>
                                         </xsl:attribute>
                                         <xsl:attribute name="unit">
                                             <xsl:text>{score}</xsl:text>
@@ -1277,7 +1277,7 @@
                                             <statusCode code="completed"/>
                                             <value xsi:type="PQ" value="2" unit="{score}">
                                                 <xsl:attribute name="value">
-                                                    <xsl:value-of select="gcs_augen"/>
+                                                    <xsl:value-of select="gcs_eyes"/>
                                                 </xsl:attribute>
                                                 <xsl:attribute name="unit">
                                                     <xsl:text>{score}</xsl:text>
@@ -1307,7 +1307,7 @@
                                             <statusCode code="completed"/>
                                             <value xsi:type="PQ" value="6" unit="{score}">
                                                 <xsl:attribute name="value">
-                                                    <xsl:value-of select="gcs_motorisch"/>
+                                                    <xsl:value-of select="gcs_motor"/>
                                                 </xsl:attribute>
                                                 <xsl:attribute name="unit">
                                                     <xsl:text>{score}</xsl:text>
@@ -1332,14 +1332,14 @@
                                     <!-- <value xsi:type="CV" code="#PupilWL#" codeSystem="1.2.276.0.76.3.1.195.5.49" displayName="mittel"/>-->
                                     <value xsi:type="CV">
                                         <xsl:choose>
-                                            <xsl:when test="pupillenweite_links = ''">
+                                            <xsl:when test="pupil_size_left = ''">
                                                 <xsl:attribute name="nullFlavor">
                                                     <xsl:text>UNK</xsl:text>
                                                 </xsl:attribute>
                                             </xsl:when>
                                             <xsl:otherwise>
                                                 <xsl:attribute name="code">
-                                                    <xsl:value-of select="pupillenweite_links"/>
+                                                    <xsl:value-of select="pupil_size_left"/>
                                                 </xsl:attribute>
                                                 <xsl:attribute name="codeSystem">
                                                     <xsl:text>1.2.276.0.76.3.1.195.5.49</xsl:text>
@@ -1364,14 +1364,14 @@
                                     <effectiveTime value="20200620"/>
                                     <value xsi:type="CV">
                                         <xsl:choose>
-                                            <xsl:when test="pupillenweite_rechts = ''">
+                                            <xsl:when test="pupil_size_right = ''">
                                                 <xsl:attribute name="nullFlavor">
                                                     <xsl:text>UNK</xsl:text>
                                                 </xsl:attribute>
                                             </xsl:when>
                                             <xsl:otherwise>
                                                 <xsl:attribute name="code">
-                                                    <xsl:value-of select="pupillenweite_rechts"/>
+                                                    <xsl:value-of select="pupil_size_right"/>
                                                 </xsl:attribute>
                                                 <xsl:attribute name="codeSystem">
                                                     <xsl:text>1.2.276.0.76.3.1.195.5.49</xsl:text>
@@ -1392,14 +1392,14 @@
                                     <code code="RPPL" codeSystem="1.2.276.0.76.3.1.195.5.1"
                                           displayName="Pupillenreaktion"/>
                                     <text>
-                                        <reference value="PupiLeft"/>
+                                        <reference value="PupilLeft"/>
                                     </text>
                                     <statusCode code="completed"/>
                                     <effectiveTime value="20200620"/>
 
                                     <value xsi:type="CV">
                                         <xsl:choose>
-                                            <xsl:when test="pupillenreaktion_links = ''">
+                                            <xsl:when test="pupil_reaction_left = ''">
                                                 <xsl:attribute name="nullFlavor">
                                                     <xsl:text>UNK</xsl:text>
                                                 </xsl:attribute>
@@ -1409,7 +1409,7 @@
                                                     <xsl:text>1.2.276.0.76.3.1.195.5.50</xsl:text>
                                                 </xsl:attribute>
                                                 <xsl:attribute name="code">
-                                                    <xsl:value-of select="pupillenreaktion_links"/>
+                                                    <xsl:value-of select="pupil_reaction_left"/>
                                                 </xsl:attribute>
                                             </xsl:otherwise>
                                         </xsl:choose>
@@ -1433,7 +1433,7 @@
                                     <effectiveTime value="20200620"/>
                                     <value xsi:type="CV">
                                         <xsl:choose>
-                                            <xsl:when test="pupillenreaktion_rechts = ''">
+                                            <xsl:when test="pupil_reaction_right = ''">
                                                 <xsl:attribute name="nullFlavor">
                                                     <xsl:text>UNK</xsl:text>
                                                 </xsl:attribute>
@@ -1443,7 +1443,7 @@
                                                     <xsl:text>1.2.276.0.76.3.1.195.5.50</xsl:text>
                                                 </xsl:attribute>
                                                 <xsl:attribute name="code">
-                                                    <xsl:value-of select="pupillenreaktion_rechts"/>
+                                                    <xsl:value-of select="pupil_reaction_right"/>
                                                 </xsl:attribute>
                                             </xsl:otherwise>
                                         </xsl:choose>
@@ -1468,7 +1468,7 @@
                                     <effectiveTime value="20200620"/>
                                     <value xsi:type="PQ" value="0.425" unit="Cel">
                                         <xsl:attribute name="value">
-                                            <xsl:value-of select="kerntemperatur"/>
+                                            <xsl:value-of select="body_temperature"/>
                                         </xsl:attribute>
                                     </value>
                                 </observation>
@@ -1488,7 +1488,7 @@
                                     <effectiveTime value="20200620"/>
                                     <value xsi:type="PQ" value="9" unit="{score}">
                                         <xsl:attribute name="value">
-                                            <xsl:value-of select="schmerzskala"/>
+                                            <xsl:value-of select="pain_severity"/>
                                         </xsl:attribute>
                                         <xsl:attribute name="unit">
                                             <xsl:text>{score}</xsl:text>
@@ -1508,7 +1508,7 @@
                                   displayName="Allergies &amp;or adverse reactions"/>
                             <title>Allergien und Unverträglichkeiten</title>
                             <text>
-                                <xsl:value-of select="allergien_txt"/>
+                                <xsl:value-of select="allergies_txt"/>
                             </text>
                             <entry typeCode="COMP">
                                 <act classCode="ACT" moodCode="EVN">
@@ -1525,7 +1525,7 @@
                                         <!--Allergien allgemein-->
                                         <observation classCode="OBS" moodCode="EVN" negationInd="true">
                                             <xsl:attribute name="negationInd">
-                                                <xsl:value-of select="allergie"/>
+                                                <xsl:value-of select="allergy"/>
                                             </xsl:attribute>
                                             <templateId root="1.2.276.0.76.10.4066"/>
                                             <id root="1.2.276.0.76.4.17.9814184919"
@@ -1554,7 +1554,7 @@
                                     <entryRelationship typeCode="SUBJ">
                                         <observation classCode="OBS" moodCode="EVN">
                                             <xsl:attribute name="negationInd">
-                                                <xsl:value-of select="allergie_antibiotika"/>
+                                                <xsl:value-of select="allergy_antibiotics"/>
                                             </xsl:attribute>
                                             <templateId root="1.2.276.0.76.10.4066"/>
                                             <id root="1.2.276.0.76.4.17.9814184919"
@@ -1584,7 +1584,7 @@
                                     <entryRelationship typeCode="SUBJ">
                                         <observation classCode="OBS" moodCode="EVN" negationInd="true">
                                             <xsl:attribute name="negationInd">
-                                                <xsl:value-of select="allergie_kontrastmittel"/>
+                                                <xsl:value-of select="allergy_contrast_agent"/>
                                             </xsl:attribute>
                                             <templateId root="1.2.276.0.76.10.4066"/>
                                             <id root="1.2.276.0.76.4.17.9814184919"
@@ -1613,7 +1613,7 @@
 
                                         <observation classCode="OBS" moodCode="EVN">
                                             <xsl:attribute name="negationInd">
-                                                <xsl:value-of select="allergie_sonstige"/>
+                                                <xsl:value-of select="allergy_other"/>
                                             </xsl:attribute>
                                             <templateId root="1.2.276.0.76.10.4066"/>
                                             <id root="1.2.276.0.76.4.17.9814184919"
@@ -1666,7 +1666,7 @@
                             <text>
                                 <list>
                                     <item ID="diag-1">
-                                        <xsl:value-of select="diagnose_txt"/>
+                                        <xsl:value-of select="diagnosis_txt"/>
                                     </item>
                                 </list>
                             </text>
@@ -1680,7 +1680,7 @@
                                     <effectiveTime>
                                         <low value="20150117"/>
                                     </effectiveTime>
-                                    <xsl:for-each select="*[starts-with(name(), 'diagnose_code')]">
+                                    <xsl:for-each select="*[starts-with(name(), 'diagnosis_code')]">
                                         <xsl:variable name="position" select="position()"/>
                                         <entryRelationship typeCode="SUBJ">
                                             <observation classCode="OBS" moodCode="EVN">
@@ -1697,7 +1697,7 @@
                                                     <low value="20150117"/>
                                                 </effectiveTime>
                                                 <value xsi:type="CD">
-                                                    <!-- Handle the diagnose_code value -->
+                                                    <!-- Handle the diagnosis_code value -->
                                                     <xsl:choose>
                                                         <xsl:when test=". = ''">
                                                             <xsl:attribute name="nullFlavor">
@@ -1725,9 +1725,9 @@
                                                     </xsl:choose>
 
                                                     <originalText>
-                                                        <!-- Find the corresponding diagnose_name element -->
+                                                        <!-- Find the corresponding diagnosis_name element -->
                                                         <xsl:variable name="correspondingName"
-                                                                      select="/aktin_raw/*[starts-with(name(), 'diagnose_name_')][position() = $position]"/>
+                                                                      select="/aktin_raw/*[starts-with(name(), 'diagnosis_name_')][position() = $position]"/>
                                                         <xsl:choose>
                                                             <xsl:when test="$correspondingName = ''">
                                                                 <xsl:attribute name="nullFlavor">
@@ -1741,7 +1741,7 @@
                                                     </originalText>
 
                                                     <xsl:variable name="correspondingQualifier"
-                                                                  select="/aktin_raw/*[starts-with(name(), 'diagnose_qualifier_')][position() = $position]"/>
+                                                                  select="/aktin_raw/*[starts-with(name(), 'diagnosis_qualifier_')][position() = $position]"/>
                                                     <xsl:if test="$correspondingQualifier != ''">
                                                         <qualifier>
                                                             <name code="8"
