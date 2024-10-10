@@ -79,7 +79,7 @@ async def process_files_async(num_rows: int = None) -> None:
     """
     RESPONSE_DIR.mkdir(exist_ok=True)
 
-    cda_files = list(CDA_DIR.glob("cda_*.cda"))
+    cda_files = list(CDA_DIR.glob("cda_*.xml"))
     if num_rows is not None:
         cda_files = cda_files[:num_rows]
 
