@@ -293,7 +293,7 @@
                                     <effectiveTime>
                                         <high>
                                             <xsl:attribute name="value">
-                                                <xsl:value-of select="admission_id"/>
+                                                <xsl:value-of select="admission_ts"/>
                                             </xsl:attribute>
                                         </high>
                                     </effectiveTime>
@@ -1157,7 +1157,7 @@
                                             </effectiveTime>
                                             <value xsi:type="CE" codeSystem="1.2.276.0.76.3.1.195.5.51">
                                                 <xsl:attribute name="code">
-                                                    <xsl:value-of select="diagnostics_echocardiographie"/>
+                                                    <xsl:value-of select="diagnostics_echocardiography"/>
                                                 </xsl:attribute>
                                             </value>
                                         </observation>

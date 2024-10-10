@@ -36,12 +36,12 @@ def calculate_timestamps(df: pd.DataFrame) -> pd.DataFrame:
 
     # Define the sequence of operations: (timestamp, start_timestamp, minutes_to_add, format_input, format_output)
     operations = [
-        ("therapiebeginn_ts", "aufnahme_ts", "_aufnahme_therapiebeginn"),
-        ("arztkontakt_ts", "therapiebeginn_ts", "_therapiebeginn_arztkontakt"),
-        ("end_arztkontakt_ts", "arztkontakt_ts", "_arztkontakt_endarztkontakt"),
-        ("entlassung_ts", "end_arztkontakt_ts", "_endarztkontakt_entlassung"),
-        ("triage_ts_start", "entlassung_ts", "_entlassung_triagestart", "%Y%m%d%H%M%S", "%Y%m%d%H%M"),
-        ("triage_ts_end", "triage_ts_start", "_triagestart_triageend", "%Y%m%d%H%M", "%Y%m%d%H%M")
+        ("therapy_start_ts", "admission_ts", "delta_admission_therapy_start"),
+        ("doctor_contact_ts", "therapy_start_ts", "delta_therapy_start_doctor_contact"),
+        ("end_doctor_contact_ts", "doctor_contact_ts", "delta_doctor_contact_end_doctor_contact"),
+        ("discharge_ts", "end_doctor_contact_ts", "delta_end_doctor_contact_discharge"),
+        ("triage_ts_start", "discharge_ts", "delta_discharge_triage_start", "%Y%m%d%H%M%S", "%Y%m%d%H%M"),
+        ("triage_ts_end", "triage_ts_start", "delta_triage_start_triage_end", "%Y%m%d%H%M", "%Y%m%d%H%M")
     ]
 
     for output_key, input_key, minutes_key, *formats in operations:
@@ -119,7 +119,8 @@ def make_associated_person_family_member(df):
     Returns:
         None
     """
-    df['_associatedPerson_nachname'] = df['nachname_patient']
+    # TODO Remove unnecessary associated persons
+    df['associated_person_last_name'] = df['patient_last_name']
 
 
 def make_pregnant_man_not_pregnant(df):
@@ -132,7 +133,7 @@ def make_pregnant_man_not_pregnant(df):
     Returns:
         None
     """
-    df.loc[df['gender'] == 'M', 'schwangerschaft'] = 0
+    df.loc[df['gender'] == 'M', 'pregnancy'] = 0
 
 
 def calculate_gcs_sum(df):
@@ -145,7 +146,7 @@ def calculate_gcs_sum(df):
     Returns:
         None
     """
-    df['gcs_summe'] = df['gcs_motorisch'].astype(int) + df['gcs_verbal'].astype(int) + df['gcs_augen'].astype(int)
+    df['gcs_total'] = df['gcs_motor'].astype(int) + df['gcs_verbal'].astype(int) + df['gcs_eyes'].astype(int)
 
 
 def define_tasks_for_diagnoses(df, tasks):
@@ -162,17 +163,17 @@ def define_tasks_for_diagnoses(df, tasks):
     diagnose_csv = os.environ['DIAGNOSES_CSV']
 
     # Identify all diagnose columns in the DataFrame
-    diagnose_cols = [col for col in df.columns if re.match(r'diagnose_code_\d+', col)]
+    diagnose_cols = [col for col in df.columns if re.match(r'diagnosis_code_\d+', col)]
 
     for diagnose in diagnose_cols:
         # Extract the number from the column name
-        num = re.match(r'diagnose_code_(\d+)', diagnose).group(1)
+        num = re.match(r'diagnosis_code_(\d+)', diagnose).group(1)
 
         task = {
             'csv_path': diagnose_csv,
             'df_key_column': diagnose,
-            'df_value_column': "diagnose_name_" + num,
-            'df_target_column': "diagnose_name_" + num,
+            'df_value_column': "diagnosis_name_" + num,
+            'df_target_column': "diagnosis_name_" + num,
             'csv_key_column': "Schlüsselnummer ohne Strich, Stern und  Ausrufezeichen",
             'csv_value_column': "Titel des dreistelligen Kodes"
         }
@@ -182,17 +183,13 @@ def define_tasks_for_diagnoses(df, tasks):
 
 
 def add_insurace_information(df):
-    df['versicherung_txt'] = df['versicherungsfall'].apply(
+    df['insurance_txt'] = df['insurance_case'].apply(
         lambda x: 'Selbstzahler' if x == 'SELF' else 'Familienversicherung')
-
-
-def add_allergie_information(df):
-    df['allergie_txt'] = df['allergie'].apply(lambda x: f"")
 
 
 def assign_names_to_patients(individual_attributes_csv, df):
     csv_df = pd.read_csv(individual_attributes_csv, dtype=str, delimiter=';')
-    df['vorname_patient'] = df['gender'].apply(lambda x:
+    df['patient_first_name'] = df['gender'].apply(lambda x:
                                                random.choice(csv_df['vorname_m']) if x == 'M' else random.choice(
                                                    csv_df['vorname_f']))
 
@@ -221,21 +218,21 @@ def calculate_dependencies(filename: str) -> None:
     tasks = [
         {
             'csv_path': clinics_csv,
-            'df_key_column': 'stadt',
+            'df_key_column': 'city',
             'df_value_column': 'klinik_name',
-            'df_target_column': 'organisation_name',
+            'df_target_column': 'organization_name',
         },
         {
             'csv_path': clinics_csv,
-            'df_key_column': 'stadt',
-            'df_value_column': 'postleitzahl',
-            'df_target_column': 'postleitzahl',
+            'df_key_column': 'city',
+            'df_value_column': 'postal_code',
+            'df_target_column': 'postal_code',
         },
         {
             'csv_path': cedis_csv,
             'df_key_column': 'cedis',
             'df_value_column': 'display_name',
-            'df_target_column': 'beschwerden_txt',
+            'df_target_column': 'complaints_txt',
         }
     ]
 
@@ -253,8 +250,6 @@ def calculate_dependencies(filename: str) -> None:
     make_associated_person_family_member(df)
 
     add_insurace_information(df)
-
-    add_allergie_information(df)
 
     assign_names_to_patients(individual_attributes_csv, df)
 
