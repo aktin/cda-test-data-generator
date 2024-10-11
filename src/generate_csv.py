@@ -6,6 +6,7 @@ import pandas as pd
 from generator import GeneratorFactory
 from generator import GeneratorType
 from parser import Parser
+from value_remover import ValueRemover
 
 
 def extract_concept_id_attributes(input_df: pd.DataFrame) -> dict:
@@ -22,7 +23,8 @@ def extract_concept_id_attributes(input_df: pd.DataFrame) -> dict:
     variables_dict = {}
     for _, row in input_df.iterrows():
         variables_dict[row['Concept Id']] = (
-            row['Default values'], row['Generation type'], row['Parameters'], row['Nullable'], row['Probability missing'])
+            row['Default values'], row['Generation type'], row['Parameters'], row['Nullable'],
+            row['Probability missing'])
     return variables_dict
 
 
@@ -116,31 +118,6 @@ def generate_data_columns(variables_dict, num_datasets):
     return output_data
 
 
-def remove_with_probability(column, probability):
-    """
-    Remove elements from the column with a given probability.
-
-    Args:
-        column (list): The list of values from which elements will be removed.
-        probability (float): The probability with which an element will be removed.
-
-    Returns:
-        list: A list with some elements replaced by None based on the given probability.
-    """
-    return ['' if random() < probability else value for value in column]
-
-
-def remove_values_with_probability(var_dict, output_data):
-    for concept_id, (_, _, _, nullable, prob_missing) in var_dict.items():
-        if nullable is False and prob_missing > 0:
-            raise ValueError(f"Probability of missing values is non-zero for a non-nullable conceptId: {concept_id}.")
-        if prob_missing < 0 or prob_missing > 1:
-            raise ValueError(f"Probability of missing values must be between 0 and 1 for conceptId: {concept_id}.")
-        if nullable:
-            output_data[concept_id] = remove_with_probability(output_data[concept_id], prob_missing)
-    return output_data
-
-
 def generate_csv(excel_path: str, csv_path, num_datasets) -> None:
     """
     Generate a CSV file from an Excel input file.
@@ -165,7 +142,7 @@ def generate_csv(excel_path: str, csv_path, num_datasets) -> None:
     output_data = generate_data_columns(variables_dict, num_datasets)
 
     # Remove value with probability
-    output_data = remove_values_with_probability(variables_dict, output_data)
+    output_data = ValueRemover.remove_values_with_probability(output_data, variables_dict)
 
     # Output to CSV
     output_data.to_csv(csv_path, index=False)
