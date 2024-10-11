@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 
+
 class ValueRemover:
     @staticmethod
     def remove_with_probability(column, probability):
@@ -32,9 +33,10 @@ class ValueRemover:
         Raises:
             ValueError: If the probability is non-zero for a non-nullable concept ID or if the probability is not between 0 and 1.
         """
-        for concept_id, (_, _, _, nullable, prob_missing) in var_dict.items():
+        for concept_id, (_, _, nullable, prob_missing) in var_dict.items():
             if nullable is False and prob_missing > 0:
-                raise ValueError(f"Probability of missing values is non-zero for a non-nullable conceptId: {concept_id}.")
+                raise ValueError(
+                    f"Probability of missing values is non-zero for a non-nullable conceptId: {concept_id}.")
             if prob_missing < 0 or prob_missing > 1:
                 raise ValueError(f"Probability of missing values must be between 0 and 1 for conceptId: {concept_id}.")
             if nullable:

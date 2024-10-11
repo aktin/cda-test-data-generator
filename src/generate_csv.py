@@ -22,8 +22,7 @@ def extract_concept_id_attributes(input_df: pd.DataFrame) -> dict:
     """
     variables_dict = {}
     for _, row in input_df.iterrows():
-        variables_dict[row['Concept Id']] = (
-            row['Default values'], row['Generation type'], row['Parameters'], row['Nullable'],
+        variables_dict[row['Concept Id']] = (row['Generation type'], row['Parameters'], row['Nullable'],
             row['Probability missing'])
     return variables_dict
 
@@ -60,13 +59,12 @@ def parse_parameters_to_dict(variables_dict: dict) -> dict:
     """
     variables_dict = {
         concept_id: (
-            default_values,
             var_type,
             Parser.parse(params) if isinstance(params, str) else {},
             nullable,
             prob_missing
         )
-        for concept_id, (default_values, var_type, params, nullable, prob_missing) in variables_dict.items()
+        for concept_id, (var_type, params, nullable, prob_missing) in variables_dict.items()
     }
     return variables_dict
 
@@ -91,24 +89,10 @@ def remove_number_from_params(concept_id, new_variables):
 
 
 def generate_data_columns(variables_dict, num_datasets):
-    """
-    Loop through all variables and generate data columns.
-    Generates data columns based on the generation type and parameters specified in the variables dictionary.
-    Removes entries with a certain probability if nullable is True.
-
-    Args:
-        variables_dict (dict): A dictionary where the keys are concept IDs and the values are tuples containing
-                               default values, generation type, parameters, and null flavors.
-        num_datasets (int): The number of data values to generate.
-        probability_missing (float, optional): The probability of a value being missing. Defaults to 0.5.
-
-    Returns:
-        pd.DataFrame: The updated DataFrame with the generated data columns.
-    """
 
     output_data = pd.DataFrame()
 
-    for concept_id, (_, var_type, params, _, _) in variables_dict.items():
+    for concept_id, (var_type, params, _, _) in variables_dict.items():
         # Generate data column
         column_list = GeneratorFactory.create_generator(GeneratorType(var_type), params).generate(num_datasets)
         # Remove entries if possible
