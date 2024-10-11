@@ -22,7 +22,7 @@ def extract_concept_id_attributes(input_df: pd.DataFrame) -> dict:
     variables_dict = {}
     for _, row in input_df.iterrows():
         variables_dict[row['Concept Id']] = (
-            row['Default values'], row['Generation type'], row['Parameters'], row['Nullable'])
+            row['Default values'], row['Generation type'], row['Parameters'], row['Nullable'], row['Probability missing'])
     return variables_dict
 
 
@@ -61,9 +61,10 @@ def parse_parameters_to_dict(variables_dict: dict) -> dict:
             default_values,
             var_type,
             Parser.parse(params) if isinstance(params, str) else {},
-            nullable
+            nullable,
+            prob_missing
         )
-        for concept_id, (default_values, var_type, params, nullable) in variables_dict.items()
+        for concept_id, (default_values, var_type, params, nullable, prob_missing) in variables_dict.items()
     }
     return variables_dict
 
@@ -87,7 +88,7 @@ def remove_number_from_params(concept_id, new_variables):
     return num
 
 
-def generate_data_columns(variables_dict, num_datasets, probability_missing=0.5):
+def generate_data_columns(variables_dict, num_datasets):
     """
     Loop through all variables and generate data columns.
     Generates data columns based on the generation type and parameters specified in the variables dictionary.
@@ -105,12 +106,10 @@ def generate_data_columns(variables_dict, num_datasets, probability_missing=0.5)
 
     output_data = pd.DataFrame()
 
-    for concept_id, (default_values, var_type, params, nullable) in variables_dict.items():
+    for concept_id, (_, var_type, params, _, _) in variables_dict.items():
         # Generate data column
         column_list = GeneratorFactory.create_generator(GeneratorType(var_type), params).generate(num_datasets)
         # Remove entries if possible
-        if nullable:
-            column_list = remove_with_probability(column_list, probability_missing)
         new_column = pd.Series(data=column_list, name=concept_id)
         output_data = pd.concat([output_data, new_column], axis=1)
 
@@ -129,6 +128,17 @@ def remove_with_probability(column, probability):
         list: A list with some elements replaced by None based on the given probability.
     """
     return ['' if random() < probability else value for value in column]
+
+
+def remove_values_with_probability(var_dict, output_data):
+    for concept_id, (_, _, _, nullable, prob_missing) in var_dict.items():
+        if nullable is False and prob_missing > 0:
+            raise ValueError(f"Probability of missing values is non-zero for a non-nullable conceptId: {concept_id}.")
+        if prob_missing < 0 or prob_missing > 1:
+            raise ValueError(f"Probability of missing values must be between 0 and 1 for conceptId: {concept_id}.")
+        if nullable:
+            output_data[concept_id] = remove_with_probability(output_data[concept_id], prob_missing)
+    return output_data
 
 
 def generate_csv(excel_path: str, csv_path, num_datasets) -> None:
@@ -152,7 +162,10 @@ def generate_csv(excel_path: str, csv_path, num_datasets) -> None:
     variables_dict = parse_parameters_to_dict(variables_dict)
 
     # Generate data columns
-    output_data = generate_data_columns(variables_dict, num_datasets, 0.2)
+    output_data = generate_data_columns(variables_dict, num_datasets)
+
+    # Remove value with probability
+    output_data = remove_values_with_probability(variables_dict, output_data)
 
     # Output to CSV
     output_data.to_csv(csv_path, index=False)
