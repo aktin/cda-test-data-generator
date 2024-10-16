@@ -100,6 +100,21 @@ def add_processing_instructions(tree: etree.ElementTree) -> etree.ElementTree:
     tree.getroot().addprevious(pi2)
     return tree
 
+def add_warning_comment(tree: etree.ElementTree, warning: str) -> etree.ElementTree:
+    """
+    Add a warning comment to an XML element tree.
+
+    Args:
+        tree (lxml.etree._ElementTree): The XML element tree to which the warning comment will be added.
+        warning (str): The warning message to add to the comment.
+
+    Returns:
+        lxml.etree._ElementTree: The XML element tree with the added warning comment.
+    """
+    comment = etree.Comment(warning)
+    tree.getroot().addprevious(comment)
+    return tree
+
 
 def csv_to_cda(csv_file: str, xslt_file: str) -> None:
     """
@@ -123,7 +138,7 @@ def csv_to_cda(csv_file: str, xslt_file: str) -> None:
     # Load XSLT transformation from Skeleton
     xslt_transform = etree.XSLT(etree.parse(xslt_file))
     # Create Parser
-    parser = etree.XMLParser(remove_blank_text=True)
+    parser = etree.XMLParser(remove_blank_text=True, remove_comments=True)
 
     for i, csv_data in enumerate(csv_to_dict(csv_file), start=1):
         # Create and save raw XML
@@ -134,6 +149,7 @@ def csv_to_cda(csv_file: str, xslt_file: str) -> None:
         transformed_xml = transform_xml(raw_xml, xslt_transform)
         xml_root = etree.fromstring(str(transformed_xml), parser=parser)
         tree = add_processing_instructions(etree.ElementTree(xml_root))
+        tree = add_warning_comment(tree, "WARNING!. This file was random generated.")
 
         # Save CDA
         save_xml(tree, os.path.join(cda_path, f'cda_{i}.xml'))
