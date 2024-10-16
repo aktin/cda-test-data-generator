@@ -69,10 +69,11 @@ def parse_command_line() -> Tuple[int, str, bool]:
     Returns:
         Tuple[int, str, bool]: Number of patients, config file path, and cleanup flag.
     """
-    parser = argparse.ArgumentParser(description='Process Excel to CDA.')
+    parser = argparse.ArgumentParser(prog='cda-test-data-generator', description='Process Excel to CDA.')
     parser.add_argument('--n', type=int, required=True, help='Number of patients to generate.')
     parser.add_argument('--config', type=str, required=True, help='Filepath for configuration TOML file.')
     parser.add_argument('--cleanup', action='store_true', help='Remove intermediate CSV file after processing.')
+    parser.add_argument('--xlsx', type=str, required=True, help='Filepath to the input Excel file.')
     args = parser.parse_args()
     return args.n, args.config, args.cleanup
 
