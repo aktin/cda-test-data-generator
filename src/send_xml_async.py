@@ -23,22 +23,6 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 
-def parse_arguments():
-    """
-    Parse command line arguments.
-
-    Returns:
-        argparse.Namespace: Parsed command line arguments.
-    """
-    parser = argparse.ArgumentParser(description="Process CDA files and analyze responses.")
-    parser.add_argument('--n', type=int, default=None,
-                        help="Number of rows to process. If not provided, will process all files in the CDA directory.")
-    parser.add_argument('--config', type=str, required=True, help='Filepath for configuration TOML file.')
-    parser.add_argument('--cleanup', action='store_true', help='Remove intermediate CSV file after processing.')
-
-    return parser.parse_args()
-
-
 async def send_xml_file_async(session: aiohttp.ClientSession, input_file: Path, output_file: Path) -> None:
     """
     Asynchronously send an XML file to a server and save the response.
@@ -68,9 +52,7 @@ async def send_xml_file_async(session: aiohttp.ClientSession, input_file: Path, 
         logger.error(f"Error processing {input_file.name}: {str(e)}")
 
 
-
-
-async def process_files_async(num_rows: int = None) -> None:
+async def process_files_async() -> None:
     """
     Process multiple XML files asynchronously.
 
@@ -80,8 +62,6 @@ async def process_files_async(num_rows: int = None) -> None:
     RESPONSE_DIR.mkdir(exist_ok=True)
 
     cda_files = list(CDA_DIR.glob("cda_*.xml"))
-    if num_rows is not None:
-        cda_files = cda_files[:num_rows]
 
     async with aiohttp.ClientSession() as session:
         tasks = [
@@ -134,17 +114,12 @@ def get_stats() -> Dict[str, int]:
     logger.info(f"Files with issues: {issue_cdas}")
     return stats
 
+
 async def main_async() -> None:
     """
     Main asynchronous function to orchestrate the XML processing and analysis.
     """
-    args = parse_arguments()
-
-    main.main()  # Run the main function from src.main
-
-
-
-    await process_files_async(args.n)
+    await process_files_async()
     get_stats()
 
 
