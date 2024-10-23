@@ -109,7 +109,7 @@ class IntGenerator(AbstractGenerator):
         self.min_value = min_value
         self.max_value = max_value
 
-    def generate(self, count):
+    def generate(self, count) -> List[int]:
         """
         Generate random integer values within the specified range.
 

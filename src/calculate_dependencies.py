@@ -210,37 +210,37 @@ def calculate_dependencies(filename: str) -> None:
     # Calculate timestamp dependencies (Mandatory for passing the import Validator
     calculate_timestamps(df)
 
-    # Define tasks for mapping values from CSV files
-    clinics_csv = os.environ['CLINICS_CSV']
-    cedis_csv = os.environ['CEDIS_CSV']
-    individual_attributes_csv = os.environ['INDIVIDUAL_ATTRIBUTES_CSV']
-
-    tasks = [
-        {
-            'csv_path': clinics_csv,
-            'df_key_column': 'city',
-            'df_value_column': 'klinik_name',
-            'df_target_column': 'organization_name',
-        },
-        {
-            'csv_path': clinics_csv,
-            'df_key_column': 'city',
-            'df_value_column': 'postal_code',
-            'df_target_column': 'postal_code',
-        },
-        {
-            'csv_path': cedis_csv,
-            'df_key_column': 'cedis',
-            'df_value_column': 'display_name',
-            'df_target_column': 'complaints_txt',
-        }
-    ]
-
-    define_tasks_for_diagnoses(df, tasks)
-
-    # do the tasks
-    for task in tasks:
-        map_csv_to_dataframe(df, **task)
+#     # Define tasks for mapping values from CSV files
+#     clinics_csv = os.environ['CLINICS_CSV']
+#     cedis_csv = os.environ['CEDIS_CSV']
+#     individual_attributes_csv = os.environ['INDIVIDUAL_ATTRIBUTES_CSV']
+#
+#     tasks = [
+#         {
+#             'csv_path': clinics_csv,
+#             'df_key_column': 'city',
+#             'df_value_column': 'klinik_name',
+#             'df_target_column': 'organization_name',
+#         },
+#         {
+#             'csv_path': clinics_csv,
+#             'df_key_column': 'city',
+#             'df_value_column': 'postal_code',
+#             'df_target_column': 'postal_code',
+#         },
+#         {
+#             'csv_path': cedis_csv,
+#             'df_key_column': 'cedis',
+#             'df_value_column': 'display_name',
+#             'df_target_column': 'complaints_txt',
+#         }
+#     ]
+#
+#     define_tasks_for_diagnoses(df, tasks)
+#
+#     # do the tasks
+#     for task in tasks:
+#         map_csv_to_dataframe(df, **task)
 
     # Further dependencies
     calculate_gcs_sum(df)
@@ -251,7 +251,7 @@ def calculate_dependencies(filename: str) -> None:
 
     add_insurace_information(df)
 
-    assign_names_to_patients(individual_attributes_csv, df)
+    # assign_names_to_patients(individual_attributes_csv, df)
 
     # Write the updated DataFrame back to a CSV file
     df.to_csv(filename, index=False)
