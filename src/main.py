@@ -6,28 +6,13 @@ import os
 from calculate_dependencies import calculate_dependencies
 from csv_to_cda import csv_to_cda
 from generate_csv import generate_csv
+from src.config import Config
 
 
 def setup_logging() -> None:
     """Set up logging configuration."""
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-
-def parse_command_line() -> None:
-    """
-    Parse command line arguments.
-
-    Returns:
-        None
-    """
-    parser = argparse.ArgumentParser(prog='cda-test-data-generator', description='Process Excel to CDA.')
-    parser.add_argument('--n', type=int, required=True, help='Number of patients to generate.')
-    parser.add_argument('--cleanup', action='store_true', help='Remove intermediate CSV file after processing.')
-    parser.add_argument('--xlsx', type=str, required=True, help='Filepath to the input Excel file.')
-    parser.add_argument('--xslt', type=str, required=True, help='Filepath to the input XSLT file.')
-    parser.add_argument('--o', type=str, required=False, default='../output/',
-                        help='Output directory for generated files.')  # noqa E501
-    parser.parse_args(namespace=main)
 
 
 def resolve_path(base_path: str, relative_path: str) -> str:
@@ -69,13 +54,13 @@ def process_excel_to_cda(n: int, cleanup: bool, output_dir='../output/') -> None
 
     try:
         logging.info("Generating CSV...")
-        generate_csv(main.xlsx, csv_path, n)
+        generate_csv(config.xlsx, csv_path, n)
 
         logging.info("Calculating dependencies...")
         calculate_dependencies(csv_path)
 
         logging.info("Transforming to CDA...")
-        csv_to_cda(csv_path, main.xslt, main.o)
+        csv_to_cda(csv_path, config.xslt, config.output_dir)
 
         if cleanup:
             clean_up(csv_path)
@@ -88,15 +73,16 @@ def process_excel_to_cda(n: int, cleanup: bool, output_dir='../output/') -> None
 
 def main() -> None:
     """Main function to orchestrate the Excel to CDA conversion process."""
-    setup_logging()
 
     try:
-        parse_command_line()
-        process_excel_to_cda(main.n, main.cleanup)
+        # Create config at program start
+        process_excel_to_cda(config.n, config.cleanup)
     except Exception as e:
         logging.error(f"Script execution failed: {str(e)}")
         exit(1)
 
 
 if __name__ == '__main__':
+    setup_logging()
+    config = Config.from_args()
     main()
