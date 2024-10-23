@@ -149,7 +149,7 @@ class LookupGenerator(AbstractGenerator):
         """
         if not column:
             raise ValueError("Column not specified in parameters")
-        df = pd.read_csv(f"../resources/value_sets/{link}", delimiter=";", dtype=str, header=0)
+        df = pd.read_csv(link, delimiter=";", dtype=str, header=0)
         if column not in df.columns:
             raise ValueError(f"Column '{column}' not found in file")
         self.value_set = set(df[column])

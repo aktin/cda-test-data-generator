@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-
+from config import config
 
 class Parser:
     @staticmethod
@@ -78,7 +78,7 @@ class ValueSetHandler:
         Returns:
             None
         """
-        value = value[1:-1]  # Remove the brackets
+        value = value[1:-1]  # Remove brackets
         value_set = value.split(",")
         param_dict["value_set"] = set([elem.strip() for elem in value_set])
 
@@ -113,8 +113,9 @@ class LinkHandler:
         Returns:
             None
         """
-        if os.path.exists(f'../resources/value_sets/{value}'):
-            param_dict["link"] = value
+        full_path = os.path.join(os.path.dirname(config.xlsx), value)
+        if os.path.isfile(full_path):
+            param_dict["link"] = full_path
         else:
             raise ValueError(f"File {value} does not exist in resources/value_sets")
 

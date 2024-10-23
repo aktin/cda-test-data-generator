@@ -28,3 +28,5 @@ class Config:
             xslt=args.xslt,
             output_dir=args.o
         )
+
+config = Config.from_args()

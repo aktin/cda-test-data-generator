@@ -2,7 +2,6 @@ import asyncio
 import os
 from pathlib import Path
 from typing import Dict
-import argparse
 
 import aiohttp
 import aiofiles

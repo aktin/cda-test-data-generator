@@ -6,7 +6,7 @@ import os
 from calculate_dependencies import calculate_dependencies
 from csv_to_cda import csv_to_cda
 from generate_csv import generate_csv
-from src.config import Config
+from src.config import config
 
 
 def setup_logging() -> None:
@@ -84,5 +84,4 @@ def main() -> None:
 
 if __name__ == '__main__':
     setup_logging()
-    config = Config.from_args()
     main()
