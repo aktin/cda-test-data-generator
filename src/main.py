@@ -1,4 +1,3 @@
-import argparse
 import glob
 import logging
 import os
@@ -10,9 +9,12 @@ from src.config import config
 
 
 def setup_logging() -> None:
-    """Set up logging configuration."""
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    """
+    Set up logging configuration.
 
+    This function configures the logging module to output messages with a specific format and at the INFO level.
+    """
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 def resolve_path(base_path: str, relative_path: str) -> str:
@@ -29,7 +31,7 @@ def resolve_path(base_path: str, relative_path: str) -> str:
     return os.path.abspath(os.path.join(base_path, relative_path))
 
 
-def clean_up(csv_path):
+def clean_up(csv_path: str) -> None:
     """
     Clean up intermediate files including the specified CSV file and all files in the raw directory.
 
@@ -45,7 +47,18 @@ def clean_up(csv_path):
         os.remove(file_path)
 
 
-def process_excel_to_cda(n: int, cleanup: bool, output_dir='../output/') -> None:
+def process_excel_to_cda(n: int, cleanup: bool, output_dir: str = '../output/') -> None:
+    """
+    Process Excel file to CDA format.
+
+    This function orchestrates the conversion of an Excel file to CDA format by generating a CSV file,
+    calculating dependencies, and transforming the CSV to CDA. Optionally, it cleans up intermediate files.
+
+    Args:
+        n (int): Number of rows to process from the Excel file.
+        cleanup (bool): Flag to indicate whether to clean up intermediate files.
+        output_dir (str, optional): Directory to store output files. Defaults to '../output/'.
+    """
     # Create output directory if it does not exist
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -72,8 +85,11 @@ def process_excel_to_cda(n: int, cleanup: bool, output_dir='../output/') -> None
 
 
 def main() -> None:
-    """Main function to orchestrate the Excel to CDA conversion process."""
+    """
+    Main function to orchestrate the Excel to CDA conversion process.
 
+    This function sets up logging and initiates the processing of the Excel file to CDA format.
+    """
     try:
         # Create config at program start
         process_excel_to_cda(config.n, config.cleanup)

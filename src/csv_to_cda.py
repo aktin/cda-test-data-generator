@@ -117,6 +117,17 @@ def add_warning_comment(tree: etree.ElementTree, warning: str) -> etree.ElementT
 
 
 def csv_to_cda(csv_file: str, xslt_file: str, output_dir: str) -> None:
+    """
+    Convert a CSV file to CDA format using XSLT transformation and save the output.
+
+    Args:
+        csv_file (str): The path to the CSV file to convert.
+        xslt_file (str): The path to the XSLT file for transformation.
+        output_dir (str): The directory to save the output files.
+
+    Returns:
+        None
+    """
     raw_path = os.path.join(output_dir, 'raw')
     cda_path = os.path.join(output_dir, 'cda')
 

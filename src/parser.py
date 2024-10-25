@@ -1,6 +1,8 @@
 import os
 from datetime import datetime
+
 from config import config
+
 
 class Parser:
     @staticmethod

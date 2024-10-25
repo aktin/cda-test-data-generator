@@ -33,7 +33,6 @@ def calculate_timestamps(df: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame: The updated DataFrame with calculated timestamp dependencies.
     """
-
     # Define the sequence of operations: (timestamp, start_timestamp, minutes_to_add, format_input, format_output)
     operations = [
         ("therapy_start_ts", "admission_ts", "delta_admission_therapy_start"),
@@ -183,11 +182,30 @@ def define_tasks_for_diagnoses(df, tasks):
 
 
 def add_insurace_information(df):
+    """
+    Add insurance information to the DataFrame based on the 'insurance_case' column.
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing the data.
+
+    Returns:
+        None
+    """
     df['insurance_txt'] = df['insurance_case'].apply(
         lambda x: 'Selbstzahler' if x == 'SELF' else 'Familienversicherung')
 
 
 def assign_names_to_patients(individual_attributes_csv, df):
+    """
+    Assign names to patients in the DataFrame based on their gender.
+
+    Args:
+        individual_attributes_csv (str): The path to the CSV file containing individual attributes.
+        df (pd.DataFrame): The DataFrame containing the data.
+
+    Returns:
+        None
+    """
     csv_df = pd.read_csv(individual_attributes_csv, dtype=str, delimiter=';')
     df['patient_first_name'] = df['gender'].apply(lambda x:
                                                random.choice(csv_df['vorname_m']) if x == 'M' else random.choice(
@@ -207,40 +225,8 @@ def calculate_dependencies(filename: str) -> None:
     # Read the input CSV file
     df = pd.read_csv(filename, dtype=str, na_values=[], keep_default_na=False)
 
-    # Calculate timestamp dependencies (Mandatory for passing the import Validator
+    # Calculate timestamp dependencies (Mandatory for passing the import Validator)
     calculate_timestamps(df)
-
-#     # Define tasks for mapping values from CSV files
-#     clinics_csv = os.environ['CLINICS_CSV']
-#     cedis_csv = os.environ['CEDIS_CSV']
-#     individual_attributes_csv = os.environ['INDIVIDUAL_ATTRIBUTES_CSV']
-#
-#     tasks = [
-#         {
-#             'csv_path': clinics_csv,
-#             'df_key_column': 'city',
-#             'df_value_column': 'klinik_name',
-#             'df_target_column': 'organization_name',
-#         },
-#         {
-#             'csv_path': clinics_csv,
-#             'df_key_column': 'city',
-#             'df_value_column': 'postal_code',
-#             'df_target_column': 'postal_code',
-#         },
-#         {
-#             'csv_path': cedis_csv,
-#             'df_key_column': 'cedis',
-#             'df_value_column': 'display_name',
-#             'df_target_column': 'complaints_txt',
-#         }
-#     ]
-#
-#     define_tasks_for_diagnoses(df, tasks)
-#
-#     # do the tasks
-#     for task in tasks:
-#         map_csv_to_dataframe(df, **task)
 
     # Further dependencies
     calculate_gcs_sum(df)
@@ -250,8 +236,6 @@ def calculate_dependencies(filename: str) -> None:
     make_associated_person_family_member(df)
 
     add_insurace_information(df)
-
-    # assign_names_to_patients(individual_attributes_csv, df)
 
     # Write the updated DataFrame back to a CSV file
     df.to_csv(filename, index=False)

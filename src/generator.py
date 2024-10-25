@@ -24,6 +24,15 @@ class GeneratorType(Enum):
 class AbstractGenerator(ABC):
     @abstractmethod
     def generate(self, count: int) -> List[Any]:
+        """
+        Generate a list of random values.
+
+        Args:
+            count (int): The number of values to generate.
+
+        Returns:
+            List[Any]: A list of generated values.
+        """
         pass
 
 
@@ -49,8 +58,11 @@ class DateGenerator(AbstractGenerator):
         """
         Generate random dates within the specified range and format.
 
-        Yields:
-            str: A randomly generated date string.
+        Args:
+            count (int): The number of dates to generate.
+
+        Returns:
+            List[str]: A list of randomly generated date strings.
         """
         random_date = self.start_date + timedelta(
             seconds=random.randint(0, int((self.end_date - self.start_date).total_seconds()))
@@ -83,12 +95,15 @@ class FloatGenerator(AbstractGenerator):
         self.max_value = max_value
         self.precision = precision
 
-    def generate(self, count):
+    def generate(self, count: int) -> List[float]:
         """
         Generate random float values within the specified range and precision.
 
-        Yields:
-            float: A randomly generated float value.
+        Args:
+            count (int): The number of float values to generate.
+
+        Returns:
+            List[float]: A list of randomly generated float values.
         """
         return [round(random.uniform(self.min_value, self.max_value), self.precision) for _ in range(count)]
 
@@ -109,12 +124,15 @@ class IntGenerator(AbstractGenerator):
         self.min_value = min_value
         self.max_value = max_value
 
-    def generate(self, count) -> List[int]:
+    def generate(self, count: int) -> List[int]:
         """
         Generate random integer values within the specified range.
 
-        Yields:
-            int: A randomly generated integer value.
+        Args:
+            count (int): The number of integer values to generate.
+
+        Returns:
+            List[int]: A list of randomly generated integer values.
         """
         return [random.randint(self.min_value, self.max_value) for _ in range(count)]
 
@@ -154,12 +172,15 @@ class LookupGenerator(AbstractGenerator):
             raise ValueError(f"Column '{column}' not found in file")
         self.value_set = set(df[column])
 
-    def generate(self, count):
+    def generate(self, count: int) -> List[str]:
         """
         Generate random values from the loaded value set.
 
-        Yields:
-            str: A randomly generated value from the value set.
+        Args:
+            count (int): The number of values to generate.
+
+        Returns:
+            List[str]: A list of randomly generated values from the value set.
         """
         return [random.choice(tuple(self.value_set)) for _ in range(count)]
 
@@ -182,12 +203,15 @@ class StringGenerator(AbstractGenerator):
         self.value_set = value_set
         self.regex = regex
 
-    def generate(self, count):
+    def generate(self, count: int) -> List[str]:
         """
         Generate random string values based on the value set or regex pattern.
 
-        Yields:
-            str: A randomly generated string value.
+        Args:
+            count (int): The number of string values to generate.
+
+        Returns:
+            List[str]: A list of randomly generated string values.
         """
         if self.value_set:  # If value set is provided, choose from it
             return [random.choice(tuple(self.value_set)) for _ in range(count)]
@@ -198,16 +222,28 @@ class StringGenerator(AbstractGenerator):
 
 
 class UUIDGenerator(AbstractGenerator):
+    """
+    Generator for random UUID values.
+    """
 
     def __init__(self, **kwargs):
+        """
+        Initialize the UUIDGenerator with optional parameters.
+
+        Args:
+            **kwargs: Additional parameters (not used).
+        """
         pass
 
-    def generate(self, count):
+    def generate(self, count: int) -> List[uuid.UUID]:
         """
         Generate random UUID values.
 
-        Yields:
-            UUID: A randomly generated UUID.
+        Args:
+            count (int): The number of UUID values to generate.
+
+        Returns:
+            List[uuid.UUID]: A list of randomly generated UUID values.
         """
         return [uuid.uuid4() for _ in range(count)]
 
@@ -242,7 +278,7 @@ class GeneratorFactory:
         """
         try:
             generator_class = cls._generator_map[generator_type]
-        except:
+        except KeyError:
             raise KeyError(f"Unknown generator type: {generator_type}")
 
         return generator_class(**params)
