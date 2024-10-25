@@ -170,7 +170,7 @@ class LookupGenerator(AbstractGenerator):
         df = pd.read_csv(link, delimiter=";", dtype=str, header=0)
         if column not in df.columns:
             raise ValueError(f"Column '{column}' not found in file")
-        self.value_set = set(df[column])
+        self.value_set = df[column]
 
     def generate(self, count: int) -> List[str]:
         """
@@ -182,7 +182,7 @@ class LookupGenerator(AbstractGenerator):
         Returns:
             List[str]: A list of randomly generated values from the value set.
         """
-        return [random.choice(tuple(self.value_set)) for _ in range(count)]
+        return self.value_set.sample(n=count, replace=True).tolist()
 
 
 class StringGenerator(AbstractGenerator):
