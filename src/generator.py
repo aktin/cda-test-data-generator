@@ -217,7 +217,7 @@ class StringGenerator(AbstractGenerator):
             return [random.choice(tuple(self.value_set)) for _ in range(count)]
         elif self.regex:  # If regex pattern is provided, generate strings based on it
             return [exrex.getone(self.regex) for _ in range(count)]
-        else:  # Default to empty strings TODO: Should be empty
+        else:  # Default to empty strings
             return ['' for _ in range(count)]
 
 
