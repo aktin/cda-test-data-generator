@@ -44,14 +44,31 @@ class ParserFactory:
             "date_format": FormatHandler,
             "link": LinkHandler,
             "regex": RegexHandler,
-            "start_date": StartDateHandler,
-            "end_date": EndDateHandler,
+            "start_date": DateHandler,
+            "end_date": DateHandler,
             "column": ColumnHandler,
         }
-        return handlers.get(key, DefaultHandler)()
+        return handlers.get(key, DefaultHandler)(key)
 
+class AbstractHandler:
+    # TODO Docstring
+    def __init__(self, key):
+        self.key = key
 
-class RangeHandler:
+    def handle(self, param_dict, value):
+        """
+        Handle the parameter by updating the parameter dictionary.
+
+        Args:
+            param_dict (dict): The dictionary to update with the parsed value.
+            value (str): The value to parse.
+
+        Returns:
+            None
+        """
+        raise NotImplementedError
+
+class RangeHandler(AbstractHandler):
     def handle(self, param_dict, value):
         """
         Handle the 'range' parameter by parsing the value and updating the parameter dictionary.
@@ -68,7 +85,7 @@ class RangeHandler:
         param_dict["max_value"] = int(max_value) if '.' not in max_value else float(max_value)
 
 
-class ValueSetHandler:
+class ValueSetHandler(AbstractHandler):
     def handle(self, param_dict, value):
         """
         Handle the 'value_set' parameter by parsing the value, converting it to a set, and updating the parameter dictionary.
@@ -85,7 +102,7 @@ class ValueSetHandler:
         param_dict["value_set"] = set([elem.strip() for elem in value_set])
 
 
-class FormatHandler:
+class FormatHandler(AbstractHandler):
     def handle(self, param_dict, value):
         """
         Handle the 'date_format' parameter by updating the parameter dictionary.
@@ -100,7 +117,7 @@ class FormatHandler:
         param_dict["date_format"] = value
 
 
-class LinkHandler:
+class LinkHandler(AbstractHandler):
     def handle(self, param_dict, value):
         """
         Handle the 'link' parameter by checking if the specified file exists and updating the parameter dictionary.
@@ -122,7 +139,7 @@ class LinkHandler:
             raise ValueError(f"File {value} does not exist in resources/value_sets")
 
 
-class RegexHandler:
+class RegexHandler(AbstractHandler):
     def handle(self, param_dict, value):
         """
         Handle the 'regex' parameter by updating the parameter dictionary.
@@ -137,7 +154,7 @@ class RegexHandler:
         param_dict["regex"] = value
 
 
-class StartDateHandler:
+class DateHandler(AbstractHandler):
     def handle(self, param_dict, value):
         """
         Handle the 'start_date' parameter by parsing the value into a datetime object and updating the parameter dictionary.
@@ -149,25 +166,11 @@ class StartDateHandler:
         Returns:
             None
         """
-        param_dict["start_date"] = datetime.strptime(value, "%Y%m%d")
+        param_dict[self.key] = datetime.strptime(value, "%Y%m%d")
 
 
-class EndDateHandler:
-    def handle(self, param_dict, value):
-        """
-        Handle the 'end_date' parameter by parsing the value into a datetime object and updating the parameter dictionary.
 
-        Args:
-            param_dict (dict): The dictionary to update with the parsed value.
-            value (str): The value to parse, expected to be in the format 'YYYYMMDD'.
-
-        Returns:
-            None
-        """
-        param_dict["end_date"] = datetime.strptime(value, "%Y%m%d")
-
-
-class ColumnHandler:
+class ColumnHandler(AbstractHandler):
     def handle(self, param_dict, value):
         """
         Handle the 'column' parameter by updating the parameter dictionary.
@@ -182,7 +185,7 @@ class ColumnHandler:
         param_dict["column"] = value
 
 
-class DefaultHandler:
+class DefaultHandler(AbstractHandler):
     def handle(self, param_dict, value):
         """
         Raise a ValueError indicating that the input string does not match the expected format.
