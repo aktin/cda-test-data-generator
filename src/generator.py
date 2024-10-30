@@ -1,12 +1,12 @@
 import random
-import exrex
 import uuid
-import pandas as pd
-
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
 from enum import Enum
 from typing import Dict, List, Any
+
+import exrex
+import pandas as pd
 
 
 class GeneratorType(Enum):
@@ -19,8 +19,6 @@ class GeneratorType(Enum):
     UUID = 'UUID'
     DATE = 'date'
     LOOKUP = 'lookup'
-    EMPTY = 'empty'
-
 
 class AbstractGenerator(ABC):
     @abstractmethod
@@ -83,32 +81,6 @@ class DateGenerator(AbstractGenerator):
             return [self._get_random_date().strftime('%Y%m%d%H%M%S') for _ in range(count)]
         else:
             return [self._get_random_date().strftime('%Y%m%d%H%M%S') for _ in range(count)]
-
-class EmptyGenerator(AbstractGenerator):
-    """
-    Generator for empty values.
-    """
-
-    def __init__(self, **kwargs):
-        """
-        Initialize the EmptyGenerator with optional parameters.
-
-        Args:
-            **kwargs: Additional parameters (not used).
-        """
-        pass
-
-    def generate(self, count: int) -> List[None]:
-        """
-        Generate empty values.
-
-        Args:
-            count (int): The number of empty values to generate.
-
-        Returns:
-            List[None]: A list of empty values.
-        """
-        return [None for _ in range(count)]
 
 
 class FloatGenerator(AbstractGenerator):
@@ -176,7 +148,7 @@ class LookupGenerator(AbstractGenerator):
     Generator for random values from a specified column in a CSV file.
     """
 
-    def __init__(self, link=None, column=None):
+    def __init__(self, link=None, column=None, **kwargs):
         """
         Initialize the LookupGenerator with a link to a CSV file and a column name.
 
@@ -186,9 +158,12 @@ class LookupGenerator(AbstractGenerator):
         """
         self.link = link
         self.column = column
-        self._load_value_set_from_csv(link, column)
+        # TODO
+        self.dependent_columns = kwargs.get('dependent_column_1', None)
+        self.dependent_concept_id = kwargs.get('dependent_concept_id_1', None)
+        self._load_value_set_from_csv()
 
-    def _load_value_set_from_csv(self, link, column):
+    def _load_value_set_from_csv(self):
         """
         Load the value set from the specified column in the CSV file.
 
@@ -199,12 +174,18 @@ class LookupGenerator(AbstractGenerator):
         Raises:
             ValueError: If the column is not specified or not found in the file.
         """
-        if not column:
+        if not self.column:
             raise ValueError("Column not specified in parameters")
-        df = pd.read_csv(link, delimiter=";", dtype=str, header=0)
-        if column not in df.columns:
-            raise ValueError(f"Column '{column}' not found in file")
-        self.value_set = df[column]
+        df = pd.read_csv(self.link, delimiter=";", dtype=str, header=0)
+        if self.column not in df.columns:
+            raise ValueError(f"Column '{self.column}' not found in file")
+
+        if self.dependent_columns:
+            self.value_set = df[[self.column] + [self.dependent_columns]]
+        else:
+            self.value_set = df[self.column]
+        print()
+        # self.value_set = df[column]
 
     def generate(self, count: int) -> List[str]:
         """
@@ -216,7 +197,7 @@ class LookupGenerator(AbstractGenerator):
         Returns:
             List[str]: A list of randomly generated values from the value set.
         """
-        return self.value_set.sample(n=count, replace=True).tolist()
+        return self.value_set.sample(n=count, replace=True).values.tolist()
 
 
 class StringGenerator(AbstractGenerator):
@@ -293,7 +274,6 @@ class GeneratorFactory:
         GeneratorType.UUID: UUIDGenerator,
         GeneratorType.DATE: DateGenerator,
         GeneratorType.LOOKUP: LookupGenerator,
-        GeneratorType.EMPTY: EmptyGenerator
     }
 
     @classmethod

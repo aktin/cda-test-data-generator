@@ -47,6 +47,8 @@ class ParserFactory:
             "start_date": DateHandler,
             "end_date": DateHandler,
             "column": DefaultHandler,
+            "dependent_concept_id_1": DefaultHandler,
+            "dependent_column_1": DefaultHandler
         }
         return handlers.get(key, ErrorHandler)(key)
 

@@ -67,35 +67,25 @@ def parse_parameters_to_dict(variables_dict: dict) -> dict:
     return variables_dict
 
 
-def remove_number_from_params(concept_id, new_variables):
-    """
-    Remove the 'number' parameter from the parameters of a given concept ID in the new variables dictionary.
-
-    Args:
-        concept_id (str): The concept ID whose parameters are to be updated.
-        new_variables (dict): A dictionary of new variables to update, where the keys are concept IDs and the values are tuples containing
-                              default values, generation type, parameters, and null flavors.
-
-    Returns:
-        int: The value of the 'number' parameter that was removed.
-    """
-    new_params = new_variables[concept_id][2]
-    num = new_params.pop("number")
-    new_variables[concept_id] = (
-        new_variables[concept_id][0], new_variables[concept_id][1], new_params, new_variables[concept_id][3])
-    return num
-
-
 def generate_data_columns(variables_dict, num_datasets):
 
     output_data = pd.DataFrame()
 
     for concept_id, (var_type, params, _, _) in variables_dict.items():
+        if var_type == 'empty':
+            continue
+
         # Generate data column
         column_list = GeneratorFactory.create_generator(GeneratorType(var_type), params).generate(num_datasets)
-        # Remove entries if possible
-        new_column = pd.Series(data=column_list, name=concept_id)
-        output_data = pd.concat([output_data, new_column], axis=1)
+
+        if 'dependent_concept_id_1' in params:
+            new_df = pd.DataFrame.from_records(column_list, columns=[concept_id, params['dependent_concept_id_1']])
+            if new_df.columns.intersection(output_data.columns).any():
+                output_data.update(new_df)
+            else:
+                output_data = pd.concat([output_data, new_df], axis=1)
+        else:
+            output_data[concept_id] = pd.Series(column_list)
 
     return output_data
 
