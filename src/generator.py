@@ -55,6 +55,16 @@ class DateGenerator(AbstractGenerator):
         self.end_date = end_date if end_date else datetime.today()
         self.format = date_format
 
+    def _get_random_date(self):
+        """
+        Get a random date within the specified range.
+
+        Returns:
+            datetime: A random date within the specified range.
+        """
+        return self.start_date + timedelta(
+            seconds=random.randint(0, int((self.end_date - self.start_date).total_seconds())))
+
     def generate(self, count: int) -> List[str]:
         """
         Generate random dates within the specified range and format.
@@ -65,17 +75,14 @@ class DateGenerator(AbstractGenerator):
         Returns:
             List[str]: A list of randomly generated date strings.
         """
-        random_date = self.start_date + timedelta(
-            seconds=random.randint(0, int((self.end_date - self.start_date).total_seconds()))
-        )
         if self.format == 'yyyymmdd':
-            return [random_date.strftime('%Y%m%d') for _ in range(count)]
+            return [self._get_random_date().strftime('%Y%m%d') for _ in range(count)]
         elif self.format == 'yyyymmddhhmm':
-            return [random_date.strftime('%Y%m%d%H%M') for _ in range(count)]
+            return [self._get_random_date().strftime('%Y%m%d%H%M') for _ in range(count)]
         elif self.format == 'yyyymmddhhmmss':
-            return [random_date.strftime('%Y%m%d%H%M%S') for _ in range(count)]
+            return [self._get_random_date().strftime('%Y%m%d%H%M%S') for _ in range(count)]
         else:
-            return [random_date.strftime('%Y%m%d%H%M%S') for _ in range(count)]
+            return [self._get_random_date().strftime('%Y%m%d%H%M%S') for _ in range(count)]
 
 class EmptyGenerator(AbstractGenerator):
     """
