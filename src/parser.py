@@ -41,14 +41,15 @@ class ParserFactory:
         handlers = {
             "range": RangeHandler,
             "value_set": ValueSetHandler,
-            "date_format": FormatHandler,
+            "date_format": DefaultHandler,
             "link": LinkHandler,
-            "regex": RegexHandler,
+            "regex": DefaultHandler,
             "start_date": DateHandler,
             "end_date": DateHandler,
-            "column": ColumnHandler,
+            "column": DefaultHandler,
         }
-        return handlers.get(key, DefaultHandler)(key)
+        return handlers.get(key, ErrorHandler)(key)
+
 
 class AbstractHandler:
     # TODO Docstring
@@ -67,6 +68,22 @@ class AbstractHandler:
             None
         """
         raise NotImplementedError
+
+
+class DefaultHandler(AbstractHandler):
+    def handle(self, param_dict, value):
+        """
+        Handle the default case by updating the parameter dictionary with the value.
+
+        Args:
+            param_dict (dict): The dictionary to update with the parsed value.
+            value (str): The value to set as the default.
+
+        Returns:
+            None
+        """
+        param_dict[self.key] = value
+
 
 class RangeHandler(AbstractHandler):
     def handle(self, param_dict, value):
@@ -102,21 +119,6 @@ class ValueSetHandler(AbstractHandler):
         param_dict["value_set"] = set([elem.strip() for elem in value_set])
 
 
-class FormatHandler(AbstractHandler):
-    def handle(self, param_dict, value):
-        """
-        Handle the 'date_format' parameter by updating the parameter dictionary.
-
-        Args:
-            param_dict (dict): The dictionary to update with the parsed value.
-            value (str): The value to set as the date format.
-
-        Returns:
-            None
-        """
-        param_dict["date_format"] = value
-
-
 class LinkHandler(AbstractHandler):
     def handle(self, param_dict, value):
         """
@@ -139,21 +141,6 @@ class LinkHandler(AbstractHandler):
             raise ValueError(f"File {value} does not exist in resources/value_sets")
 
 
-class RegexHandler(AbstractHandler):
-    def handle(self, param_dict, value):
-        """
-        Handle the 'regex' parameter by updating the parameter dictionary.
-
-        Args:
-            param_dict (dict): The dictionary to update with the parsed value.
-            value (str): The value to set as the regex pattern.
-
-        Returns:
-            None
-        """
-        param_dict["regex"] = value
-
-
 class DateHandler(AbstractHandler):
     def handle(self, param_dict, value):
         """
@@ -169,23 +156,7 @@ class DateHandler(AbstractHandler):
         param_dict[self.key] = datetime.strptime(value, "%Y%m%d")
 
 
-
-class ColumnHandler(AbstractHandler):
-    def handle(self, param_dict, value):
-        """
-        Handle the 'column' parameter by updating the parameter dictionary.
-
-        Args:
-            param_dict (dict): The dictionary to update with the parsed value.
-            value (str): The value to set as the column.
-
-        Returns:
-            None
-        """
-        param_dict["column"] = value
-
-
-class DefaultHandler(AbstractHandler):
+class ErrorHandler(AbstractHandler):
     def handle(self, param_dict, value):
         """
         Raise a ValueError indicating that the input string does not match the expected format.
