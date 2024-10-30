@@ -19,6 +19,7 @@ class GeneratorType(Enum):
     UUID = 'UUID'
     DATE = 'date'
     LOOKUP = 'lookup'
+    EMPTY = 'empty'
 
 
 class AbstractGenerator(ABC):
@@ -75,6 +76,32 @@ class DateGenerator(AbstractGenerator):
             return [random_date.strftime('%Y%m%d%H%M%S') for _ in range(count)]
         else:
             return [random_date.strftime('%Y%m%d%H%M%S') for _ in range(count)]
+
+class EmptyGenerator(AbstractGenerator):
+    """
+    Generator for empty values.
+    """
+
+    def __init__(self, **kwargs):
+        """
+        Initialize the EmptyGenerator with optional parameters.
+
+        Args:
+            **kwargs: Additional parameters (not used).
+        """
+        pass
+
+    def generate(self, count: int) -> List[None]:
+        """
+        Generate empty values.
+
+        Args:
+            count (int): The number of empty values to generate.
+
+        Returns:
+            List[None]: A list of empty values.
+        """
+        return [None for _ in range(count)]
 
 
 class FloatGenerator(AbstractGenerator):
@@ -258,7 +285,8 @@ class GeneratorFactory:
         GeneratorType.STRING: StringGenerator,
         GeneratorType.UUID: UUIDGenerator,
         GeneratorType.DATE: DateGenerator,
-        GeneratorType.LOOKUP: LookupGenerator
+        GeneratorType.LOOKUP: LookupGenerator,
+        GeneratorType.EMPTY: EmptyGenerator
     }
 
     @classmethod
