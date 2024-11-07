@@ -20,14 +20,6 @@ This project processes CSV files to generate CDA (Clinical Document Architecture
     pip install -r requirements.txt
     ```
 
-3. Ensure you have the following structure in your `config.toml` file:
-    ```toml
-    [cda_paths]
-    csv_path = "../resources/data.csv"
-    excel_path = "../resources/CDAVariables.xlsx"
-    xslt_file = "../resources/EmergencyNote.xslt"
-    ```
-
 ## Usage
 
 1. Navigate to the `src` directory:
@@ -37,45 +29,35 @@ This project processes CSV files to generate CDA (Clinical Document Architecture
 
 2. Run the main script with the required command line argument for the number of rows:
     ```sh
-    python main.py --rows <number_of_rows>
+    python main.py --n <number_of_CDAs> --xslt <xslt_file> --xlsx <excel_file> [--o <output_dir>][--cleanup]
     ```
 
-    Replace `<number_of_rows>` with the number of rows you want to generate in the CSV file.
+    - `--n <number_of_CDAs>`: Number of CDAs to generate.
+    - `--xslt <xslt_file>`: relative Path to the XSLT file.
+    - `--xlsx <excel_file>`: relative Path to the Excel file.
+    - `--o <output_dir>`: [optional] Output directory for the generated CDAs (default: <repository-directory>/output).
+    - `--cleanup`: [optional] Remove the generated CSV file.
+    
 
-## Configuration
-
-The `config.toml` file should be located in the root directory of the project. It contains paths to the necessary files:
-- `csv_path`: Path to the CSV file.
-- `excel_path`: Path to the Excel file.
-- `xslt_file`: Path to the XSLT file.
-
-Example `config.toml`:
-```toml
-[cda_paths]
-csv_path = "../resources/data.csv"
-excel_path = "../resources/CDAVariables.xlsx"
-xslt_file = "../resources/EmergencyNote.xslt"
-```
 
 ## Main Script
 
 The main script (`main.py`) performs the following steps:
 
-1. Loads configuration from `config.toml`.
-2. Sets environment variables based on the configuration.
-3. Parses command line arguments to get the number of rows.
-4. Generates a CSV file with the specified number of rows.
-5. Calculates dependencies and updates the CSV file.
-6. Transforms the CSV file to CDA format.
-7. Optionally sends the generated CDA files to a server for validation (commented out by default).
-8. Removes the generated CSV file.
+
+1. Sets environment variables based on input arguments.
+2. Parses command line arguments to get the number of rows.
+3. Generates a CSV file with the specified number of rows.
+4. Calculates dependencies and updates the CSV file.
+5. Transforms the CSV file to CDA format.
+6. Removes the generated CSV file.
 
 ## Example
 
 To generate a CSV file with 10 rows and process it, run:
-```sh
-python main.py --rows 10
-```
+   ```sh
+   python main.py --n 10 --xlsx ../resources/CDAVariables_short.xlsx --xslt ../resources/EmergencyNote.xslt --o ../output
+   ```
 
 ## License
 
