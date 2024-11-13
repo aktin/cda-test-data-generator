@@ -2,6 +2,7 @@ import csv
 import os
 from typing import Callable
 
+import lxml.etree
 from lxml import etree
 
 
@@ -53,7 +54,7 @@ def dict_to_xml(data: dict) -> etree.Element:
     return root
 
 
-def save_xml(xml_root, file_path):
+def save_xml(xml_root: lxml.etree.Element, file_path: str) -> None:
     """
     Save an XML element tree to a file.
 

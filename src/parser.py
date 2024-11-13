@@ -6,7 +6,7 @@ from config import config
 
 class Parser:
     @staticmethod
-    def parse(string_to_parse):
+    def parse(string_to_parse: str) -> dict:
         """
         Parse a semicolon-separated string into a dictionary of parameters.
 
@@ -27,7 +27,7 @@ class Parser:
 
 class ParserFactory:
     @staticmethod
-    def get_handler(key):
+    def get_handler(key: str) -> object:
         """
         Get the appropriate handler class based on the provided key.
 
@@ -54,11 +54,23 @@ class ParserFactory:
 
 
 class AbstractHandler:
-    # TODO Docstring
-    def __init__(self, key):
+    """
+    Abstract base class for handling different types of parameters.
+
+    Attributes:
+        key (str): The key associated with the handler.
+    """
+
+    def __init__(self, key: str) -> None:
+        """
+        Initialize the handler with the specified key.
+
+        Args:
+            key (str): The key associated with the handler.
+        """
         self.key = key
 
-    def handle(self, param_dict, value):
+    def handle(self, param_dict: dict, value: str) -> None:
         """
         Handle the parameter by updating the parameter dictionary.
 
@@ -73,7 +85,7 @@ class AbstractHandler:
 
 
 class DefaultHandler(AbstractHandler):
-    def handle(self, param_dict, value):
+    def handle(self, param_dict: dict, value: str) -> None:
         """
         Handle the default case by updating the parameter dictionary with the value.
 
@@ -88,7 +100,7 @@ class DefaultHandler(AbstractHandler):
 
 
 class RangeHandler(AbstractHandler):
-    def handle(self, param_dict, value):
+    def handle(self, param_dict: dict, value: str) -> None:
         """
         Handle the 'range' parameter by parsing the value and updating the parameter dictionary.
 
@@ -105,7 +117,7 @@ class RangeHandler(AbstractHandler):
 
 
 class ValueSetHandler(AbstractHandler):
-    def handle(self, param_dict, value):
+    def handle(self, param_dict: dict, value: str) -> None:
         """
         Handle the 'value_set' parameter by parsing the value, converting it to a set, and updating the parameter dictionary.
 
@@ -122,7 +134,7 @@ class ValueSetHandler(AbstractHandler):
 
 
 class LinkHandler(AbstractHandler):
-    def handle(self, param_dict, value):
+    def handle(self, param_dict: dict, value: str) -> None:
         """
         Handle the 'link' parameter by checking if the specified file exists and updating the parameter dictionary.
 
@@ -144,7 +156,7 @@ class LinkHandler(AbstractHandler):
 
 
 class DateHandler(AbstractHandler):
-    def handle(self, param_dict, value):
+    def handle(self, param_dict: dict, value: str) -> None:
         """
         Handle the 'start_date' parameter by parsing the value into a datetime object and updating the parameter dictionary.
 
@@ -159,7 +171,7 @@ class DateHandler(AbstractHandler):
 
 
 class ErrorHandler(AbstractHandler):
-    def handle(self, param_dict, value):
+    def handle(self, param_dict: dict, value: str) -> None:
         """
         Raise a ValueError indicating that the input string does not match the expected format.
 

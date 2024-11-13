@@ -4,7 +4,7 @@ import numpy as np
 
 class ValueRemover:
     @staticmethod
-    def remove_with_probability(column, probability):
+    def remove_with_probability(column: pd.Series, probability: float) -> pd.Series:
         """
         Remove elements from the column with a given probability.
 
@@ -18,7 +18,7 @@ class ValueRemover:
         return column.mask(np.random.random(len(column)) < probability, '')
 
     @classmethod
-    def remove_values_with_probability(cls, df, var_dict):
+    def remove_values_with_probability(cls, df: pd.DataFrame, var_dict: dict) -> pd.DataFrame:
         """
         Remove values from the DataFrame based on the probabilities specified in var_dict.
 

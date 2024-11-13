@@ -3,7 +3,7 @@ import uuid
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
 from enum import Enum
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 
 import exrex
 import pandas as pd
@@ -40,7 +40,12 @@ class DateGenerator(AbstractGenerator):
     Generator for random dates within a specified range.
     """
 
-    def __init__(self, start_date=None, end_date=None, date_format="yyyymmddhhmmss"):
+    def __init__(
+            self,
+            start_date: Optional[datetime] = None,
+            end_date: Optional[datetime] = None,
+            date_format: str = "yyyymmddhhmmss"
+    ) -> None:
         """
         Initialize the DateGenerator with optional parameters.
 
@@ -53,7 +58,7 @@ class DateGenerator(AbstractGenerator):
         self.end_date = end_date if end_date else datetime.today()
         self.format = date_format
 
-    def _get_random_date(self):
+    def _get_random_date(self) -> datetime:
         """
         Get a random date within the specified range.
 
@@ -88,7 +93,12 @@ class FloatGenerator(AbstractGenerator):
     Generator for random float values within a specified range.
     """
 
-    def __init__(self, min_value=0.0, max_value=0.0, precision=2):
+    def __init__(
+            self,
+            min_value: float = 0.0,
+            max_value: float = 0.0,
+            precision: int = 2
+    ) -> None:
         """
         Initialize the FloatGenerator with optional parameters.
 
@@ -119,7 +129,11 @@ class IntGenerator(AbstractGenerator):
     Generator for random integer values within a specified range.
     """
 
-    def __init__(self, min_value=0, max_value=100):
+    def __init__(
+            self,
+            min_value: int = 0,
+            max_value: int = 100
+    ) -> None:
         """
         Initialize the IntGenerator with optional parameters.
 
@@ -148,7 +162,12 @@ class LookupGenerator(AbstractGenerator):
     Generator for random values from a specified column in a CSV file.
     """
 
-    def __init__(self, link=None, column=None, **kwargs):
+    def __init__(
+            self,
+            link: Optional[str] = None,
+            column: Optional[str] = None,
+            **kwargs: Dict[str, Any]
+    ) -> None:
         """
         Initialize the LookupGenerator with a link to a CSV file and a column name.
 
@@ -241,7 +260,7 @@ class UUIDGenerator(AbstractGenerator):
     Generator for random UUID values.
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: Dict[str, Any]) -> None:
         """
         Initialize the UUIDGenerator with optional parameters.
 

@@ -7,7 +7,12 @@ from typing import Optional
 import pandas as pd
 
 
-def _add_minutes_to_timestamp(timestamp, minutes, format_in="%Y%m%d%H%M%S", format_out="%Y%m%d%H%M%S"):
+def _add_minutes_to_timestamp(
+    timestamp: str,
+    minutes: int,
+    format_in: str = "%Y%m%d%H%M%S",
+    format_out: str = "%Y%m%d%H%M%S"
+) -> str:
     """
     Add a specified number of minutes to a timestamp and return the new timestamp in the desired format.
 
@@ -108,7 +113,7 @@ def map_csv_to_dataframe(
     return df
 
 
-def make_associated_person_family_member(df):
+def make_associated_person_family_member(df: pd.DataFrame) -> None:
     """
     Maps the 'family_patient' column to the '_associatedPerson_family' column in the DataFrame.
 
@@ -118,11 +123,10 @@ def make_associated_person_family_member(df):
     Returns:
         None
     """
-    # TODO Remove unnecessary associated persons
     df['associated_person_last_name'] = df['patient_last_name']
 
 
-def make_pregnant_man_not_pregnant(df):
+def make_pregnant_man_not_pregnant(df: pd.DataFrame) -> None:
     """
     Sets the 'schwangerschaft' column to 0 for all rows where the 'gender' column is 'M'.
 
@@ -135,7 +139,7 @@ def make_pregnant_man_not_pregnant(df):
     df.loc[df['gender'] == 'M', 'pregnancy'] = 0
 
 
-def calculate_gcs_sum(df):
+def calculate_gcs_sum(df: pd.DataFrame) -> None:
     """
     Calculates the sum of 'gcs_motorisch', 'gcs_verbal', and 'gcs_augen' columns and stores it in the 'gcs_summe' column.
 
@@ -148,7 +152,7 @@ def calculate_gcs_sum(df):
     df['gcs_total'] = df['gcs_motor'].astype(int) + df['gcs_verbal'].astype(int) + df['gcs_eyes'].astype(int)
 
 
-def define_tasks_for_diagnoses(df, tasks):
+def define_tasks_for_diagnoses(df: pd.DataFrame, tasks: list) -> None:
     """
     Define tasks for each diagnose column in the DataFrame.
 
@@ -181,7 +185,7 @@ def define_tasks_for_diagnoses(df, tasks):
         tasks.append(task)
 
 
-def add_insurace_information(df):
+def add_insurace_information(df: pd.DataFrame) -> None:
     """
     Add insurance information to the DataFrame based on the 'insurance_case' column.
 
@@ -195,7 +199,7 @@ def add_insurace_information(df):
         lambda x: 'Selbstzahler' if x == 'SELF' else 'Familienversicherung')
 
 
-def assign_names_to_patients(individual_attributes_csv, df):
+def assign_names_to_patients(individual_attributes_csv: str, df: pd.DataFrame) -> None:
     """
     Assign names to patients in the DataFrame based on their gender.
 

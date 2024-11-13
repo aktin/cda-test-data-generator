@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 
 from generator import GeneratorFactory
@@ -21,27 +20,8 @@ def extract_concept_id_attributes(input_df: pd.DataFrame) -> dict:
     variables_dict = {}
     for _, row in input_df.iterrows():
         variables_dict[row['Concept Id']] = (row['Generation type'], row['Parameters'], row['Nullable'],
-            row['Probability missing'])
+                                             row['Probability missing'])
     return variables_dict
-
-
-def generate_column_list(generator, num_datasets, nullable, probability_missing=0.5):
-    """
-    Generate a list of data for a column, with optional handling for missing values.
-
-    Args:
-        generator (generator): A generator object that produces data values.
-        num_datasets (int): The number of data values to generate.
-        nullable (bool): A value indicating if values can be missing.
-        probability_missing (float, optional): The probability of a value being missing. Defaults to 0.5.
-
-    Returns:
-        list: A list of generated data values, with some values possibly being empty strings if null_flavors is specified.
-    """
-    if nullable:
-        return [next(generator) if np.random.rand() > probability_missing else "" for _ in range(num_datasets)]
-    else:
-        return [next(generator) for _ in range(num_datasets)]
 
 
 def parse_parameters_to_dict(variables_dict: dict) -> dict:
@@ -67,8 +47,7 @@ def parse_parameters_to_dict(variables_dict: dict) -> dict:
     return variables_dict
 
 
-def generate_data_columns(variables_dict, num_datasets):
-
+def generate_data_columns(variables_dict: dict, num_datasets: int) -> pd.DataFrame:
     output_data = pd.DataFrame()
 
     for concept_id, (var_type, params, _, _) in variables_dict.items():
@@ -90,7 +69,7 @@ def generate_data_columns(variables_dict, num_datasets):
     return output_data
 
 
-def generate_csv(excel_path: str, csv_path, num_datasets) -> None:
+def generate_csv(excel_path: str, csv_path: str, num_datasets: int) -> None:
     """
     Generate a CSV file from an Excel input file.
 
