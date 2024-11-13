@@ -169,7 +169,10 @@ class DateHandler(AbstractHandler):
         Returns:
             None
         """
-        param_dict[self.key] = datetime.strptime(value, "%Y%m%d")
+        try:
+            param_dict[self.key] = datetime.strptime(value, "%Y%m%d")
+        except ValueError:
+            raise ValueError(f"Invalid date format. Expected format: YYYYMMDD, got: {value}")
 
 
 class ErrorHandler(AbstractHandler):
