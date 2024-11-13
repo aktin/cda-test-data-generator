@@ -32,7 +32,7 @@ class ValueRemover:
                                     {'param_key': 'param_value'},
                                     True,
                                     0.1)
-                            } for a var_dict with only 1 concept ID, that has a 10% probability of missing values.
+                            }. It is var_dict with only 1 concept ID, that has a 10% probability of missing values.
 
         Returns:
             pd.DataFrame: The DataFrame with values removed according to the specified probabilities.
