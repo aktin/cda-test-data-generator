@@ -44,7 +44,7 @@ class DateGenerator(AbstractGenerator):
             self,
             start_date: Optional[datetime] = None,
             end_date: Optional[datetime] = None,
-            date_format: str = "yyyymmddhhmmss"
+            date_format: str = "%Y%m%d%H%M%S"
     ) -> None:
         """
         Initialize the DateGenerator with optional parameters.
@@ -52,7 +52,7 @@ class DateGenerator(AbstractGenerator):
         Args:
             start_date (datetime, optional): The start date for the range. Defaults to January 1, 2000.
             end_date (datetime, optional): The end date for the range. Defaults to today.
-            date_format (str, optional): The format of the generated date strings. Defaults to "yyyymmddhhmmss".
+            date_format (str, optional): The format of the generated date strings. Defaults to "%Y%m%d%H%M%S".
         """
         self.start_date = start_date if start_date else datetime(2000, 1, 1)
         self.end_date = end_date if end_date else datetime.today()
@@ -78,14 +78,7 @@ class DateGenerator(AbstractGenerator):
         Returns:
             List[str]: A list of randomly generated date strings.
         """
-        if self.format == 'yyyymmdd':
-            return [self._get_random_date().strftime('%Y%m%d') for _ in range(count)]
-        elif self.format == 'yyyymmddhhmm':
-            return [self._get_random_date().strftime('%Y%m%d%H%M') for _ in range(count)]
-        elif self.format == 'yyyymmddhhmmss':
-            return [self._get_random_date().strftime('%Y%m%d%H%M%S') for _ in range(count)]
-        else:
-            return [self._get_random_date().strftime('%Y%m%d%H%M%S') for _ in range(count)]
+        return [self._get_random_date().strftime(self.format) for _ in range(count)]
 
 
 class FloatGenerator(AbstractGenerator):
