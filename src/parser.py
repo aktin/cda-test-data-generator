@@ -3,22 +3,22 @@ from datetime import datetime
 
 from config import config
 
-class Parser:
+class ConfigParser:
     @staticmethod
-    def parse(string_to_parse: str) -> dict:
+    def parse(config_string: str) -> dict:
         """
         Parse a semicolon-separated string into a dictionary of parameters.
 
         Args:
-            string_to_parse (str): The string to parse, formatted as 'key1=value1;key2=value2;...'.
+            config_string (str): The string to parse, formatted as 'key1=value1;key2=value2;...'.
 
         Returns:
             dict: A dictionary containing the parsed parameters.
         """
-        if not string_to_parse or not isinstance(string_to_parse, str):
+        if not config_string or not isinstance(config_string, str):
             return dict()
 
-        param_list = string_to_parse.split(";")
+        param_list = config_string.split(";")
         param_dict = dict()
         for param in param_list:
             key, value = param.split("=")

@@ -2,7 +2,7 @@ import pandas as pd
 
 from generator import GeneratorFactory
 from generator import GeneratorType
-from parser import Parser
+from parser import ConfigParser
 from value_remover import ValueRemover
 
 
@@ -38,7 +38,7 @@ def parse_parameters_to_dict(variables_dict: dict) -> dict:
     variables_dict = {
         concept_id: (
             var_type,
-            Parser.parse(params) if isinstance(params, str) else {},
+            ConfigParser.parse(params) if isinstance(params, str) else {},
             nullable,
             prob_missing
         )
