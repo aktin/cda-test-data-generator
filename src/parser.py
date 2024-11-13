@@ -3,7 +3,6 @@ from datetime import datetime
 
 from config import config
 
-
 class Parser:
     @staticmethod
     def parse(string_to_parse: str) -> dict:
@@ -16,8 +15,11 @@ class Parser:
         Returns:
             dict: A dictionary containing the parsed parameters.
         """
+        if not string_to_parse or not isinstance(string_to_parse, str):
+            return dict()
+
         param_list = string_to_parse.split(";")
-        param_dict = {}
+        param_dict = dict()
         for param in param_list:
             key, value = param.split("=")
             handler = ParserFactory.get_handler(key)
