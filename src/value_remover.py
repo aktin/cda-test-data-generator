@@ -4,7 +4,7 @@ import numpy as np
 
 class ValueRemover:
     @staticmethod
-    def remove_with_probability(column: pd.Series, probability: float) -> pd.Series:
+    def process_column(column: pd.Series, probability: float) -> pd.Series:
         """
         Remove elements from the column with a given probability.
 
@@ -18,7 +18,7 @@ class ValueRemover:
         return column.mask(np.random.random(len(column)) < probability, '')
 
     @classmethod
-    def remove_values_with_probability(cls, df: pd.DataFrame, var_dict: dict) -> pd.DataFrame:
+    def process_df(cls, df: pd.DataFrame, var_dict: dict) -> pd.DataFrame:
         """
         Remove values from the DataFrame based on the probabilities specified in var_dict.
 
@@ -40,5 +40,5 @@ class ValueRemover:
             if prob_missing < 0 or prob_missing > 1:
                 raise ValueError(f"Probability of missing values must be between 0 and 1 for conceptId: {concept_id}.")
             if nullable:
-                df[concept_id] = cls.remove_with_probability(df[concept_id], prob_missing)
+                df[concept_id] = cls.process_column(df[concept_id], prob_missing)
         return df

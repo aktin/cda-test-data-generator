@@ -93,7 +93,7 @@ def generate_csv(excel_path: str, csv_path: str, num_datasets: int) -> None:
     output_data = generate_data_columns(variables_dict, num_datasets)
 
     # Remove value with probability
-    output_data = ValueRemover.remove_values_with_probability(output_data, variables_dict)
+    output_data = ValueRemover.process_df(output_data, variables_dict)
 
     # Output to CSV
     output_data.to_csv(csv_path, index=False)
