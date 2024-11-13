@@ -26,6 +26,13 @@ class ValueRemover:
             df (pd.DataFrame): The DataFrame containing the data.
             var_dict (dict): A dictionary where keys are concept IDs and values are tuples containing
                              information about each variable, including nullability and probability of missing values.
+                             Example: 'var_dict': {
+                                'conceptId1': (
+                                    'type1',
+                                    {'param_key': 'param_value'},
+                                    True,
+                                    0.1)
+                            } for a var_dict with only 1 concept ID, that has a 10% probability of missing values.
 
         Returns:
             pd.DataFrame: The DataFrame with values removed according to the specified probabilities.
