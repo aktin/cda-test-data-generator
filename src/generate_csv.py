@@ -68,6 +68,21 @@ def generate_data_columns(variables_dict: dict, num_datasets: int) -> pd.DataFra
 
     return output_data
 
+def validate_excel_columns(input_df: pd.DataFrame) -> None:
+    """
+    Validate the columns in the input Excel file.
+
+    Args:
+        input_df (pd.DataFrame): The input DataFrame read from the Excel file.
+
+    Returns:
+        None
+    """
+    required_columns = ['Concept Id', 'Generation type', 'Parameters', 'Nullable', 'Probability missing']
+    for column in required_columns:
+        if column not in input_df.columns:
+            raise ValueError(f"Missing required column: {column}")
+
 
 def generate_csv(excel_path: str, csv_path: str, num_datasets: int) -> None:
     """
@@ -81,7 +96,14 @@ def generate_csv(excel_path: str, csv_path: str, num_datasets: int) -> None:
     Returns:
         None
     """
+    if num_datasets < 1:
+        raise ValueError("Number of datasets must be greater than 0.")
+
+
     excel_input = pd.read_excel(excel_path)
+
+    # Validate columns in the input Excel file
+    validate_excel_columns(excel_input)
 
     # Dictionary has form { conceptId -> (Default values, Type, Parameters, Nullable) }
     variables_dict = extract_concept_id_attributes(excel_input)

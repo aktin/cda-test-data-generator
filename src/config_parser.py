@@ -203,7 +203,7 @@ class LinkHandler(AbstractHandler):
         except Exception as e:
             raise ValueError(f"Invalid file link: {str(e)}")
 
-
+# REFACTOR THIS
 class DateHandler(AbstractHandler):
     def handle(self, param_dict: Dict[str, Any], value: str) -> None:
         """
@@ -211,13 +211,13 @@ class DateHandler(AbstractHandler):
 
         Args:
             param_dict (dict): The dictionary to update with the parsed value.
-            value (str): The value to parse, expected to be in the format 'YYYYMMDD'.
+            value (str): The value to parse, expected to be in the format '%Y%m%d'.
 
         Raises:
             ValueError: If the date format is invalid or the date is invalid.
         """
         if not value or len(value) != 8:
-            raise ValueError(f"Invalid date format for '{self.key}'. Expected format: YYYYMMDD, got: '{value}'")
+            raise ValueError(f"Invalid date format for '{self.key}'. Expected format: %Y%m%d, got: '{value}'")
 
         try:
             date_obj = datetime.strptime(value, "%Y%m%d")
