@@ -2,7 +2,7 @@ import pandas as pd
 
 from generator import GeneratorFactory
 from generator import GeneratorType
-from parser import ConfigParser
+from config_parser import ConfigParser
 from value_remover import ValueRemover
 
 
