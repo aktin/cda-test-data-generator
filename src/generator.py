@@ -1,3 +1,4 @@
+import os
 import random
 import uuid
 from abc import ABC, abstractmethod
@@ -19,6 +20,7 @@ class GeneratorType(Enum):
     UUID = 'UUID'
     DATE = 'date'
     LOOKUP = 'lookup'
+
 
 class AbstractGenerator(ABC):
     @abstractmethod
@@ -170,7 +172,7 @@ class LookupGenerator(AbstractGenerator):
         """
         self.link = link
         self.column = column
-        # TODO
+        # TODO Catch other dependent columns
         self.dependent_columns = kwargs.get('dependent_column_1', None)
         self.dependent_concept_id = kwargs.get('dependent_concept_id_1', None)
         self._load_value_set_from_csv()
@@ -188,6 +190,10 @@ class LookupGenerator(AbstractGenerator):
         """
         if not self.column:
             raise ValueError("Column not specified in parameters")
+
+        if not os.path.isfile(self.link):
+            raise ValueError(f"File '{self.link}' does not exist.")
+
         df = pd.read_csv(self.link, delimiter=";", dtype=str, header=0)
         if self.column not in df.columns:
             raise ValueError(f"Column '{self.column}' not found in file")
