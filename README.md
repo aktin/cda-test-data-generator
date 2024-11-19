@@ -1,6 +1,6 @@
-# CSV to CDA Processor
+# CSV to CDA Processor ![Python 3.12](https://img.shields.io/badge/python-3.12-blue)
 
-This project processes CSV files to generate CDA (Clinical Document Architecture) files. It reads configuration from a `config.toml` file, sets environment variables, and processes the data through several steps.
+A Python-based tool for generating test Clinical Document Architecture (CDA) files from Excel templates. This project helps healthcare IT professionals create sample AKTIN CDA documents for testing and development purposes of the AKTIN DWH.
 
 ## Prerequisites
 
@@ -10,71 +10,51 @@ This project processes CSV files to generate CDA (Clinical Document Architecture
 ## Installation
 
 1. Clone the repository:
-    ```sh
-    git clone <repository-url>
-    cd <repository-directory>
-    ```
-
+```sh
+git clone https://github.com/aktin/cda-test-data-generator
+cd https://github.com/aktin/cda-test-data-generator
+```
 2. Install the required Python packages:
-    ```sh
-    pip install -r requirements.txt
-    ```
+```sh
+pip install -r requirements.txt
+```
 
-3. Ensure you have the following structure in your `config.toml` file:
-    ```toml
-    [cda_paths]
-    csv_path = "../resources/data.csv"
-    excel_path = "../resources/CDAVariables.xlsx"
-    xslt_file = "../resources/EmergencyNote.xslt"
-    ```
+## Configuration
+The tool requires two main configuration files:
+
+1. Excel Template (`*.xlsx`):
+    * Defines the structure and constraints for CSV generation
+    * Located in the `resources` directory by default 
+    * Must follow the specified template format (see Documentation)
+
+
+2. XSLT Template (`*.xslt`):
+    * Defines the transformation from CSV to CDA 
+    * Located in the `resources` directory by default 
+    * Must be valid XSLT 1.0 or 2.0
 
 ## Usage
 
-1. Navigate to the `src` directory:
-    ```sh
-    cd src
-    ```
-
-2. Run the main script with the required command line argument for the number of rows:
-    ```sh
-    python main.py --rows <number_of_rows>
-    ```
-
-    Replace `<number_of_rows>` with the number of rows you want to generate in the CSV file.
-
-## Configuration
-
-The `config.toml` file should be located in the root directory of the project. It contains paths to the necessary files:
-- `csv_path`: Path to the CSV file.
-- `excel_path`: Path to the Excel file.
-- `xslt_file`: Path to the XSLT file.
-
-Example `config.toml`:
-```toml
-[cda_paths]
-csv_path = "../resources/data.csv"
-excel_path = "../resources/CDAVariables.xlsx"
-xslt_file = "../resources/EmergencyNote.xslt"
+Navigate to the `src` directory and run:
+```sh
+python main.py --n <number_of_CDAs> --xslt <xslt_file> --xlsx <excel_file> [--o <output_dir>][--cleanup]
 ```
 
-## Main Script
+### Parameters
 
-The main script (`main.py`) performs the following steps:
+| Parameter | Required | Description                         | Default |
+|-----------|----------|-------------------------------------|---------|
+| `--n` | Yes | Number of CDA documents to generate | None |
+| `--xslt` | Yes | Relative path to XSLT template file | None |
+| `--xlsx` | Yes | Relative path to Excel template file         | None |
+| `--o` | No | Output directory for CDA files      | `<repository-directory>/output` |
+| `--cleanup` | No | Remove intermediate CSV files       | `False` |
 
-1. Loads configuration from `config.toml`.
-2. Sets environment variables based on the configuration.
-3. Parses command line arguments to get the number of rows.
-4. Generates a CSV file with the specified number of rows.
-5. Calculates dependencies and updates the CSV file.
-6. Transforms the CSV file to CDA format.
-7. Optionally sends the generated CDA files to a server for validation (commented out by default).
-8. Removes the generated CSV file.
+### Example
 
-## Example
-
-To generate a CSV file with 10 rows and process it, run:
+To generate a CSV file with 10 rows (and 10 test CDAs respectively), run:
 ```sh
-python main.py --rows 10
+python main.py --n 10 --xlsx ../resources/CDAVariables_short.xlsx --xslt ../resources/EmergencyNote.xslt --o ../output
 ```
 
 ## License

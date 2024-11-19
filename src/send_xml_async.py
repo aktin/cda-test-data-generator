@@ -2,7 +2,6 @@ import asyncio
 import os
 from pathlib import Path
 from typing import Dict
-import argparse
 
 import aiohttp
 import aiofiles
@@ -12,31 +11,15 @@ import logging
 from src import main
 
 # Constants
-URL = "http://localhost:9090/aktin/cda/fhir/Binary/$validate"
+URL = "http://localhost:5080/aktin/cda/fhir/Binary/$validate"
 OUTPUT_DIR = Path(os.environ.get('OUTPUT_DIR', '../output'))
-CDA_DIR = OUTPUT_DIR / 'cda'
-RESPONSE_DIR = OUTPUT_DIR / 'responses'
+CDA_DIR = OUTPUT_DIR.joinpath('cda')
+RESPONSE_DIR = OUTPUT_DIR.joinpath('responses')
 FHIR_NAMESPACE = {'f': 'http://hl7.org/fhir'}
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-
-
-def parse_arguments():
-    """
-    Parse command line arguments.
-
-    Returns:
-        argparse.Namespace: Parsed command line arguments.
-    """
-    parser = argparse.ArgumentParser(description="Process CDA files and analyze responses.")
-    parser.add_argument('--n', type=int, default=None,
-                        help="Number of rows to process. If not provided, will process all files in the CDA directory.")
-    parser.add_argument('--config', type=str, required=True, help='Filepath for configuration TOML file.')
-    parser.add_argument('--cleanup', action='store_true', help='Remove intermediate CSV file after processing.')
-
-    return parser.parse_args()
 
 
 async def send_xml_file_async(session: aiohttp.ClientSession, input_file: Path, output_file: Path) -> None:
@@ -68,7 +51,7 @@ async def send_xml_file_async(session: aiohttp.ClientSession, input_file: Path, 
         logger.error(f"Error processing {input_file.name}: {str(e)}")
 
 
-async def process_files_async(num_rows: int = None) -> None:
+async def process_files_async() -> None:
     """
     Process multiple XML files asynchronously.
 
@@ -77,9 +60,7 @@ async def process_files_async(num_rows: int = None) -> None:
     """
     RESPONSE_DIR.mkdir(exist_ok=True)
 
-    cda_files = list(CDA_DIR.glob("cda_*.cda"))
-    if num_rows is not None:
-        cda_files = cda_files[:num_rows]
+    cda_files = list(CDA_DIR.glob("cda_*.xml"))
 
     async with aiohttp.ClientSession() as session:
         tasks = [
@@ -137,11 +118,7 @@ async def main_async() -> None:
     """
     Main asynchronous function to orchestrate the XML processing and analysis.
     """
-    args = parse_arguments()
-
-    main.main()  # Run the main function from src.main
-
-    await process_files_async(args.n)
+    await process_files_async()
     get_stats()
 
 
