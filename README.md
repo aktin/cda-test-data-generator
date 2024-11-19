@@ -1,7 +1,6 @@
-# CDA Test Data Generator
+# CSV to CDA Processor
 
-This project generates synthetic CDA (Clinical Document Architecture) files. 
-It reads an Excel file with the required variables and generates a CSV file with the specified number of rows. The CSV file is then transformed into CDA format using an XSLT file.
+This project processes CSV files to generate CDA (Clinical Document Architecture) files. It reads configuration from a `config.toml` file, sets environment variables, and processes the data through several steps.
 
 ## Prerequisites
 
@@ -47,11 +46,11 @@ The main script (`main.py`) performs the following steps:
 
 
 1. Sets environment variables based on input arguments.
-2. Reads the Excel file with the required variables.
+2. Parses command line arguments to get the number of rows.
 3. Generates a CSV file with the specified number of rows.
 4. Calculates dependencies and updates the CSV file.
 5. Transforms the CSV file to CDA format.
-6. Saves the generated CDAs to the output directory.
+6. Removes the generated CSV file.
 
 ## Example
 
