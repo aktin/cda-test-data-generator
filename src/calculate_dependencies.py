@@ -1,6 +1,5 @@
 import datetime as dt
 import os
-import random
 import re
 from typing import Optional
 
@@ -8,10 +7,10 @@ import pandas as pd
 
 
 def _add_minutes_to_timestamp(
-    timestamp: str,
-    minutes: int,
-    format_in: str = "%Y%m%d%H%M%S",
-    format_out: str = "%Y%m%d%H%M%S"
+        timestamp: str,
+        minutes: int,
+        format_in: str = "%Y%m%d%H%M%S",
+        format_out: str = "%Y%m%d%H%M%S"
 ) -> str:
     """
     Add a specified number of minutes to a timestamp and return the new timestamp in the desired format.
@@ -197,23 +196,6 @@ def add_insurace_information(df: pd.DataFrame) -> None:
     """
     df['insurance_txt'] = df['insurance_case'].apply(
         lambda x: 'Selbstzahler' if x == 'SELF' else 'Familienversicherung')
-
-
-def assign_names_to_patients(individual_attributes_csv: str, df: pd.DataFrame) -> None:
-    """
-    Assign names to patients in the DataFrame based on their gender.
-
-    Args:
-        individual_attributes_csv (str): The path to the CSV file containing individual attributes.
-        df (pd.DataFrame): The DataFrame containing the data.
-
-    Returns:
-        None
-    """
-    csv_df = pd.read_csv(individual_attributes_csv, dtype=str, delimiter=';')
-    df['patient_first_name'] = df['gender'].apply(lambda x:
-                                               random.choice(csv_df['vorname_m']) if x == 'M' else random.choice(
-                                                   csv_df['vorname_f']))
 
 
 def calculate_dependencies(filename: str) -> None:
