@@ -145,7 +145,6 @@ def csv_to_cda(csv_file: str, xslt_file: str, output_dir: str) -> None:
     for i, csv_data in enumerate(csv_to_dict(csv_file), start=1):
         # Create and save raw XML
         raw_xml = dict_to_xml(csv_data)
-        save_xml(raw_xml, os.path.join(raw_path, f'aktin_raw_{i}.xml'))
 
         # Transform raw XML with XSLT
         transformed_xml = transform_xml(raw_xml, xslt_transform)
