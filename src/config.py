@@ -32,7 +32,7 @@ class Config:
         parser.add_argument('--cleanup', action='store_true', help='Remove intermediate CSV file after processing.')
         parser.add_argument('--xlsx', type=str, required=True, help='Filepath to the input Excel file.')
         parser.add_argument('--xslt', type=str, required=True, help='Filepath to the input XSLT file.')
-        parser.add_argument('--o', type=str, required=False, default='../output/',
+        parser.add_argument('--output', type=str, required=False, default='.',
                             help='Output directory for generated files.')
 
         args = parser.parse_args()
@@ -41,7 +41,7 @@ class Config:
             cleanup=args.cleanup,
             xlsx=args.xlsx,
             xslt=args.xslt,
-            output_dir=args.o
+            output_dir=args.output
         )
 
 # Create a Config instance from command-line arguments
