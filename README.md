@@ -1,4 +1,4 @@
-# CSV to CDA Processor ![Python 3.12](https://img.shields.io/badge/python-3.12-blue)
+# CDA-test-data-generator ![Python 3.12](https://img.shields.io/badge/python-3.12-blue)
 
 A Python-based tool for generating test Clinical Document Architecture (CDA) files from Excel templates. 
 This project helps healthcare IT professionals create sample AKTIN CDA documents for testing and development purposes of the AKTIN DWH.
