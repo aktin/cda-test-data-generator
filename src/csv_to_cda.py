@@ -129,10 +129,9 @@ def csv_to_cda(csv_file: str, xslt_file: str, output_dir: str) -> None:
     Returns:
         None
     """
-    raw_path = os.path.join(output_dir, 'raw')
+    cda_path = os.path.join(output_dir, 'cda')
 
     create_directory(output_dir)
-    create_directory(raw_path)
     create_directory(cda_path)
 
     # Load XSLT transformation from Skeleton
