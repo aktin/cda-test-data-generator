@@ -5,7 +5,7 @@ import os
 from calculate_dependencies import calculate_dependencies
 from csv_to_cda import csv_to_cda
 from generate_csv import generate_csv
-from src.config import config
+from config import config
 
 
 def setup_logging() -> None:
