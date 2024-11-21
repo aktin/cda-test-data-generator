@@ -2,7 +2,7 @@
 
 A Python-based tool for generating test Clinical Document Architecture (CDA) files from Excel templates. 
 This project helps healthcare IT professionals create sample AKTIN CDA documents for testing and development purposes of the AKTIN DWH.
-
+Additional Information can be found on the [Github Wiki](https://github.com/aktin/cda-test-data-generator/wiki).
 ## Prerequisites
 
 - Python 3.12 (3.11)
@@ -35,7 +35,7 @@ The tool requires two main configuration files.
 
 These files are already set up in the `/resources` directory by default and ready for use!
 
-More Information can be found on the [Github Wiki](https://github.com/aktin/cda-test-data-generator/wiki/Configuration)
+More Information can be found on the [Github Wiki/Configuration](https://github.com/aktin/cda-test-data-generator/wiki/Configuration)
 
 
 ## Default Usage
@@ -46,7 +46,7 @@ Recommended way to run the tool:
 ```sh
 python src/main.py --number <number_of_CDAs> --xslt <xslt_file> --xlsx <excel_file> [--output <output_dir>][--cleanup]
 ```
-Information on running it in a different directory can be found in the [Github Wiki](https://github.com/aktin/cda-test-data-generator/wiki/How-to-use-it%3F)
+Information on running it in a different directory can be found in the [Github Wiki/How_to_use_it?](https://github.com/aktin/cda-test-data-generator/wiki/How-to-use-it%3F)
 ### Parameters
 
 | Parameter   | Required | Description                                      | Default                      |
