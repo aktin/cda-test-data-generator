@@ -39,23 +39,26 @@ More Information can be found on the [Github Wiki/Configuration](https://github.
 
 
 ## Default Usage
-Recommended way to run the tool:
+Recommended way to run the script:
 1. Make sure you are in the `/cda-test-data-generator` directory
 2. Fill in the parameters as described below
 3. Run with filled parameters:
-```sh
+```
 python src/main.py --number <number_of_CDAs> --xslt <xslt_file> --xlsx <excel_file> [--output <output_dir>][--cleanup]
 ```
+_Example prompt under the Parameter table!!!_
+
+
 Information on running it in a different directory can be found in the [Github Wiki/How_to_use_it?](https://github.com/aktin/cda-test-data-generator/wiki/How-to-use-it%3F)
 ### Parameters
 
-| Parameter   | Required | Description                                      | Default                      |
-|-------------|----------|--------------------------------------------------|------------------------------|
-| `--number`  | Yes | Number of CDA documents to generate              | None                         |
-| `--xslt`    | Yes | Absolute/Relative path to XSLT template file     | None                         |
-| `--xlsx`    | Yes | Absolute/Relative path to Excel template file    | None                         |
+| Parameter   | Required | Description                                      | Default              |
+|-------------|----------|--------------------------------------------------|----------------------|
+| `--number`  | Yes | Number of CDA documents to generate              | None                 |
+| `--xslt`    | Yes | Absolute/Relative path to XSLT template file     | None                 |
+| `--xlsx`    | Yes | Absolute/Relative path to Excel template file    | None                 |
 | `--output`  | No | Output directory for CDA files.                  | `<working_directory>` |
-| `--cleanup` | No | If cleanup is set, remove intermediate CSV file. |                     |
+| `--cleanup` | No | If cleanup is set, remove intermediate CSV file. |                      |
 
 ### Example
 

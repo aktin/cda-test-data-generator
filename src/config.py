@@ -17,7 +17,7 @@ class Config:
     cleanup: bool
     xlsx: str
     xslt: str
-    output_dir: str
+    output: str
 
     @classmethod
     def from_args(cls):
@@ -41,7 +41,7 @@ class Config:
             cleanup=args.cleanup,
             xlsx=args.xlsx,
             xslt=args.xslt,
-            output_dir=args.output
+            output=args.output
         )
 
 # Create a Config instance from command-line arguments

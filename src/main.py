@@ -33,7 +33,7 @@ def resolve_path(base_path: str, relative_path: str) -> str:
 
 def clean_up(csv_path: str) -> None:
     """
-    Clean up intermediate files including the specified CSV file and all files in the raw directory.
+    Clean up intermediate files including the specified CSV file
 
     Args:
         csv_path (str): The path to the intermediate CSV file to be removed.
@@ -41,13 +41,10 @@ def clean_up(csv_path: str) -> None:
     logging.info("Cleaning up intermediate CSV file...")
     os.remove(csv_path)
     logging.info("Cleaning up intermediate RAW files")
-    # Remove all files in the raw directory
-    raw_dir = os.path.join(os.environ['OUTPUT_DIR'], 'raw')
-    for file_path in glob.glob(os.path.join(raw_dir, '*')):
-        os.remove(file_path)
 
 
-def process_excel_to_cda(number: int, cleanup: bool, output_dir: str = '../output/') -> None:
+
+def process_excel_to_cda(number: int, cleanup: bool, output_dir: str) -> None:
     """
     Process Excel file to CDA format.
 
@@ -73,7 +70,7 @@ def process_excel_to_cda(number: int, cleanup: bool, output_dir: str = '../outpu
         calculate_dependencies(csv_path)
 
         logging.info("Transforming to CDA...")
-        csv_to_cda(csv_path, config.xslt, config.output_dir)
+        csv_to_cda(csv_path, config.xslt, config.output)
 
         if cleanup:
             clean_up(csv_path)
@@ -92,7 +89,7 @@ def main() -> None:
     """
     try:
         # Create config at program start
-        process_excel_to_cda(config.number, config.cleanup)
+        process_excel_to_cda(config.number, config.cleanup, config.output)
     except Exception as e:
         logging.error(f"Script execution failed: {str(e)}")
         exit(1)
