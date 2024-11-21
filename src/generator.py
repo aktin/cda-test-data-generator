@@ -202,8 +202,6 @@ class LookupGenerator(AbstractGenerator):
             self.value_set = df[[self.column] + [self.dependent_columns]]
         else:
             self.value_set = df[self.column]
-        print()
-        # self.value_set = df[column]
 
     def generate(self, count: int) -> List[str]:
         """
