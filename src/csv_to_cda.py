@@ -141,6 +141,7 @@ def csv_to_cda(csv_file: str, xslt_file: str, output_dir: str) -> None:
     # Create Parser
     parser = etree.XMLParser(remove_blank_text=True, remove_comments=True)
 
+    # Read .csv file line by line
     for i, csv_data in enumerate(csv_to_dict(csv_file), start=1):
         # Create and save raw XML
         raw_xml = dict_to_xml(csv_data)
