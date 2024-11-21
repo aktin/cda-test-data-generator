@@ -129,10 +129,7 @@ def csv_to_cda(csv_file: str, xslt_file: str, output_dir: str) -> None:
     Returns:
         None
     """
-    cda_path = os.path.join(output_dir, 'cda')
-
-    create_directory(output_dir)
-    create_directory(cda_path)
+    cda_path = output_dir
 
     # Load XSLT transformation from Skeleton
     xslt_transform = etree.XSLT(etree.parse(xslt_file))
