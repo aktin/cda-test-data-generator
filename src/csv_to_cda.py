@@ -129,22 +129,17 @@ def csv_to_cda(csv_file: str, xslt_file: str, output_dir: str) -> None:
     Returns:
         None
     """
-    raw_path = os.path.join(output_dir, 'raw')
-    cda_path = os.path.join(output_dir, 'cda')
-
-    create_directory(output_dir)
-    create_directory(raw_path)
-    create_directory(cda_path)
+    cda_path = output_dir
 
     # Load XSLT transformation from Skeleton
     xslt_transform = etree.XSLT(etree.parse(xslt_file))
     # Create Parser
     parser = etree.XMLParser(remove_blank_text=True, remove_comments=True)
 
+    # Read .csv file line by line
     for i, csv_data in enumerate(csv_to_dict(csv_file), start=1):
         # Create and save raw XML
         raw_xml = dict_to_xml(csv_data)
-        save_xml(raw_xml, os.path.join(raw_path, f'aktin_raw_{i}.xml'))
 
         # Transform raw XML with XSLT
         transformed_xml = transform_xml(raw_xml, xslt_transform)
