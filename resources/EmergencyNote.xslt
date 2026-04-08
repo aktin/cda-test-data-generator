@@ -52,13 +52,32 @@
                         <streetAddressLine>
                             <xsl:value-of select="street_address_line"/>
                         </streetAddressLine>
+                        <xsl:if test="patient_additional_locator != ''">
+                            <additionalLocator><xsl:value-of select="patient_additional_locator"/></additionalLocator>
+                        </xsl:if>
+                        <xsl:if test="patient_direction != ''">
+                            <direction><xsl:value-of select="patient_direction"/></direction>
+                        </xsl:if>
                         <postalCode>
                             <xsl:value-of select="postal_code"/>
                         </postalCode>
                         <city>
                             <xsl:value-of select="city"/>
                         </city>
+                        <xsl:if test="patient_state != ''">
+                            <state><xsl:value-of select="patient_state"/></state>
+                        </xsl:if>
                     </addr>
+                    <!-- Kontakt -->
+                    <xsl:if test="patient_phone != ''">
+                        <telecom use="HP"><xsl:attribute name="value"><xsl:text>tel:</xsl:text><xsl:value-of select="patient_phone"/></xsl:attribute></telecom>
+                    </xsl:if>
+                    <xsl:if test="patient_mobile != ''">
+                        <telecom use="MC"><xsl:attribute name="value"><xsl:text>tel:</xsl:text><xsl:value-of select="patient_mobile"/></xsl:attribute></telecom>
+                    </xsl:if>
+                    <xsl:if test="patient_email != ''">
+                        <telecom use="HP"><xsl:attribute name="value"><xsl:text>mailto:</xsl:text><xsl:value-of select="patient_email"/></xsl:attribute></telecom>
+                    </xsl:if>
                     <patient classCode="PSN" determinerCode="INSTANCE">
                         <!-- Name -->
                         <name>
@@ -92,7 +111,11 @@
                     </xsl:attribute>
                 </time>
                 <assignedAuthor classCode="ASSIGNED">
-                    <id root="1.2.276.0.76.3.2.123456789"/>
+                    <id root="1.2.276.0.76.3.2.123456789">
+                        <xsl:if test="author_id != ''">
+                            <xsl:attribute name="extension"><xsl:value-of select="author_id"/></xsl:attribute>
+                        </xsl:if>
+                    </id>
                     <assignedPerson classCode="PSN" determinerCode="INSTANCE">
                         <name>
                             <prefix>
@@ -116,9 +139,65 @@
                         <name>
                             <xsl:value-of select="organization_name"/>
                         </name>
+                        <xsl:if test="organization_street != '' or organization_city != '' or organization_postal_code != ''">
+                            <addr>
+                                <xsl:if test="organization_street != ''">
+                                    <streetAddressLine><xsl:value-of select="organization_street"/></streetAddressLine>
+                                </xsl:if>
+                                <xsl:if test="organization_additional_locator != ''">
+                                    <additionalLocator><xsl:value-of select="organization_additional_locator"/></additionalLocator>
+                                </xsl:if>
+                                <xsl:if test="organization_postal_code != ''">
+                                    <postalCode><xsl:value-of select="organization_postal_code"/></postalCode>
+                                </xsl:if>
+                                <xsl:if test="organization_city != ''">
+                                    <city><xsl:value-of select="organization_city"/></city>
+                                </xsl:if>
+                                <xsl:if test="organization_state != ''">
+                                    <state><xsl:value-of select="organization_state"/></state>
+                                </xsl:if>
+                            </addr>
+                        </xsl:if>
+                        <!-- Note: telecom is not permitted in representedOrganization per AKTIN CDA schema -->
                     </representedOrganization>
                 </assignedAuthor>
             </author>
+            <!-- Zweiter Autor (optional) -->
+            <xsl:if test="author_2_first_name != '' or author_2_last_name != ''">
+                <author typeCode="AUT" contextControlCode="OP">
+                    <time>
+                        <xsl:attribute name="value">
+                            <xsl:value-of select="author_2_ts"/>
+                        </xsl:attribute>
+                    </time>
+                    <assignedAuthor classCode="ASSIGNED">
+                        <id root="1.2.276.0.76.3.2.123456789">
+                            <xsl:if test="author_2_id != ''">
+                                <xsl:attribute name="extension"><xsl:value-of select="author_2_id"/></xsl:attribute>
+                            </xsl:if>
+                        </id>
+                        <assignedPerson classCode="PSN" determinerCode="INSTANCE">
+                            <name>
+                                <xsl:if test="author_2_prefix != ''">
+                                    <prefix><xsl:value-of select="author_2_prefix"/></prefix>
+                                </xsl:if>
+                                <given><xsl:value-of select="author_2_first_name"/></given>
+                                <family><xsl:value-of select="author_2_last_name"/></family>
+                            </name>
+                        </assignedPerson>
+                        <representedOrganization classCode="ORG" determinerCode="INSTANCE">
+                            <id root="1.2.276.0.76.4.17">
+                                <xsl:attribute name="extension">
+                                    <xsl:value-of select="organization_id"/>
+                                </xsl:attribute>
+                            </id>
+                            <name>
+                                <xsl:value-of select="organization_name"/>
+                            </name>
+                        </representedOrganization>
+                    </assignedAuthor>
+                </author>
+            </xsl:if>
             <!-- Verwaltungsorganisation des Dokuments -->
             <custodian>
                 <assignedCustodian>
@@ -131,6 +210,26 @@
                         <name>
                             <xsl:value-of select="organization_name"/>
                         </name>
+                        <xsl:if test="organization_street != '' or organization_city != '' or organization_postal_code != ''">
+                            <addr>
+                                <xsl:if test="organization_street != ''">
+                                    <streetAddressLine><xsl:value-of select="organization_street"/></streetAddressLine>
+                                </xsl:if>
+                                <xsl:if test="organization_additional_locator != ''">
+                                    <additionalLocator><xsl:value-of select="organization_additional_locator"/></additionalLocator>
+                                </xsl:if>
+                                <xsl:if test="organization_postal_code != ''">
+                                    <postalCode><xsl:value-of select="organization_postal_code"/></postalCode>
+                                </xsl:if>
+                                <xsl:if test="organization_city != ''">
+                                    <city><xsl:value-of select="organization_city"/></city>
+                                </xsl:if>
+                                <xsl:if test="organization_state != ''">
+                                    <state><xsl:value-of select="organization_state"/></state>
+                                </xsl:if>
+                            </addr>
+                        </xsl:if>
+                        <!-- Note: telecom is not permitted in representedOrganization per AKTIN CDA schema -->
                     </representedCustodianOrganization>
                 </assignedCustodian>
             </custodian>
@@ -140,17 +239,37 @@
             <participant typeCode="HLD">
                 <templateId root="1.2.276.0.76.10.2022"/>
                 <time>
-                    <high value="20231231"/>  <!-- Hier muss immer ein Quartalsende angegeben (MM/JJ) => YYYYMMDD. -->
+                    <!-- Quartalsende: CSV versicherungs_quartalsende (YYYYMMDD); fallback to fixed value -->
+                    <high>
+                        <xsl:attribute name="value">
+                            <xsl:choose>
+                                <xsl:when test="insurance_quarter_end != ''"><xsl:value-of select="insurance_quarter_end"/></xsl:when>
+                                <xsl:otherwise>20231231</xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:attribute>
+                    </high>
                 </time>
                 <associatedEntity classCode="POLHOLD">
-                    <!-- eGK Nummer -->
-                    <id root="1.2.276.0.76.4.8">
-                        <xsl:attribute name="extension">
-                            <xsl:value-of select="insurance_egk"/>
-                        </xsl:attribute>
+                    <!-- eGK Nummer: root must not coexist with nullFlavor (dtr1-2-II) -->
+                    <id>
+                        <xsl:choose>
+                            <xsl:when test="insurance_egk = ''">
+                                <xsl:attribute name="nullFlavor"><xsl:text>UNK</xsl:text></xsl:attribute>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:attribute name="root">1.2.276.0.76.4.8</xsl:attribute>
+                                <xsl:attribute name="extension">
+                                    <xsl:value-of select="insurance_egk"/>
+                                </xsl:attribute>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </id>
-                    <!-- Versicherungsnummer -->
-                    <id extension="123456789" root="1.2.276.0.76.3.1.131.1.4.3.9999.9999.999955"/>
+                    <!-- Versicherungsnummer (omitted when empty) -->
+                    <xsl:if test="insurance_number != ''">
+                        <id root="1.2.276.0.76.3.1.131.1.4.3.9999.9999.999955">
+                            <xsl:attribute name="extension"><xsl:value-of select="insurance_number"/></xsl:attribute>
+                        </id>
+                    </xsl:if>
                     <code code="SELF" codeSystem="2.16.840.1.113883.5.111" displayName="self">
                         <xsl:attribute name="code">
                             <xsl:value-of select="insurance_case"/>
@@ -169,14 +288,20 @@
                         </associatedPerson>
                     </xsl:if>
                     <scopingOrganization>
-                        <!-- IK-NR -->
-                        <id extension="987654321" root="1.2.276.0.76.4.5">
-                            <xsl:attribute name="extension">
-                                <xsl:value-of select="insurance_iknr"/>
-                            </xsl:attribute>
-                        </id>
-                        <!-- VK-NR -->
-                        <id extension="3333" root="1.2.276.0.76.4.7"/>
+                        <!-- IK-NR (omitted when empty — extension cannot be empty per XSD 'st') -->
+                        <xsl:if test="string(insurance_iknr) != ''">
+                            <id root="1.2.276.0.76.4.5">
+                                <xsl:attribute name="extension">
+                                    <xsl:value-of select="insurance_iknr"/>
+                                </xsl:attribute>
+                            </id>
+                        </xsl:if>
+                        <!-- VK-NR (omitted when empty) -->
+                        <xsl:if test="insurance_vk != ''">
+                            <id root="1.2.276.0.76.4.7">
+                                <xsl:attribute name="extension"><xsl:value-of select="insurance_vk"/></xsl:attribute>
+                            </id>
+                        </xsl:if>
                         <name>
                             <xsl:value-of select="insurance_txt"/>
                         </name>
@@ -195,10 +320,13 @@
                                 <xsl:value-of select="therapy_start_ts"/>
                             </xsl:attribute>
                         </low>
-                        <!-- Verlegungs-/Entlassungszeitpunkt (Datum und Zeit), Zeitangabe genau bis auf die Minute-->
+                        <!-- Therapieende (therapieende_zeitpunkt); falls back to discharge_ts if empty -->
                         <high>
                             <xsl:attribute name="value">
-                                <xsl:value-of select="discharge_ts"/>
+                                <xsl:choose>
+                                    <xsl:when test="therapy_end_ts != ''"><xsl:value-of select="therapy_end_ts"/></xsl:when>
+                                    <xsl:otherwise><xsl:value-of select="discharge_ts"/></xsl:otherwise>
+                                </xsl:choose>
                             </xsl:attribute>
                         </high>
                     </effectiveTime>
@@ -219,6 +347,8 @@
                             </high>
                         </time>
                         <assignedEntity classCode="ASSIGNED">
+                            <!-- AKTIN schematron (CDADocumentationOf) requires nullFlavor="NA" here;
+                                 behandler_id is mapped in field dict but not emitted in CDA -->
                             <id nullFlavor="NA"/>
                         </assignedEntity>
                     </performer>
@@ -227,12 +357,23 @@
             <!-- Patientenkontakt -->
             <componentOf>
                 <encompassingEncounter classCode="ENC" moodCode="EVN">
-                    <!-- Aufnahme-Identifikator -->
+                    <!-- Encounter-ID (Patientenkontakt in der Notaufnahme) -->
                     <id root="1.2.276.0.76.3.87686">
                         <xsl:attribute name="extension">
                             <xsl:value-of select="admission_id"/>
                         </xsl:attribute>
                     </id>
+                    <!-- Krankenhausinternes Fallkennzeichen (optional) -->
+                    <xsl:if test="string(case_number) != ''">
+                        <id>
+                            <xsl:attribute name="root">
+                                <xsl:value-of select="case_number_oid"/>
+                            </xsl:attribute>
+                            <xsl:attribute name="extension">
+                                <xsl:value-of select="case_number"/>
+                            </xsl:attribute>
+                        </id>
+                    </xsl:if>
                     <effectiveTime>
                         <!-- Start Patientenkontakt -->
                         <low>
@@ -247,24 +388,26 @@
                             </xsl:attribute>
                         </high>
                     </effectiveTime>
-                    <!-- Entlassung des Patienten mit Entlassungsgrund -->
-                    <dischargeDispositionCode>
-                        <xsl:choose>
-                            <xsl:when test="discharge = ''">
-                                <xsl:attribute name="nullFlavor">
-                                    <xsl:text>OTH</xsl:text>
-                                </xsl:attribute>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:attribute name="code">
-                                    <xsl:value-of select="discharge"/>
-                                </xsl:attribute>
-                                <xsl:attribute name="codeSystem">
-                                    <xsl:text>1.2.276.0.76.3.1.195.5.56</xsl:text>
-                                </xsl:attribute>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                    </dischargeDispositionCode>
+                    <!-- Entlassung ODER Verlegung — niemals beides (Schematron-Regel) -->
+                    <xsl:if test="verlegung_type = '' or verlegung_type = 'OTH'">
+                        <dischargeDispositionCode>
+                            <xsl:choose>
+                                <xsl:when test="discharge = ''">
+                                    <xsl:attribute name="nullFlavor">
+                                        <xsl:text>OTH</xsl:text>
+                                    </xsl:attribute>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:attribute name="code">
+                                        <xsl:value-of select="discharge"/>
+                                    </xsl:attribute>
+                                    <xsl:attribute name="codeSystem">
+                                        <xsl:text>1.2.276.0.76.3.1.195.5.56</xsl:text>
+                                    </xsl:attribute>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </dischargeDispositionCode>
+                    </xsl:if>
                 </encompassingEncounter>
             </componentOf>
 
@@ -280,9 +423,7 @@
                             <code code="11459-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
                                   displayName="Transport mode"/>
                             <title>Transportmittel</title>
-                            <text>
-
-                            </text>
+                            <text>&#160;</text>
                             <entry typeCode="COMP">
                                 <observation classCode="OBS" moodCode="EVN">
                                     <templateId root="1.2.276.0.76.10.4037"/>
@@ -297,14 +438,22 @@
                                             </xsl:attribute>
                                         </high>
                                     </effectiveTime>
-                                    <value xsi:type="CV" codeSystem="1.2.276.0.76.3.1.195.5.41">
+                                    <value xsi:type="CV">
                                         <xsl:choose>
-                                            <xsl:when test="transport_method = '' or transport_method = 'OTH'">
+                                            <xsl:when test="transport_method = 'NA' or transport_method = 'OTH'">
                                                 <xsl:attribute name="nullFlavor">
-                                                    <xsl:text>NA</xsl:text>
+                                                    <xsl:value-of select="transport_method"/>
+                                                </xsl:attribute>
+                                            </xsl:when>
+                                            <xsl:when test="transport_method = ''">
+                                                <xsl:attribute name="nullFlavor">
+                                                    <xsl:text>UNK</xsl:text>
                                                 </xsl:attribute>
                                             </xsl:when>
                                             <xsl:otherwise>
+                                                <xsl:attribute name="codeSystem">
+                                                    <xsl:text>1.2.276.0.76.3.1.195.5.41</xsl:text>
+                                                </xsl:attribute>
                                                 <xsl:attribute name="code">
                                                     <xsl:value-of select="transport_method"/>
                                                 </xsl:attribute>
@@ -330,11 +479,18 @@
                                     <code code="11293-8" codeSystem="2.16.840.1.113883.6.1" displayName="Zuweisung"/>
                                     <participant typeCode="AUT">
                                         <participantRole classCode="AGNT">
-                                            <code codeSystem="1.2.276.0.76.5.440">
-                                                <xsl:attribute name="code">
-                                                    <xsl:value-of select="referral"/>
-                                                </xsl:attribute>
-                                            </code>
+                                            <xsl:choose>
+                                                <xsl:when test="referral = 'OTH' or referral = ''">
+                                                    <code nullFlavor="OTH"/>
+                                                </xsl:when>
+                                                <xsl:otherwise>
+                                                    <code codeSystem="1.2.276.0.76.5.440">
+                                                        <xsl:attribute name="code">
+                                                            <xsl:value-of select="referral"/>
+                                                        </xsl:attribute>
+                                                    </code>
+                                                </xsl:otherwise>
+                                            </xsl:choose>
                                         </participantRole>
                                     </participant>
                                 </act>
@@ -350,7 +506,14 @@
                                   displayName="History of present illness"/>
                             <title>Notfallanamnese</title>
                             <text>
-                                <xsl:value-of select="emergency_medical_history"/>
+                                <xsl:choose>
+                                    <xsl:when test="emergency_medical_history = ''">
+                                        <xsl:text>&#160;</xsl:text>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="emergency_medical_history"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
                             </text>
                         </section>
                     </component>
@@ -370,8 +533,11 @@
                             <entry typeCode="COMP">
                                 <act classCode="ACT" moodCode="EVN">
                                     <templateId root="1.2.276.0.76.10.4039"/>
-                                    <id root="1.2.276.0.76.4.17.9814184919"
-                                        extension="c7a7f896-6125-4de4-ab16-706f1d2221c1"/>
+                                    <id root="1.2.276.0.76.4.17.9814184919">
+                                        <xsl:attribute name="extension">
+                                            <xsl:value-of select="concat(document_id, '-compl-act')"/>
+                                        </xsl:attribute>
+                                    </id>
                                     <code code="CONC" codeSystem="2.16.840.1.113883.5.6" displayName="Concern"/>
                                     <statusCode code="active"/>
                                     <effectiveTime>
@@ -393,7 +559,11 @@
                                     <entryRelationship typeCode="SUBJ">
                                         <observation classCode="OBS" moodCode="EVN">
                                             <templateId root="1.2.276.0.76.10.4040"/>
-                                            <id root="1.2.276.0.76.4.17.9814184919" extension="___?___"/>
+                                            <id root="1.2.276.0.76.4.17.9814184919">
+                                                <xsl:attribute name="extension">
+                                                    <xsl:value-of select="concat(document_id, '-compl-obs')"/>
+                                                </xsl:attribute>
+                                            </id>
                                             <code code="75322-8" codeSystem="2.16.840.1.113883.6.1"
                                                   displayName="Complaint"/>
                                             <text>
@@ -432,10 +602,8 @@
                                                         </xsl:attribute>
                                                         <originalText>
                                                             <xsl:choose>
-                                                                <xsl:when test="complaints_txt = ''">
-                                                                    <xsl:attribute name="nullFlavor">
-                                                                        <xsl:text>UNK</xsl:text>
-                                                                    </xsl:attribute>
+                                                                <xsl:when test="string(complaints_txt) = ''">
+                                                                    <xsl:text>&#160;</xsl:text>
                                                                 </xsl:when>
                                                                 <xsl:otherwise>
                                                                     <xsl:value-of select="complaints_txt"/>
@@ -452,10 +620,8 @@
                                                         </xsl:attribute>
                                                         <originalText>
                                                             <xsl:choose>
-                                                                <xsl:when test="complaints_txt = ''">
-                                                                    <xsl:attribute name="nullFlavor">
-                                                                        <xsl:text>UNK</xsl:text>
-                                                                    </xsl:attribute>
+                                                                <xsl:when test="string(complaints_txt) = ''">
+                                                                    <xsl:text>&#160;</xsl:text>
                                                                 </xsl:when>
                                                                 <xsl:otherwise>
                                                                     <xsl:value-of select="complaints_txt"/>
@@ -480,12 +646,22 @@
                                   displayName="Acuity assessment"/>
                             <title>Ersteinschätzung</title>
                             <text>
-                                <xsl:value-of select="initial_assessment_text"/>
+                                <xsl:choose>
+                                    <xsl:when test="initial_assessment_text = ''">
+                                        <xsl:text>&#160;</xsl:text>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="initial_assessment_text"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
                             </text>
                             <entry typeCode="COMP" contextConductionInd="true">
                                 <observation classCode="OBS" moodCode="EVN">
                                     <templateId root="1.2.276.0.76.10.4042"/>
-                                    <id root="45F99818-637B-4BE7-BC22-A7041C1CF813">
+                                    <id root="1.2.276.0.76.4.17.9814184919">
+                                        <xsl:attribute name="extension">
+                                            <xsl:value-of select="concat(document_id, '-triage')"/>
+                                        </xsl:attribute>
                                     </id>
                                     <code code="11283-9" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
                                           displayName="Acuity assessment"/>
@@ -494,24 +670,41 @@
                                     </text>
                                     <statusCode code="completed"/>
                                     <effectiveTime>
-                                        <low value="202006201603">
-                                            <xsl:attribute name="value">
-                                                <xsl:value-of select="triage_ts_start"/>
-                                            </xsl:attribute>
-                                        </low>
-                                        <high value="202006201608">
-                                            <xsl:attribute name="value">
-                                                <xsl:value-of select="triage_ts_end"/>
-                                            </xsl:attribute>
-                                        </high>
+                                        <xsl:choose>
+                                            <xsl:when test="triage_ts_start = ''">
+                                                <low nullFlavor="UNK"/>
+                                                <high nullFlavor="UNK"/>
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                <low>
+                                                    <xsl:attribute name="value">
+                                                        <xsl:value-of select="triage_ts_start"/>
+                                                    </xsl:attribute>
+                                                </low>
+                                                <high>
+                                                    <xsl:attribute name="value">
+                                                        <xsl:value-of select="triage_ts_end"/>
+                                                    </xsl:attribute>
+                                                </high>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
                                     </effectiveTime>
-                                    <value code="1" codeSystem="1.2.276.0.76.5.438" xsi:type="CE">
-                                        <xsl:attribute name="code">
-                                            <xsl:value-of select="triage"/>
-                                        </xsl:attribute>
-                                        <xsl:attribute name="codeSystem">
-                                            <xsl:value-of select="triage_system"/>
-                                        </xsl:attribute>
+                                    <value>
+                                        <xsl:choose>
+                                            <xsl:when test="triage != '' and triage_system != ''">
+                                                <xsl:attribute name="xsi:type" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">CE</xsl:attribute>
+                                                <xsl:attribute name="code">
+                                                    <xsl:value-of select="triage"/>
+                                                </xsl:attribute>
+                                                <xsl:attribute name="codeSystem">
+                                                    <xsl:value-of select="triage_system"/>
+                                                </xsl:attribute>
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                <xsl:attribute name="xsi:type" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">ST</xsl:attribute>
+                                                <xsl:attribute name="nullFlavor">UNK</xsl:attribute>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
                                     </value>
                                     <!--<value xsi:type="CE" code="3" codeSystem="1.2.276.0.76.5.438" displayName="Triage"/>-->
                                 </observation>
@@ -544,14 +737,22 @@
                             <entry typeCode="COMP" contextConductionInd="true">
                                 <observation classCode="OBS" moodCode="EVN">
                                     <templateId root="1.2.276.0.76.10.4043"/>
-                                    <id root="b2e0e192-416a-4e9c-97ce-2f3e27424242"/>
+                                    <id root="1.2.276.0.76.4.17.9814184919">
+                                        <xsl:attribute name="extension">
+                                            <xsl:value-of select="concat(document_id, '-preg')"/>
+                                        </xsl:attribute>
+                                    </id>
                                     <code code="11449-6" codeSystem="2.16.840.1.113883.6.1"
                                           displayName="Pregnancy status"/>
                                     <text>
                                         <reference value="#Preg"/>
                                     </text>
                                     <statusCode code="completed"/>
-                                    <effectiveTime value="202006201545"/>
+                                    <effectiveTime>
+                                        <xsl:attribute name="value">
+                                            <xsl:value-of select="vital_signs_ts"/>
+                                        </xsl:attribute>
+                                    </effectiveTime>
                                     <value xsi:type="CV">
                                         <xsl:choose>
                                             <xsl:when test="pregnancy = ''">
@@ -575,9 +776,9 @@
                             </entry>
 
                             <entry typeCode="COMP" contextConductionInd="true">
-                                <substanceAdministration moodCode="EVN" classCode="SBADM" negationInd="true">
+                                <substanceAdministration moodCode="EVN" classCode="SBADM">
                                     <xsl:choose>
-                                        <xsl:when test="tetanus_vaccination = ''">
+                                        <xsl:when test="string(tetanus_vaccination) = ''">
                                             <xsl:attribute name="negationInd">
                                                 <xsl:text>false</xsl:text>
                                             </xsl:attribute>
@@ -610,18 +811,29 @@
                             <entry typeCode="COMP" contextConductionInd="true">
                                 <observation classCode="OBS" moodCode="EVN">
                                     <templateId root="1.2.276.0.76.10.4045"/>
-                                    <id root="10C1EB7E-DC2D-4D1F-806A-2AD65EBA0396"/>
+                                    <id root="1.2.276.0.76.4.17.9814184919">
+                                        <xsl:attribute name="extension">
+                                            <xsl:value-of select="concat(document_id, '-rankin')"/>
+                                        </xsl:attribute>
+                                    </id>
                                     <code code="75859-9" codeSystem="2.16.840.1.113883.6.1"
                                           displayName="Modified Rankin scale"/>
                                     <text>
                                         <reference value="#rankin"/>
                                     </text>
                                     <statusCode code="completed"/>
-                                    <effectiveTime value="20200620"/>
-                                    <value xsi:type="PQ" value="2" unit="{score}"
+                                    <effectiveTime>
+                                        <xsl:attribute name="value">
+                                            <xsl:value-of select="vital_signs_ts"/>
+                                        </xsl:attribute>
+                                    </effectiveTime>
+                                    <value xsi:type="PQ"
                                            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                                         <xsl:attribute name="value">
-                                            <xsl:value-of select="rankin"/>
+                                            <xsl:choose>
+                                                <xsl:when test="rankin = ''">0</xsl:when>
+                                                <xsl:otherwise><xsl:value-of select="rankin"/></xsl:otherwise>
+                                            </xsl:choose>
                                         </xsl:attribute>
                                         <xsl:attribute name="unit">
                                             <xsl:text>{score}</xsl:text>
@@ -632,15 +844,21 @@
                             <entry typeCode="COMP" contextConductionInd="true">
                                 <act classCode="ACT" moodCode="EVN">
                                     <templateId root="1.2.276.0.76.10.4072"/>
-                                    <id root="1.2.276.0.76.4.17.9814184919"
-                                        extension="dd8a6ff8-ed4b-4f7e-82c3-e98e58b45de6"/>
+                                    <id root="1.2.276.0.76.4.17.9814184919">
+                                        <xsl:attribute name="extension">
+                                            <xsl:value-of select="concat(document_id, '-germs-act')"/>
+                                        </xsl:attribute>
+                                    </id>
                                     <code code="CONC" codeSystem="2.16.840.1.113883.5.6" displayName="Concern"/>
                                     <statusCode code="completed"/>
                                     <entryRelationship typeCode="SUBJ">
                                         <observation classCode="OBS" moodCode="EVN">
                                             <templateId root="1.2.276.0.76.10.4073"/>
-                                            <id root="1.2.276.0.76.4.17.9814184919"
-                                                extension="3564b7c0-2111-43f2-a784-9a5fdfaa67f2"/>
+                                            <id root="1.2.276.0.76.4.17.9814184919">
+                                                <xsl:attribute name="extension">
+                                                    <xsl:value-of select="concat(document_id, '-germs-obs')"/>
+                                                </xsl:attribute>
+                                            </id>
                                             <code code="COND" codeSystem="2.16.840.1.113883.5.4"
                                                   displayName="Condition"/>
                                             <text>
@@ -692,8 +910,11 @@
                                     <entry typeCode="COMP" contextConductionInd="true">
                                         <observation classCode="OBS" moodCode="EVN">
                                             <templateId root="1.2.276.0.76.10.4050"/>
-                                            <id root="1.2.276.0.76.4.17.9814184919"
-                                                extension="944cd73e-4361-4fca-929b-9a404b063651"/>
+                                            <id root="1.2.276.0.76.4.17.9814184919">
+                                                <xsl:attribute name="extension">
+                                                    <xsl:value-of select="concat(document_id, '-diag-01')"/>
+                                                </xsl:attribute>
+                                            </id>
                                             <code code="30745-4" codeSystem="2.16.840.1.113883.6.1"
                                                   displayName="Chest X-ray"/>
                                             <text>
@@ -728,8 +949,11 @@
 
                                         <observation classCode="OBS" moodCode="EVN">
                                             <templateId root="1.2.276.0.76.10.4051"/>
-                                            <id root="1.2.276.0.76.4.17.9814184919"
-                                                extension="944cd73e-4361-4fca-929b-9a404b063651"/>
+                                            <id root="1.2.276.0.76.4.17.9814184919">
+                                                <xsl:attribute name="extension">
+                                                    <xsl:value-of select="concat(document_id, '-diag-02')"/>
+                                                </xsl:attribute>
+                                            </id>
                                             <code code="38008-9" codeSystem="2.16.840.1.113883.6.1"
                                                   displayName="Spine Cervical and Thoracic and Lumbar X-ray"/>
                                             <text>
@@ -763,8 +987,11 @@
 
                                         <observation classCode="OBS" moodCode="EVN">
                                             <templateId root="1.2.276.0.76.10.4052"/>
-                                            <id root="1.2.276.0.76.4.17.9814184919"
-                                                extension="944cd73e-4361-4fca-929b-9a404b063651"/>
+                                            <id root="1.2.276.0.76.4.17.9814184919">
+                                                <xsl:attribute name="extension">
+                                                    <xsl:value-of select="concat(document_id, '-diag-03')"/>
+                                                </xsl:attribute>
+                                            </id>
                                             <code code="28561-9" codeSystem="2.16.840.1.113883.6.1"
                                                   displayName="Pelvis X-Ray"/>
                                             <text>
@@ -798,8 +1025,11 @@
 
                                         <observation classCode="OBS" moodCode="EVN">
                                             <templateId root="1.2.276.0.76.10.4053"/>
-                                            <id root="1.2.276.0.76.4.17.9814184919"
-                                                extension="944cd73e-4361-4fca-929b-9a404b063651"/>
+                                            <id root="1.2.276.0.76.4.17.9814184919">
+                                                <xsl:attribute name="extension">
+                                                    <xsl:value-of select="concat(document_id, '-diag-04')"/>
+                                                </xsl:attribute>
+                                            </id>
                                             <code code="37637-6" codeSystem="2.16.840.1.113883.6.1"
                                                   displayName="Extremity X-Ray"/>
                                             <text>
@@ -833,8 +1063,11 @@
 
                                         <observation classCode="OBS" moodCode="EVN">
                                             <templateId root="1.2.276.0.76.10.4054"/>
-                                            <id root="1.2.276.0.76.4.17.9814184919"
-                                                extension="944cd73e-4361-4fca-929b-9a404b063651"/>
+                                            <id root="1.2.276.0.76.4.17.9814184919">
+                                                <xsl:attribute name="extension">
+                                                    <xsl:value-of select="concat(document_id, '-diag-05')"/>
+                                                </xsl:attribute>
+                                            </id>
                                             <code code="43468-8" codeSystem="2.16.840.1.113883.6.1"
                                                   displayName="Unspecified body region X-Ray"/>
                                             <text>
@@ -868,8 +1101,11 @@
 
                                         <observation classCode="OBS" moodCode="EVN">
                                             <templateId root="1.2.276.0.76.10.4055"/>
-                                            <id root="1.2.276.0.76.4.17.9814184919"
-                                                extension="944cd73e-4361-4fca-929b-9a404b063651"/>
+                                            <id root="1.2.276.0.76.4.17.9814184919">
+                                                <xsl:attribute name="extension">
+                                                    <xsl:value-of select="concat(document_id, '-diag-06')"/>
+                                                </xsl:attribute>
+                                            </id>
                                             <code code="24725-4" codeSystem="2.16.840.1.113883.6.1"
                                                   displayName="Head CT"/>
                                             <text>
@@ -903,8 +1139,11 @@
 
                                         <observation classCode="OBS" moodCode="EVN">
                                             <templateId root="1.2.276.0.76.10.4056"/>
-                                            <id root="1.2.276.0.76.4.17.9814184919"
-                                                extension="944cd73e-4361-4fca-929b-9a404b063651"/>
+                                            <id root="1.2.276.0.76.4.17.9814184919">
+                                                <xsl:attribute name="extension">
+                                                    <xsl:value-of select="concat(document_id, '-diag-07')"/>
+                                                </xsl:attribute>
+                                            </id>
                                             <code code="46305-9" codeSystem="2.16.840.1.113883.6.1"
                                                   displayName="CT whole body"/>
                                             <text>
@@ -939,8 +1178,11 @@
 
                                         <observation classCode="OBS" moodCode="EVN">
                                             <templateId root="1.2.276.0.76.10.4057"/>
-                                            <id root="1.2.276.0.76.4.17.9814184919"
-                                                extension="944cd73e-4361-4fca-929b-9a404b063651"/>
+                                            <id root="1.2.276.0.76.4.17.9814184919">
+                                                <xsl:attribute name="extension">
+                                                    <xsl:value-of select="concat(document_id, '-diag-08')"/>
+                                                </xsl:attribute>
+                                            </id>
                                             <code code="26436-6" codeSystem="2.16.840.1.113883.6.1"
                                                   displayName="Laboratory studies"/>
                                             <text>
@@ -968,8 +1210,11 @@
 
                                         <observation classCode="OBS" moodCode="EVN">
                                             <templateId root="1.2.276.0.76.10.4058"/>
-                                            <id root="1.2.276.0.76.4.17.9814184919"
-                                                extension="944cd73e-4361-4fca-929b-9a404b063651"/>
+                                            <id root="1.2.276.0.76.4.17.9814184919">
+                                                <xsl:attribute name="extension">
+                                                    <xsl:value-of select="concat(document_id, '-diag-09')"/>
+                                                </xsl:attribute>
+                                            </id>
                                             <code code="25056-3" codeSystem="2.16.840.1.113883.6.1"
                                                   displayName="Unspecified body region MRT"/>
                                             <text>
@@ -997,8 +1242,11 @@
 
                                         <observation classCode="OBS" moodCode="EVN">
                                             <templateId root="1.2.276.0.76.10.4059"/>
-                                            <id root="1.2.276.0.76.4.17.9814184919"
-                                                extension="944cd73e-4361-4fca-929b-9a404b063651"/>
+                                            <id root="1.2.276.0.76.4.17.9814184919">
+                                                <xsl:attribute name="extension">
+                                                    <xsl:value-of select="concat(document_id, '-diag-10')"/>
+                                                </xsl:attribute>
+                                            </id>
                                             <code code="18767-4" codeSystem="2.16.840.1.113883.6.1"
                                                       displayName="Blood gas studies"/>
                                             <text>
@@ -1026,8 +1274,11 @@
 
                                         <observation classCode="OBS" moodCode="EVN">
                                             <templateId root="1.2.276.0.76.10.4060"/>
-                                            <id root="1.2.276.0.76.4.17.9814184919"
-                                                extension="944cd73e-4361-4fca-929b-9a404b063651"/>
+                                            <id root="1.2.276.0.76.4.17.9814184919">
+                                                <xsl:attribute name="extension">
+                                                    <xsl:value-of select="concat(document_id, '-diag-11')"/>
+                                                </xsl:attribute>
+                                            </id>
                                             <code code="50556-0" codeSystem="2.16.840.1.113883.6.1"
                                                   displayName="Urinalysis dipstick panel"/>
                                             <text>
@@ -1055,8 +1306,11 @@
 
                                         <observation classCode="OBS" moodCode="EVN">
                                             <templateId root="1.2.276.0.76.10.4061"/>
-                                            <id root="1.2.276.0.76.4.17.9814184919"
-                                                extension="944cd73e-4361-4fca-929b-9a404b063651"/>
+                                            <id root="1.2.276.0.76.4.17.9814184919">
+                                                <xsl:attribute name="extension">
+                                                    <xsl:value-of select="concat(document_id, '-diag-12')"/>
+                                                </xsl:attribute>
+                                            </id>
                                             <code code="34534-8" codeSystem="2.16.840.1.113883.6.1"
                                                   displayName="EKG 12 channel panel"/>
                                             <text>
@@ -1084,8 +1338,11 @@
 
                                         <observation classCode="OBS" moodCode="EVN">
                                             <templateId root="1.2.276.0.76.10.4062"/>
-                                            <id root="1.2.276.0.76.4.17.9814184919"
-                                                extension="944cd73e-4361-4fca-929b-9a404b063651"/>
+                                            <id root="1.2.276.0.76.4.17.9814184919">
+                                                <xsl:attribute name="extension">
+                                                    <xsl:value-of select="concat(document_id, '-diag-13')"/>
+                                                </xsl:attribute>
+                                            </id>
                                             <code code="25061-3" codeSystem="2.16.840.1.113883.6.1"
                                                   displayName="Unspecified body region US"/>
                                             <text>
@@ -1113,8 +1370,11 @@
 
                                         <observation classCode="OBS" moodCode="EVN">
                                             <templateId root="1.2.276.0.76.10.4063"/>
-                                            <id root="1.2.276.0.76.4.17.9814184919"
-                                                extension="944cd73e-4361-4fca-929b-9a404b063651"/>
+                                            <id root="1.2.276.0.76.4.17.9814184919">
+                                                <xsl:attribute name="extension">
+                                                    <xsl:value-of select="concat(document_id, '-diag-14')"/>
+                                                </xsl:attribute>
+                                            </id>
                                             <code code="25045-6" codeSystem="2.16.840.1.113883.6.1"
                                                   displayName="Unspecified body region CT"/>
                                             <text>
@@ -1142,8 +1402,11 @@
 
                                         <observation classCode="OBS" moodCode="EVN">
                                             <templateId root="1.2.276.0.76.10.4064"/>
-                                            <id root="1.2.276.0.76.4.17.9814184919"
-                                                extension="944cd73e-4361-4fca-929b-9a404b063651"/>
+                                            <id root="1.2.276.0.76.4.17.9814184919">
+                                                <xsl:attribute name="extension">
+                                                    <xsl:value-of select="concat(document_id, '-diag-15')"/>
+                                                </xsl:attribute>
+                                            </id>
                                             <code code="42148-7" codeSystem="2.16.840.1.113883.6.1"
                                                   displayName="Heart US"/>
                                             <text>
@@ -1174,97 +1437,169 @@
                             <code code="8716-3" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
                                   displayName="Vital signs"/>
                             <title>Vitalparameter</title>
-                            <text>
-                            </text>
+                            <text>&#160;</text>
                             <entry typeCode="COMP" contextConductionInd="true">
                                 <observation classCode="OBS" moodCode="EVN">
                                     <templateId root="1.2.276.0.76.10.4030"/>
-                                    <id root="10C1EB7E-DC2D-4D1F-806A-2AD65EBA0396"/>
+                                    <id root="1.2.276.0.76.4.17.9814184919">
+                                        <xsl:attribute name="extension">
+                                            <xsl:value-of select="concat(document_id, '-resp')"/>
+                                        </xsl:attribute>
+                                    </id>
                                     <code code="9279-1" codeSystem="2.16.840.1.113883.6.1"
                                           displayName="Respiratory Rate">
-                                        <originalText>
-                                            RR #AF#/Min
-                                        </originalText>
+                                        <originalText>Atemfrequenz</originalText>
                                     </code>
                                     <text>
                                         <reference value="#resp"/>
                                     </text>
                                     <statusCode code="completed"/>
-                                    <effectiveTime value="20200620"/>
-                                    <value xsi:type="PQ" value="54" unit="/min">
+                                    <effectiveTime>
                                         <xsl:attribute name="value">
-                                            <xsl:value-of select="respiratory_rate"/>
+                                            <xsl:value-of select="vital_signs_ts"/>
                                         </xsl:attribute>
+                                    </effectiveTime>
+                                    <value xsi:type="PQ">
+                                        <xsl:choose>
+                                            <xsl:when test="respiratory_rate = ''">
+                                                <xsl:attribute name="nullFlavor">UNK</xsl:attribute>
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                <xsl:attribute name="value">
+                                                    <xsl:value-of select="respiratory_rate"/>
+                                                </xsl:attribute>
+                                                <xsl:attribute name="unit">/min</xsl:attribute>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
                                     </value>
                                 </observation>
                             </entry>
                             <entry typeCode="COMP" contextConductionInd="true">
                                 <observation classCode="OBS" moodCode="EVN">
                                     <templateId root="1.2.276.0.76.10.4031"/>
-                                    <id root="769eb111-93b0-4c84-8e55-98f2098b7950"/>
+                                    <id root="1.2.276.0.76.4.17.9814184919">
+                                        <xsl:attribute name="extension">
+                                            <xsl:value-of select="concat(document_id, '-oxy')"/>
+                                        </xsl:attribute>
+                                    </id>
                                     <code code="20564-1" codeSystem="2.16.840.1.113883.6.1"
                                           displayName="Oxygen saturation"/>
                                     <text>
                                         <reference value="#oxy"/>
                                     </text>
                                     <statusCode code="completed"/>
-                                    <effectiveTime value="20200620"/>
-                                    <value xsi:type="PQ" value="88" unit="%">
+                                    <effectiveTime>
                                         <xsl:attribute name="value">
-                                            <xsl:value-of select="saturation"/>
+                                            <xsl:value-of select="vital_signs_ts"/>
                                         </xsl:attribute>
+                                    </effectiveTime>
+                                    <value xsi:type="PQ">
+                                        <xsl:choose>
+                                            <xsl:when test="saturation = ''">
+                                                <xsl:attribute name="nullFlavor">UNK</xsl:attribute>
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                <xsl:attribute name="value">
+                                                    <xsl:value-of select="saturation"/>
+                                                </xsl:attribute>
+                                                <xsl:attribute name="unit">%</xsl:attribute>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
                                     </value>
                                 </observation>
                             </entry>
                             <entry typeCode="COMP" contextConductionInd="true">
                                 <observation classCode="OBS" moodCode="EVN">
                                     <templateId root="1.2.276.0.76.10.4032"/>
-                                    <id root="adeb672e-a620-4aa4-9117-bdd8b2505a78"/>
+                                    <id root="1.2.276.0.76.4.17.9814184919">
+                                        <xsl:attribute name="extension">
+                                            <xsl:value-of select="concat(document_id, '-sysbp')"/>
+                                        </xsl:attribute>
+                                    </id>
                                     <code code="8480-6" codeSystem="2.16.840.1.113883.6.1"
                                           displayName="Systolic blood pressure"/>
                                     <text>
                                         <reference value="#SysBP"/>
                                     </text>
                                     <statusCode code="completed"/>
-                                    <effectiveTime value="20200620"/>
-                                    <value xsi:type="PQ" value="174" unit="mm[Hg]">
+                                    <effectiveTime>
                                         <xsl:attribute name="value">
-                                            <xsl:value-of select="blood_pressure_sys"/>
+                                            <xsl:value-of select="vital_signs_ts"/>
                                         </xsl:attribute>
+                                    </effectiveTime>
+                                    <value xsi:type="PQ">
+                                        <xsl:choose>
+                                            <xsl:when test="blood_pressure_sys = ''">
+                                                <xsl:attribute name="nullFlavor">UNK</xsl:attribute>
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                <xsl:attribute name="value">
+                                                    <xsl:value-of select="blood_pressure_sys"/>
+                                                </xsl:attribute>
+                                                <xsl:attribute name="unit">mm[Hg]</xsl:attribute>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
                                     </value>
                                 </observation>
                             </entry>
                             <entry typeCode="COMP" contextConductionInd="true">
                                 <observation classCode="OBS" moodCode="EVN">
                                     <templateId root="1.2.276.0.76.10.4033"/>
-                                    <id root="BBFB672E-A620-4AA4-9117-BDD8B2505AAA"/>
+                                    <id root="1.2.276.0.76.4.17.9814184919">
+                                        <xsl:attribute name="extension">
+                                            <xsl:value-of select="concat(document_id, '-hr')"/>
+                                        </xsl:attribute>
+                                    </id>
                                     <code code="8867-4" codeSystem="2.16.840.1.113883.6.1" displayName="Heart Rate"/>
                                     <text>
                                         <reference value="#HeartR"/>
                                     </text>
                                     <statusCode code="completed"/>
-                                    <effectiveTime value="20200620"/>
-                                    <value xsi:type="PQ" value="174" unit="/min">
+                                    <effectiveTime>
                                         <xsl:attribute name="value">
-                                            <xsl:value-of select="heart_rate"/>
+                                            <xsl:value-of select="vital_signs_ts"/>
                                         </xsl:attribute>
+                                    </effectiveTime>
+                                    <value xsi:type="PQ">
+                                        <xsl:choose>
+                                            <xsl:when test="heart_rate = ''">
+                                                <xsl:attribute name="nullFlavor">UNK</xsl:attribute>
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                <xsl:attribute name="value">
+                                                    <xsl:value-of select="heart_rate"/>
+                                                </xsl:attribute>
+                                                <xsl:attribute name="unit">/min</xsl:attribute>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
                                     </value>
                                 </observation>
                             </entry>
                             <entry typeCode="COMP" contextConductionInd="true">
                                 <observation classCode="OBS" moodCode="EVN">
                                     <templateId root="1.2.276.0.76.10.4034"/>
-                                    <id root="98c1eb7e-dc2d-4d1f-806a-2ad65eba0351"/>
+                                    <id root="1.2.276.0.76.4.17.9814184919">
+                                        <xsl:attribute name="extension">
+                                            <xsl:value-of select="concat(document_id, '-gcs')"/>
+                                        </xsl:attribute>
+                                    </id>
                                     <code code="9269-2" codeSystem="2.16.840.1.113883.6.1"
                                           displayName="Glasgow coma score total"/>
                                     <text>
                                         <reference value="#GlasgowCS"/>
                                     </text>
                                     <statusCode code="completed"/>
-                                    <effectiveTime value="20200620"/>
-                                    <value xsi:type="PQ" value="9" unit="{score}">
+                                    <effectiveTime>
                                         <xsl:attribute name="value">
-                                            <xsl:value-of select="gcs_total"/>
+                                            <xsl:value-of select="vital_signs_ts"/>
+                                        </xsl:attribute>
+                                    </effectiveTime>
+                                    <value xsi:type="PQ">
+                                        <xsl:attribute name="value">
+                                            <xsl:choose>
+                                                <xsl:when test="gcs_total = ''">15</xsl:when>
+                                                <xsl:otherwise><xsl:value-of select="gcs_total"/></xsl:otherwise>
+                                            </xsl:choose>
                                         </xsl:attribute>
                                         <xsl:attribute name="unit">
                                             <xsl:text>{score}</xsl:text>
@@ -1275,9 +1610,12 @@
                                             <code code="9267-6" codeSystem="2.16.840.1.113883.6.1"
                                                   displayName="Glasgow coma score eye opening"/>
                                             <statusCode code="completed"/>
-                                            <value xsi:type="PQ" value="2" unit="{score}">
+                                            <value xsi:type="PQ">
                                                 <xsl:attribute name="value">
-                                                    <xsl:value-of select="gcs_eyes"/>
+                                                    <xsl:choose>
+                                                        <xsl:when test="gcs_eyes = ''">4</xsl:when>
+                                                        <xsl:otherwise><xsl:value-of select="gcs_eyes"/></xsl:otherwise>
+                                                    </xsl:choose>
                                                 </xsl:attribute>
                                                 <xsl:attribute name="unit">
                                                     <xsl:text>{score}</xsl:text>
@@ -1290,9 +1628,12 @@
                                             <code code="9270-0" codeSystem="2.16.840.1.113883.6.1"
                                                   displayName="Glasgow coma score verbal"/>
                                             <statusCode code="completed"/>
-                                            <value xsi:type="PQ" value="1" unit="{score}">
+                                            <value xsi:type="PQ">
                                                 <xsl:attribute name="value">
-                                                    <xsl:value-of select="gcs_verbal"/>
+                                                    <xsl:choose>
+                                                        <xsl:when test="gcs_verbal = ''">5</xsl:when>
+                                                        <xsl:otherwise><xsl:value-of select="gcs_verbal"/></xsl:otherwise>
+                                                    </xsl:choose>
                                                 </xsl:attribute>
                                                 <xsl:attribute name="unit">
                                                     <xsl:text>{score}</xsl:text>
@@ -1305,9 +1646,12 @@
                                             <code code="9268-4" codeSystem="2.16.840.1.113883.6.1"
                                                   displayName="Glasgow coma score motor"/>
                                             <statusCode code="completed"/>
-                                            <value xsi:type="PQ" value="6" unit="{score}">
+                                            <value xsi:type="PQ">
                                                 <xsl:attribute name="value">
-                                                    <xsl:value-of select="gcs_motor"/>
+                                                    <xsl:choose>
+                                                        <xsl:when test="gcs_motor = ''">6</xsl:when>
+                                                        <xsl:otherwise><xsl:value-of select="gcs_motor"/></xsl:otherwise>
+                                                    </xsl:choose>
                                                 </xsl:attribute>
                                                 <xsl:attribute name="unit">
                                                     <xsl:text>{score}</xsl:text>
@@ -1320,14 +1664,22 @@
                             <entry typeCode="COMP" contextConductionInd="true">
                                 <observation classCode="OBS" moodCode="EVN">
                                     <templateId root="1.2.276.0.76.10.4046"/>
-                                    <id root="DEEE672E-A620-4AA4-9117-BDD8B2505AAF"/>
+                                    <id root="1.2.276.0.76.4.17.9814184919">
+                                        <xsl:attribute name="extension">
+                                            <xsl:value-of select="concat(document_id, '-pupil-sl')"/>
+                                        </xsl:attribute>
+                                    </id>
                                     <code code="SPPL" codeSystem="1.2.276.0.76.3.1.195.5.1"
                                           displayName="Pupillenweite"/>
                                     <text>
                                         <reference value="#PupilLeft"/>
                                     </text>
                                     <statusCode code="completed"/>
-                                    <effectiveTime value="20200620"/>
+                                    <effectiveTime>
+                                        <xsl:attribute name="value">
+                                            <xsl:value-of select="vital_signs_ts"/>
+                                        </xsl:attribute>
+                                    </effectiveTime>
 
                                     <!-- <value xsi:type="CV" code="#PupilWL#" codeSystem="1.2.276.0.76.3.1.195.5.49" displayName="mittel"/>-->
                                     <value xsi:type="CV">
@@ -1354,14 +1706,22 @@
                             <entry typeCode="COMP" contextConductionInd="true">
                                 <observation classCode="OBS" moodCode="EVN">
                                     <templateId root="1.2.276.0.76.10.4046"/>
-                                    <id root="DEEE672E-A620-4AA4-9117-BDD8B2505AAF"/>
+                                    <id root="1.2.276.0.76.4.17.9814184919">
+                                        <xsl:attribute name="extension">
+                                            <xsl:value-of select="concat(document_id, '-pupil-sr')"/>
+                                        </xsl:attribute>
+                                    </id>
                                     <code code="SPPL" codeSystem="1.2.276.0.76.3.1.195.5.1"
                                           displayName="Pupillenweite"/>
                                     <text>
                                         <reference value="#PupilRight"/>
                                     </text>
                                     <statusCode code="completed"/>
-                                    <effectiveTime value="20200620"/>
+                                    <effectiveTime>
+                                        <xsl:attribute name="value">
+                                            <xsl:value-of select="vital_signs_ts"/>
+                                        </xsl:attribute>
+                                    </effectiveTime>
                                     <value xsi:type="CV">
                                         <xsl:choose>
                                             <xsl:when test="pupil_size_right = ''">
@@ -1388,14 +1748,22 @@
                             <entry typeCode="COMP" contextConductionInd="true">
                                 <observation classCode="OBS" moodCode="EVN">
                                     <templateId root="1.2.276.0.76.10.4047"/>
-                                    <id root="DEEE672E-A620-4AA4-9117-BDD8B2505AAF"/>
+                                    <id root="1.2.276.0.76.4.17.9814184919">
+                                        <xsl:attribute name="extension">
+                                            <xsl:value-of select="concat(document_id, '-pupil-rl')"/>
+                                        </xsl:attribute>
+                                    </id>
                                     <code code="RPPL" codeSystem="1.2.276.0.76.3.1.195.5.1"
                                           displayName="Pupillenreaktion"/>
                                     <text>
-                                        <reference value="PupilLeft"/>
+                                        <reference value="#PupilLeft"/>
                                     </text>
                                     <statusCode code="completed"/>
-                                    <effectiveTime value="20200620"/>
+                                    <effectiveTime>
+                                        <xsl:attribute name="value">
+                                            <xsl:value-of select="vital_signs_ts"/>
+                                        </xsl:attribute>
+                                    </effectiveTime>
 
                                     <value xsi:type="CV">
                                         <xsl:choose>
@@ -1423,14 +1791,22 @@
                             <entry typeCode="COMP" contextConductionInd="true">
                                 <observation classCode="OBS" moodCode="EVN">
                                     <templateId root="1.2.276.0.76.10.4047"/>
-                                    <id root="DEEE672E-A620-4AA4-9117-BDD8B2505AAF"/>
+                                    <id root="1.2.276.0.76.4.17.9814184919">
+                                        <xsl:attribute name="extension">
+                                            <xsl:value-of select="concat(document_id, '-pupil-rr')"/>
+                                        </xsl:attribute>
+                                    </id>
                                     <code code="RPPL" codeSystem="1.2.276.0.76.3.1.195.5.1"
                                           displayName="Pupillenreaktion"/>
                                     <text>
-                                        <reference value="PupilRight"/>
+                                        <reference value="#PupilRight"/>
                                     </text>
                                     <statusCode code="completed"/>
-                                    <effectiveTime value="20200620"/>
+                                    <effectiveTime>
+                                        <xsl:attribute name="value">
+                                            <xsl:value-of select="vital_signs_ts"/>
+                                        </xsl:attribute>
+                                    </effectiveTime>
                                     <value xsi:type="CV">
                                         <xsl:choose>
                                             <xsl:when test="pupil_reaction_right = ''">
@@ -1458,18 +1834,30 @@
                             <entry typeCode="COMP" contextConductionInd="true">
                                 <observation classCode="OBS" moodCode="EVN">
                                     <templateId root="1.2.276.0.76.10.4035"/>
-                                    <id root="AF1EB111-93B0-4C84-8E55-98F2098B7950"/>
+                                    <id root="1.2.276.0.76.4.17.9814184919">
+                                        <xsl:attribute name="extension">
+                                            <xsl:value-of select="concat(document_id, '-temp')"/>
+                                        </xsl:attribute>
+                                    </id>
                                     <code code="8329-5" codeSystem="2.16.840.1.113883.6.1"
                                           displayName="Body temperature - Core"/>
                                     <text>
                                         <reference value="#BodyTemp"/>
                                     </text>
                                     <statusCode code="completed"/>
-                                    <effectiveTime value="20200620"/>
-                                    <value xsi:type="PQ" value="0.425" unit="Cel">
+                                    <effectiveTime>
                                         <xsl:attribute name="value">
-                                            <xsl:value-of select="body_temperature"/>
+                                            <xsl:value-of select="vital_signs_ts"/>
                                         </xsl:attribute>
+                                    </effectiveTime>
+                                    <value xsi:type="PQ">
+                                        <xsl:attribute name="value">
+                                            <xsl:choose>
+                                                <xsl:when test="body_temperature = ''">37.0</xsl:when>
+                                                <xsl:otherwise><xsl:value-of select="body_temperature"/></xsl:otherwise>
+                                            </xsl:choose>
+                                        </xsl:attribute>
+                                        <xsl:attribute name="unit">Cel</xsl:attribute>
                                     </value>
                                 </observation>
                             </entry>
@@ -1477,7 +1865,11 @@
                             <entry typeCode="COMP" contextConductionInd="true">
                                 <observation classCode="OBS" moodCode="EVN">
                                     <templateId root="1.2.276.0.76.10.4036"/>
-                                    <id root="10C1EB7E-DC2D-4D1F-806A-2AD65EBA0396"/>
+                                    <id root="1.2.276.0.76.4.17.9814184919">
+                                        <xsl:attribute name="extension">
+                                            <xsl:value-of select="concat(document_id, '-pain')"/>
+                                        </xsl:attribute>
+                                    </id>
                                     <code code="72514-3" codeSystem="2.16.840.1.113883.6.1"
                                           displayName="Pain severity - 0-10 verbal numeric rating"/>
                                     <text>
@@ -1485,10 +1877,17 @@
                                     </text>
                                     <!-- 56840-2" Pain severity verbal numeric scale -->
                                     <statusCode code="completed"/>
-                                    <effectiveTime value="20200620"/>
-                                    <value xsi:type="PQ" value="9" unit="{score}">
+                                    <effectiveTime>
                                         <xsl:attribute name="value">
-                                            <xsl:value-of select="pain_severity"/>
+                                            <xsl:value-of select="vital_signs_ts"/>
+                                        </xsl:attribute>
+                                    </effectiveTime>
+                                    <value xsi:type="PQ">
+                                        <xsl:attribute name="value">
+                                            <xsl:choose>
+                                                <xsl:when test="pain_severity = ''">5</xsl:when>
+                                                <xsl:otherwise><xsl:value-of select="pain_severity"/></xsl:otherwise>
+                                            </xsl:choose>
                                         </xsl:attribute>
                                         <xsl:attribute name="unit">
                                             <xsl:text>{score}</xsl:text>
@@ -1508,13 +1907,23 @@
                                   displayName="Allergies &amp;or adverse reactions"/>
                             <title>Allergien und Unverträglichkeiten</title>
                             <text>
-                                <xsl:value-of select="allergies_txt"/>
+                                <xsl:choose>
+                                    <xsl:when test="allergies_txt = ''">
+                                        <xsl:text>&#160;</xsl:text>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="allergies_txt"/>
+                                    </xsl:otherwise>
+                                </xsl:choose>
                             </text>
                             <entry typeCode="COMP">
                                 <act classCode="ACT" moodCode="EVN">
                                     <templateId root="1.2.276.0.76.10.4065"/>
-                                    <id root="1.2.276.0.76.4.17.9814184919"
-                                        extension="15100194-6d6e-4b00-a4d8-effeb66596b4"/>
+                                    <id root="1.2.276.0.76.4.17.9814184919">
+                                        <xsl:attribute name="extension">
+                                            <xsl:value-of select="concat(document_id, '-alg-act')"/>
+                                        </xsl:attribute>
+                                    </id>
                                     <code code="CONC" codeSystem="2.16.840.1.113883.5.6"/>
                                     <statusCode code="active"/>
                                     <!-- This is the time stamp for when the allergy was first documented as a concern-->
@@ -1523,13 +1932,16 @@
                                     </effectiveTime>
                                     <entryRelationship typeCode="SUBJ">
                                         <!--Allergien allgemein-->
-                                        <observation classCode="OBS" moodCode="EVN" negationInd="true">
+                                        <observation classCode="OBS" moodCode="EVN">
                                             <xsl:attribute name="negationInd">
                                                 <xsl:value-of select="allergy"/>
                                             </xsl:attribute>
                                             <templateId root="1.2.276.0.76.10.4066"/>
-                                            <id root="1.2.276.0.76.4.17.9814184919"
-                                                extension="c9599ec1-6077-4f74-b58e-80c4148efbd8"/>
+                                            <id root="1.2.276.0.76.4.17.9814184919">
+                                                <xsl:attribute name="extension">
+                                                    <xsl:value-of select="concat(document_id, '-alg-gen')"/>
+                                                </xsl:attribute>
+                                            </id>
                                             <code code="ASSERTION" codeSystem="2.16.840.1.113883.5.4"/>
                                             <statusCode code="completed"/>
                                             <!-- N/A - author/time records when this assertion was made -->
@@ -1557,8 +1969,11 @@
                                                 <xsl:value-of select="allergy_antibiotics"/>
                                             </xsl:attribute>
                                             <templateId root="1.2.276.0.76.10.4066"/>
-                                            <id root="1.2.276.0.76.4.17.9814184919"
-                                                extension="4adc1020-7b14-11db-9fe1-0800200c9a66"/>
+                                            <id root="1.2.276.0.76.4.17.9814184919">
+                                                <xsl:attribute name="extension">
+                                                    <xsl:value-of select="concat(document_id, '-alg-atb')"/>
+                                                </xsl:attribute>
+                                            </id>
                                             <code code="ASSERTION" codeSystem="2.16.840.1.113883.5.4"/>
                                             <statusCode code="completed"/>
                                             <effectiveTime>
@@ -1582,13 +1997,16 @@
                                     </entryRelationship>
                                     <!-- Kontrastmittel -->
                                     <entryRelationship typeCode="SUBJ">
-                                        <observation classCode="OBS" moodCode="EVN" negationInd="true">
+                                        <observation classCode="OBS" moodCode="EVN">
                                             <xsl:attribute name="negationInd">
                                                 <xsl:value-of select="allergy_contrast_agent"/>
                                             </xsl:attribute>
                                             <templateId root="1.2.276.0.76.10.4066"/>
-                                            <id root="1.2.276.0.76.4.17.9814184919"
-                                                extension="4adc1020-7b14-11db-9fe1-0800200c9a66"/>
+                                            <id root="1.2.276.0.76.4.17.9814184919">
+                                                <xsl:attribute name="extension">
+                                                    <xsl:value-of select="concat(document_id, '-alg-kont')"/>
+                                                </xsl:attribute>
+                                            </id>
                                             <code code="ASSERTION" codeSystem="2.16.840.1.113883.5.4"/>
                                             <statusCode code="completed"/>
                                             <effectiveTime nullFlavor="NA"/>
@@ -1616,8 +2034,11 @@
                                                 <xsl:value-of select="allergy_other"/>
                                             </xsl:attribute>
                                             <templateId root="1.2.276.0.76.10.4066"/>
-                                            <id root="1.2.276.0.76.4.17.9814184919"
-                                                extension="4adc1020-7b14-11db-9fe1-0800200c9a66"/>
+                                            <id root="1.2.276.0.76.4.17.9814184919">
+                                                <xsl:attribute name="extension">
+                                                    <xsl:value-of select="concat(document_id, '-alg-oth')"/>
+                                                </xsl:attribute>
+                                            </id>
                                             <code code="ASSERTION" codeSystem="2.16.840.1.113883.5.4"/>
                                             <statusCode code="completed"/>
                                             <effectiveTime nullFlavor="NA"/>
@@ -1653,8 +2074,86 @@
                                     <item ID="refact">Weiterbehandler: Hausarzt</item>
                                 </list>
                             </text>
+                            <xsl:if test="verlegung_type != ''">
+                                <entry typeCode="COMP">
+                                    <act classCode="ACT" moodCode="INT">
+                                        <templateId root="1.2.276.0.76.10.4067"/>
+                                        <code codeSystem="1.2.276.0.76.3.1.195.5.53">
+                                            <xsl:attribute name="code">
+                                                <xsl:value-of select="verlegung_type"/>
+                                            </xsl:attribute>
+                                        </code>
+                                        <text>
+                                            <reference value="#refact"/>
+                                        </text>
+                                    </act>
+                                </entry>
+                            </xsl:if>
                         </section>
                     </component>
+
+                    <!-- Befunde / Verlauf / durchgeführte Therapie (section 3054) — only when isolation present -->
+                    <xsl:if test="isolation_grund != ''">
+                        <component typeCode="COMP" contextConductionInd="true">
+                            <section classCode="DOCSECT">
+                                <templateId root="1.2.276.0.76.10.3054"/>
+                                <code code="67781-5" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+                                      displayName="Summarization of encounter note"/>
+                                <title>Befunde / Verlauf / durchgeführte Therapie</title>
+                                <text>
+                                    <list>
+                                        <item ID="iso">Isolation</item>
+                                    </list>
+                                </text>
+                                <entry typeCode="COMP" contextConductionInd="true">
+                                    <procedure classCode="PROC" moodCode="EVN">
+                                        <templateId root="1.2.276.0.76.10.4068"/>
+                                        <id root="1.2.276.0.76.4.17.9814184919">
+                                            <xsl:attribute name="extension">
+                                                <xsl:value-of select="concat(document_id, '-iso-proc')"/>
+                                            </xsl:attribute>
+                                        </id>
+                                        <code code="ISO" codeSystem="1.2.276.0.76.3.1.195.5.54"
+                                              displayName="Isolation"/>
+                                        <text>
+                                            <reference value="#iso"/>
+                                        </text>
+                                        <statusCode code="completed"/>
+                                        <entryRelationship typeCode="RSON">
+                                            <observation classCode="OBS" moodCode="EVN">
+                                                <templateId root="1.2.276.0.76.10.4069"/>
+                                                <id root="1.2.276.0.76.4.17.9814184919">
+                                                    <xsl:attribute name="extension">
+                                                        <xsl:value-of select="concat(document_id, '-iso-grund')"/>
+                                                    </xsl:attribute>
+                                                </id>
+                                                <code code="44100-6" codeSystem="2.16.840.1.113883.6.1"
+                                                      displayName="Medical Problem"/>
+                                                <statusCode code="completed"/>
+                                                <value xsi:type="CV">
+                                                    <xsl:choose>
+                                                        <xsl:when test="isolation_grund = 'OTH'">
+                                                            <xsl:attribute name="nullFlavor">
+                                                                <xsl:text>OTH</xsl:text>
+                                                            </xsl:attribute>
+                                                        </xsl:when>
+                                                        <xsl:otherwise>
+                                                            <xsl:attribute name="code">
+                                                                <xsl:value-of select="isolation_grund"/>
+                                                            </xsl:attribute>
+                                                            <xsl:attribute name="codeSystem">
+                                                                <xsl:text>2.16.840.1.113883.6.3</xsl:text>
+                                                            </xsl:attribute>
+                                                        </xsl:otherwise>
+                                                    </xsl:choose>
+                                                </value>
+                                            </observation>
+                                        </entryRelationship>
+                                    </procedure>
+                                </entry>
+                            </section>
+                        </component>
+                    </xsl:if>
 
                     <!-- Abschlussdiagnosen -->
                     <component typeCode="COMP" contextConductionInd="true">
@@ -1663,47 +2162,84 @@
                             <code code="11301-9" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
                                   displayName="ED diagnosis"/>
                             <title>Abschlussdiagnosen</title>
-                            <text>
-                                <list>
-                                    <item ID="diag-1">
-                                        <xsl:value-of select="diagnosis_txt"/>
-                                    </item>
-                                </list>
-                            </text>
+                            <xsl:choose>
+                                <xsl:when test="*[starts-with(name(), 'diagnosis_code') and . != ''][position() &lt;= 10]">
+                                    <text>
+                                        <list>
+                                            <!-- One item per non-empty diagnosis code (max 10); ID matches the field suffix -->
+                                            <xsl:for-each select="*[starts-with(name(), 'diagnosis_code') and . != ''][position() &lt;= 10]">
+                                                <xsl:variable name="suffix" select="substring-after(name(), 'diagnosis_code_')"/>
+                                                <xsl:variable name="diagName" select="../*[name() = concat('diagnosis_name_', $suffix)]"/>
+                                                <item>
+                                                    <xsl:attribute name="ID">
+                                                        <xsl:value-of select="concat('diag-', $suffix)"/>
+                                                    </xsl:attribute>
+                                                    <xsl:choose>
+                                                        <xsl:when test="$diagName != ''">
+                                                            <xsl:value-of select="concat(., ' ', $diagName)"/>
+                                                        </xsl:when>
+                                                        <xsl:otherwise>
+                                                            <xsl:value-of select="."/>
+                                                        </xsl:otherwise>
+                                                    </xsl:choose>
+                                                </item>
+                                            </xsl:for-each>
+                                        </list>
+                                    </text>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <text/>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                            <xsl:if test="*[starts-with(name(), 'diagnosis_code') and . != ''][position() &lt;= 10]">
                             <entry typeCode="COMP">
                                 <act classCode="ACT" moodCode="EVN">
                                     <templateId root="1.2.276.0.76.10.4048"/>
-                                    <id root="1.2.276.0.76.4.17.9814184919"
-                                        extension="4193be05-5a9a-4e94-ad03-e35c0c5ca739"/>
+                                    <id root="1.2.276.0.76.4.17.9814184919">
+                                        <xsl:attribute name="extension">
+                                            <xsl:value-of select="concat(document_id, '-diag-act')"/>
+                                        </xsl:attribute>
+                                    </id>
                                     <code code="CONC" codeSystem="2.16.840.1.113883.5.6" displayName="Concern"/>
                                     <statusCode code="active"/>
                                     <effectiveTime>
-                                        <low value="20150117"/>
+                                        <low>
+                                            <xsl:attribute name="value">
+                                                <xsl:value-of select="admission_ts"/>
+                                            </xsl:attribute>
+                                        </low>
                                     </effectiveTime>
-                                    <xsl:for-each select="*[starts-with(name(), 'diagnosis_code')]">
+                                    <!-- Iterate over diagnosis codes max 10; skip empty; position 1 is leading -->
+                                    <xsl:variable name="doc_id" select="document_id"/>
+                                    <xsl:for-each select="*[starts-with(name(), 'diagnosis_code') and . != ''][position() &lt;= 10]">
                                         <xsl:variable name="position" select="position()"/>
+                                        <xsl:variable name="suffix" select="substring-after(name(), 'diagnosis_code_')"/>
                                         <entryRelationship typeCode="SUBJ">
+                                            <xsl:if test="$position = 1">
+                                                <sequenceNumber value="1"/>
+                                            </xsl:if>
                                             <observation classCode="OBS" moodCode="EVN">
                                                 <templateId root="1.2.276.0.76.10.4049"/>
-                                                <id root="1.2.276.0.76.4.17.9814184919"
-                                                    extension="45F99818-637B-4BE7-BC22-A7041C1CF813"/>
+                                                <id root="1.2.276.0.76.4.17.9814184919">
+                                                    <xsl:attribute name="extension">
+                                                        <xsl:value-of select="concat($doc_id, '-diag-obs-', $suffix)"/>
+                                                    </xsl:attribute>
+                                                </id>
                                                 <code code="29308-4" codeSystem="2.16.840.1.113883.6.1"
                                                       displayName="Diagnosis"/>
                                                 <text>
-                                                    <reference value="#diag-{$position}"/>
+                                                    <reference value="#diag-{$suffix}"/>
                                                 </text>
                                                 <statusCode code="completed"/>
                                                 <effectiveTime>
-                                                    <low value="20150117"/>
+                                                    <low>
+                                                        <xsl:attribute name="value">
+                                                            <xsl:value-of select="../admission_ts"/>
+                                                        </xsl:attribute>
+                                                    </low>
                                                 </effectiveTime>
                                                 <value xsi:type="CD">
-                                                    <!-- Handle the diagnosis_code value -->
                                                     <xsl:choose>
-                                                        <xsl:when test=". = ''">
-                                                            <xsl:attribute name="nullFlavor">
-                                                                <xsl:text>UNK</xsl:text>
-                                                            </xsl:attribute>
-                                                        </xsl:when>
                                                         <xsl:when test=". = 'OTH'">
                                                             <xsl:attribute name="nullFlavor">
                                                                 <xsl:text>OTH</xsl:text>
@@ -1719,15 +2255,11 @@
                                                             <xsl:attribute name="codeSystemName">
                                                                 <xsl:text>icd10gm2015</xsl:text>
                                                             </xsl:attribute>
-
-
                                                         </xsl:otherwise>
                                                     </xsl:choose>
-
                                                     <originalText>
-                                                        <!-- Find the corresponding diagnosis_name element -->
                                                         <xsl:variable name="correspondingName"
-                                                                      select="/aktin_raw/*[starts-with(name(), 'diagnosis_name_')][position() = $position]"/>
+                                                                      select="../*[name() = concat('diagnosis_name_', $suffix)]"/>
                                                         <xsl:choose>
                                                             <xsl:when test="$correspondingName = ''">
                                                                 <xsl:attribute name="nullFlavor">
@@ -1739,17 +2271,15 @@
                                                             </xsl:otherwise>
                                                         </xsl:choose>
                                                     </originalText>
-
                                                     <xsl:variable name="correspondingQualifier"
-                                                                  select="/aktin_raw/*[starts-with(name(), 'diagnosis_qualifier_')][position() = $position]"/>
+                                                                  select="../*[name() = concat('diagnosis_qualifier_', $suffix)]"/>
                                                     <xsl:if test="$correspondingQualifier != ''">
                                                         <qualifier>
                                                             <name code="8"
                                                                   codeSystem="2.16.840.1.113883.3.7.1.0"/>
-                                                            <value codeSystem="1.2.276.0.76.3.1.1.5.1.21">
+                                                            <value xsi:type="CV" codeSystem="1.2.276.0.76.3.1.1.5.1.21">
                                                                 <xsl:attribute name="code">
-                                                                    <xsl:value-of
-                                                                            select="$correspondingQualifier"/>
+                                                                    <xsl:value-of select="$correspondingQualifier"/>
                                                                 </xsl:attribute>
                                                             </value>
                                                         </qualifier>
@@ -1760,6 +2290,7 @@
                                     </xsl:for-each>
                                 </act>
                             </entry>
+                            </xsl:if>
                         </section>
                     </component>
                 </structuredBody>
